@@ -145,15 +145,14 @@ const CandidatesTable = ({ columns, data }) => {
 export default CandidatesTable
 
 export function StatusPill({ value }) {
-    const status = value ? value.toLowerCase() : "unknown";
+    const status = value ? "active" : "eliminated";
 
     return (
         <span
             className={classNames(
                 "py-1 capitalize leading-wide font-bold text-xs rounded-full shadow-sm",
                 status.startsWith("eliminated") ? "bg-red-200 p-2 text-red-700" : null,
-                status.startsWith("active") ? "bg-green-200 p-2 text-green-700" : null,
-                status.startsWith("disqualified") ? "bg-gray-200 p-2 text-gray-700" : null
+                status.startsWith("active") ? "bg-green-200 p-2 text-green-700" : null
             )}
         >
             {status}
@@ -171,7 +170,7 @@ export function Detail({ value }) {
         <div className='flex flex-row'>
             <Link to="/candidateDetail" state={value} className="mr-2"><AiOutlineInfoCircle /></Link>
             <Link to="/editCandidate" state={value} className="mr-2"><MdOutlineModeEdit color='green' /></Link>
-            <FaUserLock onClick={disqualify} color='red'/>
+            <FaUserLock cursor="pointer" onClick={disqualify} color='red'/>
         </div>
     )
 

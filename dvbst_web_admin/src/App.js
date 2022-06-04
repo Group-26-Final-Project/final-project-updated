@@ -1,12 +1,12 @@
 import './App.css';
 import Login from './components/Login';
 import Home from './components/Home';
-// import Voters from './components/Voters';
+import Voters from './components/Voters';
 // import VoterDetail from './components/VoterDetail';
-// import NewVoter from './components/NewVoter';
+import NewVoter from './components/NewVoter';
 import Candidates from './components/Candidates';
 import CandidateDetail from './components/CandidateDetail';
-// import NewCandidate from './components/NewCandidate';
+import NewCandidate from './components/NewCandidate';
 // import Election from './components/Elections';
 // import NewElection from './components/NewElection';
 // import Blacklist from './components/Blacklist'
@@ -18,55 +18,231 @@ import {
   Navigate
 } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { loadUser } from './features/authSlice';
 import { AiOutlineMenu } from "react-icons/ai";
 import Approval from './components/Approval';
+import PrivateRoute from './PrivateRoute';
+import { useEffect, useState } from 'react';
+
+// <Router>
+//   <div class="md:flex bg-[#D3E8E6]/20 h-screen">
+//       <div>
+//         <div class="bg-[#2F313D] text-white md:hidden">
+//           <button class="p-4">
+//             <AiOutlineMenu />
+//           </button>
+//         </div>
+//         <div class="w-[25vw] inset-y-0 left-0 absolute transform -translate-x-full md:relative md:translate-x-0 transition duration-200 ease-in-out">
+//           <Sidebar />
+//         </div>
+//       </div>
+//       <div class="flex-1 h-screen md:overflow-y-auto">
+//         <Routes>
+//           <Route path="/" exact element={
+//             <PrivateRoute>
+//               <Home />
+//             </PrivateRoute>
+//           } />
+//           <Route path="/voters" element={
+//             <PrivateRoute>
+//               <Voters />
+//             </PrivateRoute>
+//           } />
+//           <Route path="/candidates" element={
+//             <PrivateRoute>
+//               <Candidates />
+//             </PrivateRoute>
+//           } />
+//           <Route path="/candidateDetail" element={
+//             <PrivateRoute>
+//               <CandidateDetail />
+//             </PrivateRoute>
+//           } />
+//           <Route path="/voters/newvoter" element={
+//             <PrivateRoute>
+//               <NewVoter />
+//             </PrivateRoute>
+//           } />
+//           <Route path="/candidates/newcandidate" element={
+//             <PrivateRoute>
+//               <NewCandidate />
+//             </PrivateRoute>
+//           } />
+//           <Route path="/approval" element={
+//             <PrivateRoute>
+//               <Approval />
+//             </PrivateRoute>
+//           } />
+
+//           {/* <Route path="/blacklist" element={
+//           <PrivateRoute>
+//             <Blacklist />
+//           </PrivateRoute>
+//         } /> 
+
+//         <Route path="/elections" element={
+//           <PrivateRoute>
+//             <Election />
+//           </PrivateRoute>
+//         } />
+//         <Route path="/elections/newelection" element={
+//           <PrivateRoute>
+//             <NewElection />
+//           </PrivateRoute>
+//         } />
+//         <Route path="/results" element={
+//           <PrivateRoute>
+//             <Result />
+//           </PrivateRoute>
+//         } /> */}
+//           <Route
+//             path="*"
+//             element={<Navigate to="/" replace />}
+//           />
+//           <Route path="/login" element={<Login />} />
+//         </Routes>
+//       </div>
+//   </div>
+// </Router >
 
 function App() {
-  const authState = useSelector((state) => state.authState)
-  return authState.isLoggedIn ? (
-    <Router>
-      <Routes>
-        <Route path="/" exact element={<Login />} />
-        <Route
-          path="*"
-          element={<Navigate to="/" replace />}
-        />
-      </Routes>
-    </Router>
-  ) : (
+  const dispatch = useDispatch();
+  const { token } = useSelector((state) => state.authState)
+
+  useEffect(() => {
+    dispatch(loadUser());
+  }, [dispatch, token]);
+
+  return (
     <Router>
       <div class="md:flex bg-[#D3E8E6]/20 h-screen">
-        <div class="bg-[#2F313D] text-white md:hidden">
-          <button class="p-4">
-            <AiOutlineMenu />
-          </button>
-        </div>
-        <div class="w-[25vw] inset-y-0 left-0 absolute transform -translate-x-full md:relative md:translate-x-0 transition duration-200 ease-in-out">
-          <Sidebar />
-        </div>
+        {token && (
+          <div>
+            <div class="bg-[#2F313D] text-white md:hidden">
+              <button class="p-4">
+                <AiOutlineMenu />
+              </button>
+            </div>
+            <div class="w-[25vw] inset-y-0 left-0 absolute transform -translate-x-full md:relative md:translate-x-0 transition duration-200 ease-in-out">
+              <Sidebar />
+            </div>
+          </div>
+        )}
         <div class="flex-1 h-screen md:overflow-y-auto">
           <Routes>
-            <Route path="/" exact element={<Home />} />
-            <Route path="/login" exact element={<Login />} />
-            {/* <Route path="/voters" element={<Voters />} />
-            <Route path="/voterDetail" element={<VoterDetail />} />
-            <Route path="/voters/newvoter" element={<NewVoter />} /> */}
-            <Route path="/candidates" element={<Candidates />} />
-            <Route path="/approval" element={<Approval />} />
-            <Route path="/candidateDetail" element={<CandidateDetail />} />
-            {/* <Route path="/candidates/newcandidate" element={<NewCandidate />} /> */}
-            {/* <Route path="/elections" element={<Election />} />
-            <Route path="/elections/newelection" element={<NewElection />} />
-            <Route path="/blacklist" element={<Blacklist />} /> */}
+            <Route path="/" exact element={
+              <PrivateRoute>
+                <Home />
+              </PrivateRoute>
+            } />
+            <Route path="/voters" element={
+              <PrivateRoute>
+                <Voters />
+              </PrivateRoute>
+            } />
+            <Route path="/candidates" element={
+              <PrivateRoute>
+                <Candidates />
+              </PrivateRoute>
+            } />
+            <Route path="/candidateDetail" element={
+              <PrivateRoute>
+                <CandidateDetail />
+              </PrivateRoute>
+            } />
+            <Route path="/voters/newvoter" element={
+              <PrivateRoute>
+                <NewVoter />
+              </PrivateRoute>
+            } />
+            <Route path="/candidates/newcandidate" element={
+              <PrivateRoute>
+                <NewCandidate />
+              </PrivateRoute>
+            } />
+            <Route path="/approval" element={
+              <PrivateRoute>
+                <Approval />
+              </PrivateRoute>
+            } />
+
+            {/* <Route path="/blacklist" element={
+              <PrivateRoute>
+                <Blacklist />
+              </PrivateRoute>
+            } /> 
+
+            <Route path="/elections" element={
+              <PrivateRoute>
+                <Election />
+              </PrivateRoute>
+            } />
+            <Route path="/elections/newelection" element={
+              <PrivateRoute>
+                <NewElection />
+              </PrivateRoute>
+            } />
+            <Route path="/results" element={
+              <PrivateRoute>
+                <Result />
+              </PrivateRoute>
+            } /> */}
             <Route
               path="*"
               element={<Navigate to="/" replace />}
             />
+            <Route path="/login" element={token ? <Navigate to="/" replace/> : <Login/>} />
+
           </Routes>
         </div>
       </div>
-    </Router>
-  );
+    </Router >
+  )
+
+  // !loggedIn ? (
+  //   <Router>
+  //     <Routes>
+  //       <Route path="/" exact element={<Login />} />
+  //       <Route
+  //         path="*"
+  //         element={<Navigate to="/" replace />}
+  //       />
+  //     </Routes>
+  //   </Router>
+  // ) : (
+  //   <Router>
+  //     <div class="md:flex bg-[#D3E8E6]/20 h-screen">
+  //       <div class="bg-[#2F313D] text-white md:hidden">
+  //         <button class="p-4">
+  //           <AiOutlineMenu />
+  //         </button>
+  //       </div>
+  //       <div class="w-[25vw] inset-y-0 left-0 absolute transform -translate-x-full md:relative md:translate-x-0 transition duration-200 ease-in-out">
+  //         <Sidebar />
+  //       </div>
+  //       <div class="flex-1 h-screen md:overflow-y-auto">
+  //         <Routes>
+  //           <Route path="/" exact element={<Home />} />
+  //           <Route path="/login" exact element={<Login />} />
+  //           {/* <Route path="/voters" element={<Voters />} />
+  //           <Route path="/voterDetail" element={<VoterDetail />} />
+  //           <Route path="/voters/newvoter" element={<NewVoter />} /> */}
+  //           <Route path="/candidates" element={<Candidates />} />
+  //           <Route path="/approval" element={<Approval />} />
+  //           <Route path="/candidateDetail" element={<CandidateDetail />} />
+  //           {/* <Route path="/candidates/newcandidate" element={<NewCandidate />} /> */}
+  //           {/* <Route path="/elections" element={<Election />} />
+  //           <Route path="/elections/newelection" element={<NewElection />} />
+  //           <Route path="/blacklist" element={<Blacklist />} /> */}
+  //           <Route
+  //             path="*"
+  //             element={<Navigate to="/" replace />}
+  //           />
+  //         </Routes>
+  //       </div>
+  //     </div>
+  //   </Router>
+  // );
 }
 
 export default App;

@@ -6,7 +6,8 @@ const Voter = require('../models/voter')
 const User = require('../models/user')
 const upload = require('../middleware/upload')
 const bcrypt = require('bcryptjs')
-const cors = require('cors')
+const cors = require('cors');
+const Blacklist = require('../models/blacklist');
 
 //get all candidates
 router.get('/', cors(), async (req, res, next) => {
@@ -53,6 +54,21 @@ router.patch("/", cors(), async function (req, res, next) {
       status: !candidate.status,
     });
     res.send(updatedCandidate);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
+router.delete("/:id", cors(), async function (req, res, next) {
+  try {
+    const deletedCandidate = await Candidate.findByIdAndDelete(req.params.id);
+    const blacklist = new Blacklist({
+      userId: deletedCandidate._id,
+      fullName: deletedCandidate.fullName,
+      studId: deletedCandidate.id
+    })
+    const newBlacklist = await blacklist.save()
+    res.send(newBlacklist);
   } catch (error) {
     res.status(400).json({ message: error.message });
   }

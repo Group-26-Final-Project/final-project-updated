@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import UsersTable, { Detail } from "./VotersTable";
 import axios from "axios";
 import { useDispatch, useSelector } from 'react-redux';
@@ -13,10 +13,14 @@ export default function Voters() {
   const dispatch = useDispatch()
   const votersState = useSelector((state) => state.votersState)
   const [searchQuery, setSearchQuery] = useState("");
+  const [error, setError] = useState()
+  // const allVoters = votersState.voters
+  // const filteredVoters = useMemo(() => allVoters.filter(voter => voter.fullName.startsWith(searchQuery)), [allVoters, searchQuery])
 
   const clearSearch = () => {
     setSearchQuery("");
   };
+
 
   const deptTypes = [
     "Biomedical Engineering",
@@ -28,13 +32,11 @@ export default function Voters() {
   ];
 
   useEffect(() => {
-    if (votersState.getVotersStatus === '') {
-      dispatch(getVoters(searchQuery))
-    }
-  }, [dispatch, votersState.getVotersStatus, searchQuery])
-  
+    dispatch(getVoters(searchQuery))
+  }, [dispatch, searchQuery])
+
   const routeChange = () => {
-    let path = window.location.pathname + "/newuser";
+    let path = window.location.pathname + "/newvoter";
     navigate(path);
   };
 
@@ -77,13 +79,13 @@ export default function Voters() {
           />
         </div>
       )}
-      {votersState.getVotersStatus === 'failed' &&  (
+      {votersState.getVotersStatus === 'failed' && (
         <div>
           <h3>Ooops something went wrong</h3>
           <button>Reload</button>
         </div>
       )}
-      {!votersState.getVotersStatus === 'pending' && votersState.voters && (
+      {votersState.getVotersStatus === 'success' && votersState.voters && (
         <div class="w-full py-4 px-4 lg:px-8 rounded-2xl bg-white-700">
           <div class="flex justify-between items-center">
             <div class="p-2 pl-0">

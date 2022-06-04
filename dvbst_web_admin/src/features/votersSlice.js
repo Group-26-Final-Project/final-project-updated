@@ -21,8 +21,7 @@ function timeout(ms) {
 export const getVoters = createAsyncThunk("voters/getVoters", async (query, {
     rejectWithValue }) => {
     try {
-        await timeout(1000)
-        const response = await axios.get(baseURL + "/voters/" + query)
+        const response = await axios.get(baseURL + "/voters?query=" + query)
         return response.data
     } catch (err) {
         return rejectWithValue(err.response.data)
@@ -86,7 +85,7 @@ const votersSlice = createSlice({
         [addVoter.fulfilled]: (state, action) => {
             return {
                 ...state,
-                voter: [...state.voter, action.payload],
+                voters: [...state.voters, action.payload],
                 addVoterStatus: "success"
             }
         },

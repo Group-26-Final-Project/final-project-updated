@@ -32,20 +32,18 @@ export default function Candidates() {
     }
     
     useEffect(() => {
-        if (candidatesState.getCandidatesStatus === '') {
-            dispatch(getCandidates(searchQuery))
-        }
-    }, [dispatch, candidatesState.getCandidatesStatus, searchQuery])
+        dispatch(getCandidates(searchQuery))
+    }, [dispatch, searchQuery])
     
     const columns = React.useMemo(() =>
         [
             {
                 Header: "Name",
-                accessor: "name",
+                accessor: "fullName",
             },
             {
                 Header: "Section",
-                accessor: "sect",
+                accessor: "section",
             },
             {
                 Header: "Year",
@@ -70,7 +68,7 @@ export default function Candidates() {
 
     return (
         <div class="min-h-screen w-full bg-white-800 flex flex-col justify-center items-center py-4 px-4 lg:px-8">
-            {/* {candidatesState.getCandidatesStatus === "pending" && (
+            {candidatesState.getCandidatesStatus === "pending" && (
                 <div>
                     <SpinnerCircularFixed
                         size={50}
@@ -86,8 +84,8 @@ export default function Candidates() {
                     <h3>Ooops something went wrong</h3>
                     <button onClick={() => window.location.reload(false)}>Reload!</button>
                 </div>
-            )} */}
-            {/* {candidatesState.getCandidatesStatus !== "pending" && candidatesState.Candidates && ( */}
+            )}
+            {candidatesState.getCandidatesStatus === "success" && candidatesState.candidates && (
                 < div class="w-full py-4 px-4 lg:px-8 rounded-2xl bg-white-700">
                     <div class="flex justify-between items-center">
                         <div class="p-2 pl-0">
@@ -106,7 +104,7 @@ export default function Candidates() {
                             <button onClick={routeChange}>Add Candidate</button>
                         </div>
                     </div>
-                    <CandidatesTable columns={columns} data={[
+                    {/* <CandidatesTable columns={columns} data={[
                         {
                             "name": "Kaleb Mesfin Kassa",
                             "year": 1,
@@ -114,10 +112,10 @@ export default function Candidates() {
                             "sect": 2,
                             "status": "active"
                         }
-                    ]} />
-                    {/* <CandidatesTable columns={columns} data={candidatesState.Candidates} /> */}
+                    ]} /> */}
+                    <CandidatesTable columns={columns} data={candidatesState.candidates} />
                 </div>
-            {/* )} */}
+            )}
         </div >
     )
 }

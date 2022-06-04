@@ -24,7 +24,7 @@ export const getCandidates = createAsyncThunk("candidates/getCandidates", async 
     rejectWithValue }) => {
     try {
         await timeout(1000)
-        const response = await axios.get(baseURL + "/candidates/" + query)
+        const response = await axios.get(baseURL + "/candidates?query=" + query)
         return response.data
     } catch (err) {
         return rejectWithValue(err.response.data)
@@ -98,7 +98,7 @@ const candidatesSlice = createSlice({
         [addCandidate.fulfilled]: (state, action) => {
             return {
                 ...state,
-                candidate: [...state.candidate, action.payload],
+                candidates: [...state.candidates, action.payload],
                 addCandidateStatus: "success"
             }
         },

@@ -3,11 +3,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { SpinnerCircularFixed } from "spinners-react";
 import { useNavigate } from "react-router";
 import { addCandidate } from '../features/candidatesSlice';
+import { CgDanger } from 'react-icons/cg'
 
 export default function NewCandidate() {
   const dispatch = useDispatch()
   const navigate = useNavigate();
-  const candidateState = useSelector((state) => state.candidateState)
+  const candidateState = useSelector((state) => state.candidatesState)
   const initialValues = {
     name: "",
     fname: "",
@@ -47,14 +48,25 @@ export default function NewCandidate() {
   };
 
   const handleSubmit = async (e) => {
-    await e.preventDefault();
-    setFormErrors(validate(formValues));
+    e.preventDefault();
     setIsLoading(true);
-    if (Object.keys(formErrors).length === 0 && candidateState.addCandidateStatus === 'success') {
-      console.log("inside the if statement");
-      dispatch(addCandidate(formValues))
-      navigate("/candidates");
-      setFormValues(initialValues);
+    const errors = validate(formValues);
+    if (Object.keys(errors).length === 0) {
+      dispatch(addCandidate({
+        ...formValues,
+        role: "candidate"
+      }))
+        .unwrap()
+        .then(() => {
+          navigate('/candidates')
+          setFormValues(initialValues)
+        })
+        .catch((err) => {
+          setIsLoading(false)
+        })
+    } else {
+      setFormErrors(errors);
+      setIsLoading(false)
     }
   };
 
@@ -85,7 +97,6 @@ export default function NewCandidate() {
     const idRegex = new RegExp("^[a-zA-Z]{3}/[0-9]{4}/[0-9]{2}$");
     const emailRegex = new RegExp("^[A-Za-z0-9]{1,64}@(.+)$");
     const phoneRegex = new RegExp("^09[0-9]{8}$");
-    const walletRegex = new RegExp("^0x[a-fA-F0-9]{40}$");
 
     if (!values.name) {
       errors.name = "Name is a Required Field";
@@ -129,10 +140,6 @@ export default function NewCandidate() {
     } else if (!phoneRegex.test(values.phone)) {
       errors.phone = "Invalid Phone Number (eg. 0911123456)";
     }
-    if (values.wallet && !walletRegex.test(values.wallet)) {
-      errors.wallet =
-        "Invalid Wallet Address (0x followed by 40 hexadecimal characters)";
-    }
     if (!values.bio) {
       errors.bio = "Bio is a Required Field";
     }
@@ -145,26 +152,25 @@ export default function NewCandidate() {
   };
 
   return (
-    <div class="min-h-screen w-full bg-white-800 flex flex-row justify-center items-center py-8 px-4 lg:px-8">
+    <div class="min-h-screen w-full bg-white-800 flex flex-col justify-center items-center py-8 px-4 lg:px-8">
       {(candidateState.addCandidateStatus === "pending" || isLoading) && (
         <div class="w-full flex justify-center items-center self-center">
-           <SpinnerCircularFixed
+          <SpinnerCircularFixed
             size={40}
             thickness={100}
             speed={100}
             color="#36ad47"
             secondaryColor="rgba(0, 0, 0, 0.44)"
           />
-          <h2 class="ml-3">Processing Transaction...</h2>
-         
         </div>
       )}
       {candidateState.addCandidateStatus === 'failed' && (
-        <div>
-          <h2>{candidateState.addCandidateError}</h2>
+        <div className="w-[75vh] p-3 flex flex-row justify-center" style={{ backgroundColor: "#ff000033" }}>
+          <CgDanger className="mr-2 flex-2" size={24} color={"#fb1032"} />
+          <h2 className="flex-1" style={{ color: "#fb1032" }}>{candidateState.addCandidateError}</h2>
         </div>
       )}
-      {!candidateState.addCandidateStatus === 'pending' && !candidateState.addCandidateStatus === 'failed' && (
+      {candidateState.addCandidateStatus !== 'pending' && (
         <div class="w-[50vw]">
           <div class="sm:mx-auto sm:w-full sm:max-w-md">
             <h2 class="mt-6 mb-6 text-left text-2xl font-extrabold text-gray-900">
@@ -396,26 +402,6 @@ export default function NewCandidate() {
                 />
                 {/* <p class="text-gray-600 text-xs italic">Make it as long and as crazy as you'd like</p> */}
                 <p class="text-red-500 text-xs italic">{formErrors.phone}</p>
-              </div>
-            </div>
-            <div class="flex flex-wrap -mx-3 mb-3">
-              <div class="w-full md:w-full px-3 mb-6 md:mb-0">
-                <label
-                  class="block tracking-wide text-gray-700 text-xs font-bold mb-2"
-                  for="grid-wallet"
-                >
-                  Wallet Address
-                </label>
-                <input
-                  class="appearance-none block w-full bg-white-200 text-sm text-gray-700 border border-gray-200 rounded py-2 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                  name="wallet"
-                  id="grid-wallet"
-                  type="text"
-                  value={formValues.wallet}
-                  onChange={changeHandler}
-                />
-                {/* <p class="text-gray-600 text-xs italic">Make it as long and as crazy as you'd like</p> */}
-                <p class="text-red-500 text-xs italic">{formErrors.wallet}</p>
               </div>
             </div>
             <div>

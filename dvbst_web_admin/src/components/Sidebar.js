@@ -9,6 +9,7 @@ export default function Sidebar() {
     function changePage(location){
         setStatus(location)
     }
+    
     return (
         // <div className="top-0 left-0 fixed grid grid-cols-1 gap-3 bg-[#2F313D] w-[25vw] h-full p-10 content-center">
         <div className="grid grid-cols-1 gap-3 bg-[#2F313D] h-screen md:p-6 lg:p-10 content-center">
