@@ -9,7 +9,9 @@ import CandidateDetail from './components/CandidateDetail';
 import NewCandidate from './components/NewCandidate';
 // import Election from './components/Elections';
 // import NewElection from './components/NewElection';
-// import Blacklist from './components/Blacklist'
+import Result from './components/Result';
+import ResultDetail from './components/ResultDetail';
+import Blacklist from './components/Blacklist'
 import Sidebar from './components/Sidebar';
 import {
   BrowserRouter as Router,
@@ -21,8 +23,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { loadUser } from './features/authSlice';
 import { AiOutlineMenu } from "react-icons/ai";
 import Approval from './components/Approval';
+import approvalDetail from './components/ApprovalDetail';
 import PrivateRoute from './PrivateRoute';
 import { useEffect, useState } from 'react';
+import ApprovalDetail from './components/ApprovalDetail';
 
 // <Router>
 //   <div class="md:flex bg-[#D3E8E6]/20 h-screen">
@@ -165,33 +169,43 @@ function App() {
                 <Approval />
               </PrivateRoute>
             } />
+            <Route path="/approvalDetail" element={
+              <PrivateRoute>
+                <ApprovalDetail />
+              </PrivateRoute>
+            } />
 
-            {/* <Route path="/blacklist" element={
+            <Route path="/blacklist" element={
               <PrivateRoute>
                 <Blacklist />
               </PrivateRoute>
-            } /> 
+            } />
 
-            <Route path="/elections" element={
+            {/* <Route path="/elections" element={
               <PrivateRoute>
                 <Election />
               </PrivateRoute>
-            } />
-            <Route path="/elections/newelection" element={
+            } /> */}
+            {/* <Route path="/elections/newelection" element={
               <PrivateRoute>
                 <NewElection />
               </PrivateRoute>
-            } />
+            } /> */}
             <Route path="/results" element={
               <PrivateRoute>
                 <Result />
               </PrivateRoute>
-            } /> */}
+            } />
+            <Route path="/resultsDetail" element={
+              <PrivateRoute>
+                <ResultDetail />
+              </PrivateRoute>
+            } />
             <Route
               path="*"
               element={<Navigate to="/" replace />}
             />
-            <Route path="/login" element={token ? <Navigate to="/" replace/> : <Login/>} />
+            <Route path="/login" element={token ? <Navigate to="/" replace /> : <Login />} />
 
           </Routes>
         </div>

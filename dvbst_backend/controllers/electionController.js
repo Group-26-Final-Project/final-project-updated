@@ -18,22 +18,10 @@ const deptTypes = [
 router.get("/", cors(), async (req, res, next) => {
   
   try {
-    let query = {};
-    if (req.query.query) {
-      query.$or = [{ name: { $regex: req.query.query, $options: "i" } }];
-    }
-    var elections = await Election.find(query);
-    res.json({
-      status: "success",
-      code: 200,
-      data: elections,
-    });
+    var elections = await Election.find();
+    return res.json(elections).status(200);
   } catch (e) {
-    res.json({
-      status: "failed",
-      code: 400,
-      message: e,
-    });
+    return res.json(e).status(400)
   }
 });
 

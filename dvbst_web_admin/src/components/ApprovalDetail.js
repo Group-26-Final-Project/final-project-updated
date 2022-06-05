@@ -1,12 +1,16 @@
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { addCandidate } from "../features/candidatesSlice";
+import { addVoter } from "../features/votersSlice";
 
 export default function ApprovalDetail() {
+  const dispatch = useDispatch()
   let location = useLocation();
   let navigate = useNavigate();
-  const candidatesState = useSelector((state) => state.candidatesState)
-  const candidate = candidatesState.candidates.filter((el) => el.id === location.state)
+  const pendingState = useSelector((state) => state.pendingState)
+  const user = pendingState.pendingUsers.filter((el) => el._id === location.state)[0]
+  console.log(user)
 
   const deptTypes = [
     "Biomedical Engineering",
@@ -22,30 +26,35 @@ export default function ApprovalDetail() {
   };
 
   const onApprove = () => {
+    if (user.role === "voter"){
+      dispatch(addVoter(user))
+    } else {
+      dispatch(addCandidate(user))
+    }
   };
 
   // const getProfileUrl = () => {
-  //   if (candidate) {
+  //   if (user) {
   //     console.log("am here in first");
   //     console.log(
-  //       "candidate.id",
-  //       candidate.studentId
+  //       "user.id",
+  //       user.studentId
   //     );
-  //     const id = candidate.studentId.replaceAll(
+  //     const id = user.studentId.replaceAll(
   //       "/",
   //       "_"
   //     );
   //     console.log("id", id);
   //     console.log(
   //       "ppurl: ",
-  //       candidate.candidateProfilePicture
+  //       user.userProfilePicture
   //     );
-  //     if (id === candidate.studentId)
+  //     if (id === user.studentId)
   //       return "https://randomuser.me/api/portraits/women/81.jpg";
 
-  //     if (candidate.candidateProfilePicture.includes(id)) {
+  //     if (user.userProfilePicture.includes(id)) {
   //       console.log("am here in second");
-  //       return `${process.env.REACT_APP_MORALIS_SERVER_URL}/files/${process.env.REACT_APP_MORALIS_APPID}/${candidate.candidateProfilePicture}`;
+  //       return `${process.env.REACT_APP_MORALIS_SERVER_URL}/files/${process.env.REACT_APP_MORALIS_APPID}/${user.userProfilePicture}`;
   //     }
   //   }
   //   return "https://randomuser.me/api/portraits/women/81.jpg";
@@ -64,11 +73,8 @@ export default function ApprovalDetail() {
             </div> */}
           <div>
             <h2 class="my-4 text-xl font-bold text-gray-900">
-              {candidate.fullName}
+              {user.name + " " + user.fname + " " + user.gname}
             </h2>
-          </div>
-          <div class="text-l text-center w-[50vw] font-regular text-gray-900">
-            <p>{candidate.candidateBio}</p>
           </div>
           <div class="w-[50vw] py-2 px-4 lg:px-8">
             <div class="flex flex-row justify-between items-center mb-6 md:mb-1">
@@ -84,11 +90,7 @@ export default function ApprovalDetail() {
                 id="grid-name"
                 name="name"
                 type="text"
-                value={
-                  candidate.fullName.split(
-                    " "
-                  )[0]
-                }
+                value={user.name}
               />
             </div>
             <div class="flex flex-row justify-between items-center mb-6 md:mb-1">
@@ -104,11 +106,7 @@ export default function ApprovalDetail() {
                 id="grid-fname"
                 name="fname"
                 type="text"
-                value={
-                  candidate.fullName.split(
-                    " "
-                  )[1]
-                }
+                value={user.fname}
               />
             </div>
             <div class="flex flex-row justify-between items-center mb-6 md:mb-1">
@@ -124,11 +122,7 @@ export default function ApprovalDetail() {
                 id="grid-gname"
                 name="gname"
                 type="text"
-                value={
-                  candidate.fullName.split(
-                    " "
-                  )[2]
-                }
+                value={user.gname}
               />
             </div>
             <div class="flex flex-row justify-between items-center">
@@ -144,7 +138,7 @@ export default function ApprovalDetail() {
                 id="grid-id"
                 name="id"
                 type="text"
-                value={candidate.studentId}
+                value={user.id}
               />
             </div>
             <div class="flex flex-row justify-between items-center">
@@ -160,7 +154,7 @@ export default function ApprovalDetail() {
                 id="grid-email"
                 name="email"
                 type="text"
-                value={candidate.email}
+                value={user.email}
               />
             </div>
             <div class="flex flex-row justify-between items-center">
@@ -176,7 +170,7 @@ export default function ApprovalDetail() {
                 id="grid-phone"
                 name="phone"
                 type="text"
-                value={candidate.phone}
+                value={user.phone}
               />
             </div>
             <div class="flex flex-row justify-between items-center mb-6 md:mb-1">
@@ -192,7 +186,7 @@ export default function ApprovalDetail() {
                 id="grid-dept"
                 name="dept"
                 type="text"
-                value={deptTypes[candidate.currentDepartment]}
+                value={deptTypes[user.dept]}
               />
             </div>
             <div class="flex flex-row justify-between items-center mb-6 md:mb-1">
@@ -208,7 +202,7 @@ export default function ApprovalDetail() {
                 id="grid-year"
                 name="year"
                 type="text"
-                value={candidate.currentYear}
+                value={user.year}
               />
             </div>
             <div class="flex flex-row justify-between items-center">
@@ -225,19 +219,13 @@ export default function ApprovalDetail() {
                 name="sect"
                 type="text"
                 value={
-                  candidate.currentSection
+                  user.section
                 }
               />
             </div>
           </div>
         </div>
         <div class="flex flex-row justify-end">
-          <div class="bg-white float-right text-[#C70039] border border-[#C70039] text-center py-3 mr-2 px-4 rounded-xl font-body font-light text-sm">
-            <button>Add to Blacklist</button>
-          </div>
-          <div class="bg-[#C70039] float-right text-white border border-white text-center py-3 mr-2 px-4 rounded-xl font-body font-light text-sm">
-            <button>Remove Candidate</button>
-          </div>
           <div class="bg-[#00D05A] float-right text-white border border-white text-center py-3 px-4 mr-10 rounded-xl font-body font-light text-sm">
             <button onClick={onApprove}>Approve</button>
           </div>

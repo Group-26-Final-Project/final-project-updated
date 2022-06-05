@@ -1,8 +1,18 @@
-import React from 'react'
-import ApprovalTable from './ApprovalTable';
-import BlacklistTable, { Detail } from './BlacklistTable'
+import React, { useEffect } from 'react'
+import ApprovalTable, { Detail } from './ApprovalTable';
+import { useDispatch, useSelector } from 'react-redux';
+import { getUsers } from '../features/pendingSlice';
+import { SpinnerCircularFixed } from "spinners-react";
+
 
 export default function Approval() {
+    const dispatch = useDispatch()
+    const pendingState = useSelector((state) => state.pendingState)
+
+    useEffect(() => {
+        dispatch(getUsers())
+    }, [dispatch])
+
     const columns = React.useMemo(() =>
         [
             {
@@ -19,42 +29,47 @@ export default function Approval() {
             },
             {
                 Header: "Date Added",
-                accessor: "date",
+                accessor: "dateAdded",
             },
             {
                 Header: "",
-                accessor: "details",
+                accessor: "_id",
                 Cell: Detail,
             },
         ],
         []);
-    const rowdata = [
-        {
-            name: "Candidate #1",
-            email: "Email #1",
-            role: "candidate",
-            date: "01/01/2022",
-            details: 1,
-        },
-        {
-            name: "Voter #1",
-            email: "Email #2",
-            role: "voter",
-            date: "01/01/2022",
-            details: 2,
-        }
-    ]
+
     return (
         <div class="min-h-screen w-full bg-white-800 flex flex-col justify-center items-center py-4 px-4 lg:px-8">
-            <div class="w-full py-4 px-4 lg:px-8 rounded-2xl bg-white-700">
-                {rowdata.length === 0 ? (
-                    <div>
-                        <p className='text-center text-lg'>No Pending Approvals</p>
-                    </div>
-                ) :
-                    <ApprovalTable columns={columns} data={rowdata} />
-                }
-            </div>
+            {pendingState.getUsersStatus === "pending" && (
+                <div>
+                    <SpinnerCircularFixed
+                        size={50}
+                        thickness={100}
+                        speed={100}
+                        color="#36ad47"
+                        secondaryColor="rgba(0, 0, 0, 0.44)"
+                    />
+                </div>
+            )}
+            {pendingState.getUsersStatus === "failed" && (
+                <div>
+                    <h3>Ooops something went wrong</h3>
+                    <button onClick={() => window.location.reload(false)}>Reload!</button>
+                </div>
+            )}
+            {pendingState.getUsersStatus !== "pending" && pendingState.getUsersStatus !== "failed" && pendingState.pendingUsers && (
+
+                <div class="w-full py-4 px-4 lg:px-8 rounded-2xl bg-white-700">
+                    {pendingState.pendingUsers.length === 0 ? (
+                        <div>
+                            <p className='text-center text-lg'>No Pending Approvals</p>
+                        </div>
+                    ) :
+                        <ApprovalTable columns={columns} data={pendingState.pendingUsers} />
+                    }
+                </div>
+            )}
         </div>
     )
 }

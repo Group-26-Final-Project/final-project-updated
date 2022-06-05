@@ -11,7 +11,7 @@ const initialState = user
 export const register = createAsyncThunk("auth/register", async (newUser,
     rejectWithValue) => {
     try {
-        const response = await axios.post(API_URL + "signup", newUser);
+        const response = await axios.post(API_URL + "/pending", newUser);
         return response.data;
     } catch (error) {
         return rejectWithValue(error.response.data);

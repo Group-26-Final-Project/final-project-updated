@@ -62,6 +62,7 @@ router.patch("/", cors(), async function (req, res, next) {
 router.delete("/:id", cors(), async function (req, res, next) {
   try {
     const deletedCandidate = await Candidate.findByIdAndDelete(req.params.id);
+    await User.remove({userId: req.params.id});
     const blacklist = new Blacklist({
       userId: deletedCandidate._id,
       fullName: deletedCandidate.fullName,

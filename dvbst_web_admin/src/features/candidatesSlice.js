@@ -57,7 +57,7 @@ export const disqualifyCandidate = createAsyncThunk("candidates/disqualifyCandid
     rejectWithValue})=>{
         try{
             await timeout(1000)
-            const response = await axios.delete(baseURL+"/candidates/", id)
+            const response = await axios.delete(baseURL+"/candidates/" + id)
             return response.data
         } catch(err){
             return rejectWithValue(err.response.data)
@@ -133,21 +133,21 @@ const candidatesSlice = createSlice({
         [disqualifyCandidate.pending]: (state, action) => {
             return {
                 ...state,
-                disqualifyCandidateStatus: "pending",
+                disqualifyCandidatesStatus: "pending",
             }
         },
         [disqualifyCandidate.fulfilled]: (state, action) => {
             return {
                 ...state,
                 candidates: state.candidates.filter((el) => el.id !== action.payload._id),
-                disqualifyCandidateStatus: "success"
+                disqualifyCandidatesStatus: "success"
             }
         },
         [disqualifyCandidate.rejected]: (state, action) => {
             return {
                 ...state,
-                disqualifyCandidateStatus: "failed",
-                disqualifyCandidateError: action.payload
+                disqualifyCandidatesStatus: "failed",
+                disqualifyCandidatesError: action.payload
             }
         },
     }

@@ -14,16 +14,18 @@ const candidateRouter = require('./controllers/candidateController');
 const pendingRouter = require('./controllers/pendingController');
 const electionRouter = require('./controllers/electionController');
 const resultRouter = require('./controllers/resultController');
-const verifyRouter = require('./controllers/verificationController');
+const blacklistRouter = require('./controllers/blacklistController');
+// const verifyRouter = require('./controllers/verificationController');
 
 // app.use('/auth', authRouter)
 app.use('/login', authRouter)
+app.use('/blacklist', blacklistRouter)
 app.use('/ideas', ideaRouter)
 app.use('/voters', voterRouter)
 app.use('/candidates', candidateRouter)
 app.use('/pending', pendingRouter)
 app.use('/elections', electionRouter)
 app.use('/results', resultRouter)
-app.use('/verify', verifyRouter)
+// app.use('/verify', verifyRouter)
 
 module.exports = app;

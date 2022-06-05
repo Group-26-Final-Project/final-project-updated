@@ -30,10 +30,10 @@ export default function Candidates() {
         let path = window.location.pathname + '/newcandidate';
         navigate(path);
     }
-    
+
     useEffect(() => {
         dispatch(getCandidates(searchQuery))
-    }, [dispatch, searchQuery])
+    }, [dispatch, searchQuery, candidatesState.disqualifyCandidatesStatus])
     
     const columns = React.useMemo(() =>
         [
