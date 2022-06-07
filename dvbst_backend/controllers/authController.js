@@ -7,69 +7,53 @@ const User = require("../models/user");
 const jwt = require("jsonwebtoken");
 const config = require("../config");
 const bcrypt = require("bcryptjs");
-// const { v4: uuidv4 } = require("uuid");
-// const { send_magic_link } = require("./emailController");
+const { v4: uuidv4 } = require("uuid");
+const { send_magic_link } = require("./emailController");
 var cors = require("cors");
 
 // Login router
-// router.post("/enter", cors(), async (req, res) => {
-//   const { email, link } = req.body;
-//   if (!email)
-//     return res.json({
-//       status: "failed",
-//       code: 404,
-//       message: "User not Found",
-//     });
-//   try {
-//     const user = await User.findOne({ email: email });
-//     if(!user) return res.status(400).json({ ok: false, message: "User not found" });
-//     else if (!link) {
-//       console.log(user);
-//       console.log("No magic");
-//       try {
-//         const user = await User.findOneAndUpdate(
-//           { email: email },
-//           { magicLink: uuidv4(), magicLinkExpired: false },
-//           { returnDocument: "after" }
-//         );
-//         await send_magic_link(email, user.magicLink, "login");
-//         res.send({ ok: true, message: "Hit the link in email to sign in", email:email, link:user.magicLink });
-//       } catch {
-//         res.json({
-//           status: "failed",
-//           code: 500,
-//           message: "Plese try again! Can not Login",
-//         });
-//       }
-//     } else if (user.magicLink == link && !user.magicLinkExpired) {
-//       const token = jwt.sign({ id: user.userId }, config.secret, {
-//         expiresIn: "24h",
-//       });
-//       try {
-//         await User.findOneAndUpdate(
-//           { email: email },
-//           { magicLinkExpired: true }
-//         );
-//         res.json({
-//           status: "success",
-//           code: 200,
-//           data: token,
-//           message: "Login was Successful",
-//         });
-//       } catch {
-//         res.status(500).send('Plese try again , "Can not Login"');
-//       }
-//     } else {
-//       return res.json({
-//         status: "failed",
-//         code: 400,
-//         message: "Magic link expired or incorrect",
-//       });
-//     }
-//   } catch (error) {
-//     res.status(500).send('Plese try again , "Can not Login"');
-//   }
-// });
+router.post("/enter", cors(), async (req, res) => {
+  const { email, link } = req.body;
+  console.log("Enter value", req.body)
+  if (!email)
+    return res.status(404).json("User not Found");
+  try {
+    const user = await User.findOne({ email: email });
+    if (!user) return res.status(400).json({ ok: false, message: "User not found" });
+    else if (!link) {
+      console.log(user);
+      console.log("No magic");
+      try {
+        const user = await User.findOneAndUpdate(
+          { email: email },
+          { magicLink: uuidv4(), magicLinkExpired: false },
+          { returnDocument: "after" }
+        );
+        await send_magic_link(email, user.magicLink, "login");
+        res.send({ ok: true, message: "Hit the link in email to sign in", email: email, link: user.magicLink });
+      } catch {
+        return res.status(500).send('Plese try again , "Can not Login"');
+      }
+    } else if (user.magicLink == link && !user.magicLinkExpired) {
+      const token = jwt.sign({ id: user.userId }, config.secret, {
+        expiresIn: "24h",
+      });
+      try {
+        await User.findOneAndUpdate(
+          { email: email },
+          { magicLinkExpired: true }
+        );
+        return res.status(200).json(token);
+      } catch {
+        return res.status(500).send('Plese try again , "Can not Login"');
+      }
+    } else {
+      return res.status(400).json("Magic link expired or incorrect");
+    }
+  } catch (error) {
+    return res.status(500).send('Plese try again , "Can not Login"');
+  }
+});
 
 // router.post("/", async (req, res) => {
 //   try {

@@ -6,6 +6,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import Login from "./pages/Login";
 import RegistrationPage from "./pages/RegistrationPage";
 import AfterRegistration from "./pages/AfterRegistration";
+import VerifyLogin from "./pages/VerifyLogin";
+import PrivateRoute from "./PrivateRoute"
+import HomeScreen from "./pages/HomeScreen";
+import PublicRoute from "./PublicRoute";
 
 function App() {
   const authState = useSelector((state) => state.authState)
@@ -24,9 +28,30 @@ function App() {
   ) : (
     <Router>
       <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<RegistrationPage />} />
-        <Route path="/after" element={<AfterRegistration />} />
+        <Route path="/" element={
+          <PrivateRoute>
+            <HomeScreen />
+          </PrivateRoute>
+        } />
+        <Route path="/login" element={
+          <PublicRoute>
+            <Login />
+          </PublicRoute>
+        } />
+        <Route path="/signup" element={
+          <PublicRoute>
+            <RegistrationPage />
+          </PublicRoute>
+        } />
+        <Route path="/after" element={
+          <PublicRoute>
+            <AfterRegistration />
+          </PublicRoute>
+        } />
+        {/* <Route path="/login" element={<Login />} /> */}
+        {/* <Route path="/signup" element={<RegistrationPage />} />
+        <Route path="/after" element={<AfterRegistration />} /> */}
+        <Route path="/login/enter/:email/:link" exact element={<VerifyLogin />} />
       </Routes>
     </Router>
   );

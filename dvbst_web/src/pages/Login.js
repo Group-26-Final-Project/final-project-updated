@@ -1,8 +1,9 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { SpinnerCircularFixed } from "spinners-react";
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
-import { login } from '../features/authSlice';
+import { login, loadUser } from '../features/authSlice';
+import { CgDanger } from 'react-icons/cg'
 
 export default function Login() {
     const navigate = useNavigate();
@@ -11,6 +12,7 @@ export default function Login() {
     const [email, setEmail] = useState("")
     const [emailError, setEmailError] = useState("")
     const [isSubmit, setIsSubmit] = useState(false)
+    const authState = useSelector((state) => state.authState)
 
     const changeHandler = (event) => {
         setEmail(event.target.value)
@@ -18,24 +20,52 @@ export default function Login() {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        setEmailError(validate(email))
-        if (!emailError){
-            dispatch(login(email))
-            setEmail("")
-            navigate("/")
+        var error = validate(email);
+        if (!error) {
+            dispatch(login({email}))
+        } else {
+            setEmailError(error);
         }
     }
 
     const validate = (values) => {
-        const errors = {}
-        if (!values.email) {
-            errors.email = "Email is a Required Field"
+        var error = ""
+        if (!values) {
+            error = "Email is a Required Field"
         }
-        return errors
+        return error
     }
+
+    useEffect(()=>{
+        console.log("Here")
+    }, [authState])
 
     return (
         <div class="flex items-center justify-center min-h-screen bg-[#2F313D]">
+            {(authState.loginStatus === "pending" || authState.verifyStatus === "pending") && (
+                <div class="flex items-center justify-center">
+                    <SpinnerCircularFixed
+                        size={50}
+                        thickness={100}
+                        speed={100}
+                        color="#36ad47"
+                        secondaryColor="rgba(0, 0, 0, 0.44)"
+                    />
+                    <p>Please Wait... Verifying your magic link</p>
+                </div>
+            )}
+            {authState.verifyStatus === "failed" && (
+                <div className="w-[52vh] p-3 flex flex-row justify-center" style={{ backgroundColor: "#ff000033" }}>
+                    <CgDanger className="mr-2 flex-2" size={24} color={"#fb1032"} />
+                    <h2 className="flex-1" style={{ color: "#fb1032" }}>Email verification has failed. Try Again!</h2>
+                </div>
+            )}
+            {authState.loginStatus === 'failed' && authState.loginError && (
+                <div className="w-[52vh] p-3 flex flex-row justify-center" style={{ backgroundColor: "#ff000033" }}>
+                    <CgDanger className="mr-2 flex-2" size={24} color={"#fb1032"} />
+                    <h2 className="flex-1" style={{ color: "#fb1032" }}>{authState.loginError}</h2>
+                </div>
+            )}
             <div class="px-12 py-8 mt-4 text-left bg-white shadow-lg  w-[25vw]">
                 <div class="w-[5vw]">
                     <h3 class="text-2xl font-bold text-left">Login</h3>
