@@ -8,6 +8,8 @@ const initialState = {
     pendingUsers: [],
     getUsersStatus: "",
     getUsersError: "",
+    addVoterStatus: "",
+    addVoterError: "",
 }
 
 function timeout(ms) {
@@ -23,6 +25,17 @@ export const getUsers = createAsyncThunk("pending/getUsers", async (query, {
     } catch (err) {
         return rejectWithValue(err.response.data)
     }
+})
+
+export const addVoter = createAsyncThunk("voters/addVoter", async (id, {
+    rejectWithValue})=>{
+        try{
+            await timeout(1000)
+            const response = await axios.delete(baseURL+"/pending/" + id)
+            return response.data
+        } catch(err){
+            return rejectWithValue(err.response.data)
+        }
 })
 
 const pendingSlice = createSlice({
@@ -48,6 +61,26 @@ const pendingSlice = createSlice({
                 ...state,
                 getUsersStatus: "failed",
                 getUsersError: action.payload,
+            }
+        },
+        [addVoter.pending]: (state, action) => {
+            return {
+                ...state,
+                addVoterStatus: "pending",
+            }
+        },
+        [addVoter.fulfilled]: (state, action) => {
+            return {
+                ...state,
+                pendingUsers: [...state.pendingUsers, action.payload],
+                addVoterStatus: "success"
+            }
+        },
+        [addVoter.rejected]: (state, action) => {
+            return {
+                ...state,
+                addVoterStatus: "failed",
+                addVoterError: action.payload
             }
         },
     }

@@ -1,8 +1,8 @@
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
-import { addCandidate } from "../features/candidatesSlice";
-import { addVoter } from "../features/votersSlice";
+// import { addCandidate } from "../features/candidatesSlice";
+import { addVoter } from "../features/pendingSlice";
 
 export default function ApprovalDetail() {
   const dispatch = useDispatch()
@@ -26,11 +26,12 @@ export default function ApprovalDetail() {
   };
 
   const onApprove = () => {
-    if (user.role === "voter"){
-      dispatch(addVoter(user))
-    } else {
-      dispatch(addCandidate(user))
-    }
+    // if (user.role === "voter"){
+      dispatch(addVoter(user._id))
+      navigate('/approval')
+    // } else {
+    //   dispatch(addCandidate(user))
+    // }
   };
 
   // const getProfileUrl = () => {

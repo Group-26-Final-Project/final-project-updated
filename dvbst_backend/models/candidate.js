@@ -17,6 +17,10 @@ const candidateSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    phone: {
+        type: String,
+        required: true,
+    },
     id: {
         type: String,
         required: true,
@@ -35,7 +39,11 @@ const candidateSchema = new mongoose.Schema({
     },
     bio: {
         type: String,
-        required: true,
+        default: ''
+    },
+    plans: {
+        type: String,
+        default: '',
     },
     profile: {
         type: String,
@@ -46,13 +54,18 @@ const candidateSchema = new mongoose.Schema({
         required: false,
         default: '',
     },
+    completed: {
+        type: Boolean,
+        required: true,
+        default: false,
+    },
     voteCount: {
         type: Number,
         required: true,
         default: 0
     },
     fullName: {
-        type: String, 
+        type: String,
         require: true
     },
     status: {
@@ -60,6 +73,13 @@ const candidateSchema = new mongoose.Schema({
         require: true,
         default: true
     }
+})
+
+candidateSchema.path('plans').required(function () {
+    return this.completed
+})
+candidateSchema.path('bio').required(function () {
+    return this.completed
 })
 
 module.exports = mongoose.model('Candidate', candidateSchema)

@@ -1,23 +1,37 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios'
 
-const baseURL = "https://1d10-197-156-103-47.eu.ngrok.io"
+const baseURL = "http://localhost:8080"
 
 const initialState = {
     user: null,
-    addUserStatus: "",
-    addUserError: ""
+    getUserStatus: "",
+    getUserError: "",
+    editUserStatus: "",
+    editUserError: "",
 }
 
 function timeout(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-export const addUser = createAsyncThunk("user/addUser", async (user, {
+export const getUser = createAsyncThunk("user/getUser", async (id, {
     rejectWithValue})=>{
         try{
             await timeout(1000)
-            const response = await axios.post(baseURL+"/users", user)
+            const response = await axios.get(baseURL+"/user/" + id)
+            return response.data
+        } catch(err){
+            return rejectWithValue(err.response.data)
+        }
+})
+
+export const editUser = createAsyncThunk("user/editUser", async ({id, user}, {
+    rejectWithValue})=>{
+        try{
+            await timeout(1000)
+            console.log("Here", id, user)
+            const response = await axios.patch(baseURL+"/candidates/complete/" + id, user)
             return response.data
         } catch(err){
             return rejectWithValue(err.response.data)
@@ -25,28 +39,48 @@ export const addUser = createAsyncThunk("user/addUser", async (user, {
 })
 
 const userSlice = createSlice({
-    name: "users",
+    name: "user",
     initialState,
     reducers: {},
     extraReducers: {
-        [addUser.pending]: (state, action) => {
+        [getUser.pending]: (state, action) => {
             return {
                 ...state,
-                addIdeasStatus: "pending",
+                getUserStatus: "pending",
             }
         },
-        [addUser.fulfilled]: (state, action) => {
+        [getUser.fulfilled]: (state, action) => {
             return {
                 ...state,
                 user: action.payload,
-                addUserStatus: "success"
+                getUserStatus: "success"
             }
         },
-        [addUser.rejected]: (state, action) => {
+        [getUser.rejected]: (state, action) => {
             return {
                 ...state,
-                addUserStatus: "failed",
-                addUserError: action.payload
+                getUserStatus: "failed",
+                getUserError: action.payload
+            }
+        },
+        [editUser.pending]: (state, action) => {
+            return {
+                ...state,
+                editUserStatus: "pending",
+            }
+        },
+        [editUser.fulfilled]: (state, action) => {
+            return {
+                ...state,
+                user: action.payload,
+                editUserStatus: "success"
+            }
+        },
+        [editUser.rejected]: (state, action) => {
+            return {
+                ...state,
+                editUserStatus: "failed",
+                editUserError: action.payload
             }
         },
     }

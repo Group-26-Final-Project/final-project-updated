@@ -52,7 +52,13 @@ export default function Result() {
             )}
             {electionState.getElectionsStatus !== "pending" && electionState.getElectionsStatus !== "failed" && electionState.elections && (
                 < div class="w-full py-4 px-4 lg:px-8 rounded-2xl bg-white-700">
-                    <ElectionTable columns={columns} data={electionState.elections} />
+                    {electionState.elections.length === 0 ? (
+                        <div>
+                            <p className='text-center text-lg'>No Elections</p>
+                        </div>
+                    ) :
+                        <ElectionTable columns={columns} data={electionState.elections} />
+                    }
                 </div>
             )}
         </div>

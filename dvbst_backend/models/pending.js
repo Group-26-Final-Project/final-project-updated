@@ -17,6 +17,10 @@ const pendingSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    phone: {
+        type: String,
+        required: true,
+    },
     id: {
         type: String,
         required: true,
@@ -36,10 +40,6 @@ const pendingSchema = new mongoose.Schema({
     fullName: {
         type: String, 
         require: true
-    }, 
-    role: {
-        type: String,
-        required: true
     }
 })
 

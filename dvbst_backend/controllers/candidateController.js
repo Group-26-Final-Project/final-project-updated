@@ -47,6 +47,7 @@ router.get("/:id", cors(), async (req, res, next) => {
   }
 });
 
+//disqualify
 router.patch("/", cors(), async function (req, res, next) {
   const candidate = await Candidate.findOne({ email: req.body.email });
   try {
@@ -54,6 +55,22 @@ router.patch("/", cors(), async function (req, res, next) {
       status: !candidate.status,
     });
     res.send(updatedCandidate);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
+//complete profile
+router.patch("/complete/:id", cors(), async function (req, res, next) {
+  console.log("Got here", req.body)
+  try {
+    const updatedCandidate = await Candidate.findByIdAndUpdate(req.params.id, {
+      completed: true,
+      bio: req.body.bio,
+      plans: req.body.plans,
+      profile: req.file ? req.file.path.substring(8) : ""
+    });
+    return res.send(updatedCandidate).status(200);
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
@@ -86,16 +103,13 @@ router.post(
       gname: req.body.gname,
       fullName: req.body.name + " " + req.body.fname + " " + req.body.gname,
       email: req.body.email,
+      phone: req.body.phone,
       id: req.body.id,
       dept: req.body.dept,
       section: req.body.section,
       year: req.body.year,
-      wallet: req.body.wallet,
-      bio: req.body.bio,
     });
-    if (req.file) {
-      candidate.profile = req.file.path.substring(8);
-    }
+    
     try {
       var check = await User.findOne({ email: req.body.email });
       if (check) {
@@ -120,12 +134,7 @@ router.post(
       user.password = await bcrypt.hash("password", salt);
       await user.save();
 
-      res.json({
-        status: "success",
-        code: 201,
-        message: "Candidate Added",
-        data: newCandidate,
-      });
+      res.json(newCandidate).status(201)
     } catch (err) {
       res.status(400).json({ message: err.message });
     }

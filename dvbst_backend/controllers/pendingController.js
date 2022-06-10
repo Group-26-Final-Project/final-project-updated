@@ -32,8 +32,7 @@ router.post("/", async function (req, res, next) {
     id: req.body.id,
     dept: req.body.dept,
     section: req.body.section,
-    year: req.body.year,
-    role: req.body.role
+    year: req.body.year
   });
   try {
     var check = await User.findOne({ email: req.body.email });
@@ -42,7 +41,7 @@ router.post("/", async function (req, res, next) {
     }
     check = await Pending.findOne({ email: req.body.email, id: req.body.id });
     if (check) {
-      return res.status(404).send("User Already Exists!");
+      return res.status(404).send("User already in the pending list!");
     }
     check = await Voter.findOne({ id: req.body.id });
     if (check) {
@@ -54,12 +53,7 @@ router.post("/", async function (req, res, next) {
     }
 
     const newPending = await pending.save();
-    res.json({
-      status: "success",
-      code: 201,
-      message: "User added to Pending State",
-      data: newPending,
-    });
+    return res.json(newPending).status(201)
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
@@ -91,35 +85,29 @@ router.delete('/:id', async (req, res, next) => {
     if (!approvedUser) {
       return res.status(400).json({ message: "User doesn't exist!" });
     }
-    if (approvedUser.role === "voter") {
-      const voter = new Voter(approvedUser)
-      const newVoter = await voter.save()
-      const salt = await bcrypt.genSalt(10);
-      const user = new User({
-        userId: newVoter._id,
-        email: newVoter.email,
-        role: "voter",
-      });
-      user.password = await bcrypt.hash("password", salt);
-      await user.save();
-      return res.status(201).json(newVoter);
-    } else {
-      const candidate = new Candidate({
-        ...approvedUser,
-        bio: req.body.bio,
-        profile: req.body.profile
-      })
-      const newCandidate = await candidate.save()
-      const salt = await bcrypt.genSalt(10);
-      const user = new User({
-        userId: newVoter._id,
-        email: newVoter.email,
-        role: "candidate",
-      });
-      user.password = await bcrypt.hash("password", salt);
-      await user.save();
-      return res.status(201).json(newVoter);
-    }
+    const voter = new Voter({
+      name: approvedUser.name,
+      fname: approvedUser.fname,
+      gname: approvedUser.gname,
+      email: approvedUser.email,
+      phone: approvedUser.phone,
+      id: approvedUser.id,
+      dept: approvedUser.dept,
+      year: approvedUser.year,
+      section: approvedUser.section,
+      fullName: approvedUser.name + " " + approvedUser.fname + " " + approvedUser.gname
+    })
+    const newVoter = await voter.save()
+    const salt = await bcrypt.genSalt(10);
+    const user = new User({
+      userId: newVoter._id,
+      email: newVoter.email,
+      role: "voter",
+    });
+    user.password = await bcrypt.hash("password", salt);
+    await user.save();
+    return res.status(201).json(newVoter);
+
   } catch (error) {
     res.status(400).json({ message: error.message });
   }

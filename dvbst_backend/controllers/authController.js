@@ -14,12 +14,12 @@ var cors = require("cors");
 // Login router
 router.post("/enter", cors(), async (req, res) => {
   const { email, link } = req.body;
-  console.log("Enter value", req.body)
+  console.log("Enter value", email, link)
   if (!email)
-    return res.status(404).json("User not Found");
+    return res.status(404).json("Email is required field!");
   try {
     const user = await User.findOne({ email: email });
-    if (!user) return res.status(400).json({ ok: false, message: "User not found" });
+    if (!user) return res.status(400).json("User not found");
     else if (!link) {
       console.log(user);
       console.log("No magic");

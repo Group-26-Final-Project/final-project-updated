@@ -9,7 +9,7 @@ const API_URL = 'http://localhost:8080';
 //     : { isLoggedIn: false, user: null };
 const initialState = {
     token: localStorage.getItem("token"),
-    id: "",
+    id: localStorage.getItem("token") ? jwtDecode(localStorage.getItem("token")).id : "",
     loginStatus: "",
     loginError: "",
     registerStatus: "",
@@ -22,7 +22,7 @@ const initialState = {
 export const register = createAsyncThunk("auth/register", async (newUser,
     rejectWithValue) => {
     try {
-        const response = await axios.post(API_URL + "/pending", newUser);
+        const response = await axios.post(API_URL + "/pending", newUser); 
         return response.data;
     } catch (error) {
         return rejectWithValue(error.response.data);
@@ -33,7 +33,7 @@ export const login = createAsyncThunk("auth/login", async ({ email, link }, {
     rejectWithValue }) => {
     try {
         console.log("Email", email, link)
-        const response = await axios.post(API_URL + "/login/enter", {email, link});
+        const response = await axios.post(API_URL + "/login/enter", { email, link });
         return response.data
     } catch (error) {
         return rejectWithValue(error.response.data);
@@ -55,7 +55,7 @@ export const verify = createAsyncThunk("auth/verify", async ({ email, link }, {
 });
 
 export const logout = createAsyncThunk("auth/logout", async () => {
-    localStorage.removeItem("user");
+    localStorage.removeItem("token");
 });
 
 const authSlice = createSlice({
@@ -131,15 +131,14 @@ const authSlice = createSlice({
             }
         },
         [verify.fulfilled]: (state, action) => {
-            if (action.payload) {
-                const user = jwtDecode(action.payload);
-                return {
-                    ...state,
-                    token: action.payload,
-                    id: user.id,
-                    verifyStatus: "success",
-                };
-            } else return state;
+            const user = jwtDecode(action.payload);
+            console.log(user)
+            return {
+                ...state,
+                token: action.payload,
+                id: user.id,
+                verifyStatus: "success",
+            };
         },
         [verify.rejected]: (state, action) => {
             return {

@@ -19,33 +19,33 @@ export default function NewCandidate() {
     email: "",
     id: "",
     phone: "",
-    bio: "",
-    plans: "",
-    profile: null,
+    // bio: "",
+    // plans: "",
+    // profile: null,
   };
   const [formValues, setFormValues] = useState(initialValues);
   const [formErrors, setFormErrors] = useState({});
-  const [isFilePicked, setIsFilePicked] = useState(false);
+  // const [isFilePicked, setIsFilePicked] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedFile, setSelectedFile] = useState(null);
+  // const [selectedFile, setSelectedFile] = useState(null);
   // const [IPFSURL, setIPFSURL] = useState("");
 
-  const isValidFileUploaded = (file) => {
-    const validExtensions = ["png", "jpeg", "jpg"];
-    const fileExtension = file.type.split("/")[1];
-    return validExtensions.includes(fileExtension);
-  };
+  // const isValidFileUploaded = (file) => {
+  //   const validExtensions = ["png", "jpeg", "jpg"];
+  //   const fileExtension = file.type.split("/")[1];
+  //   return validExtensions.includes(fileExtension);
+  // };
 
   const changeHandler = (event) => {
     const { name, value } = event.target;
     setFormValues({ ...formValues, [name]: value });
   };
 
-  const picHandler = (event) => {
-    setFormValues({ ...formValues, profile: event.target.files[0] });
-    setIsFilePicked(true);
-    setSelectedFile(event.target.files[0]);
-  };
+  // const picHandler = (event) => {
+  //   setFormValues({ ...formValues, profile: event.target.files[0] });
+  //   setIsFilePicked(true);
+  //   setSelectedFile(event.target.files[0]);
+  // };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -140,14 +140,14 @@ export default function NewCandidate() {
     } else if (!phoneRegex.test(values.phone)) {
       errors.phone = "Invalid Phone Number (eg. 0911123456)";
     }
-    if (!values.bio) {
-      errors.bio = "Bio is a Required Field";
-    }
-    if (values.profile && !isValidFileUploaded(values.profile)) {
-      errors.profile = "Invalid Image Type (only png, jpg, jpeg allowed)";
-    } else if (values.profile && values.profile.size > 1024000) {
-      errors.profile = "Image size should be less than 1MB";
-    }
+    // if (!values.bio) {
+    //   errors.bio = "Bio is a Required Field";
+    // }
+    // if (values.profile && !isValidFileUploaded(values.profile)) {
+    //   errors.profile = "Invalid Image Type (only png, jpg, jpeg allowed)";
+    // } else if (values.profile && values.profile.size > 1024000) {
+    //   errors.profile = "Image size should be less than 1MB";
+    // }
     return errors;
   };
 
@@ -404,7 +404,7 @@ export default function NewCandidate() {
                 <p class="text-red-500 text-xs italic">{formErrors.phone}</p>
               </div>
             </div>
-            <div>
+            {/* <div>
               <hr />
               <div class="flex flex-wrap -mx-3 mb-3">
                 <div class="w-full md:w-full px-3 mb-6 md:mb-0">
@@ -442,7 +442,7 @@ export default function NewCandidate() {
                 />
                 <p class="text-red-500 text-xs italic">{formErrors.profile}</p>
               </div>
-            </div>
+            </div> */}
 
             <div>
               <button

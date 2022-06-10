@@ -23,10 +23,10 @@ export default function Approval() {
                 Header: "Email",
                 accessor: "email",
             },
-            {
-                Header: "User Type",
-                accessor: "role",
-            },
+            // {
+            //     Header: "User Type",
+            //     accessor: "role",
+            // },
             {
                 Header: "Date Added",
                 accessor: "dateAdded",

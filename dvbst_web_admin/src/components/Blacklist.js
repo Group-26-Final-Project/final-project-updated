@@ -53,7 +53,13 @@ export default function Blacklist() {
             )}
             {blacklistState.getCandidatesStatus !== "pending" && blacklistState.getCandidatesStatus !== "failed" && blacklistState.candidates && (
                 <div class="w-full py-4 px-4 lg:px-8 rounded-2xl bg-white-700">
-                    <BlacklistTable columns={columns} data={blacklistState.candidates} />
+                    {blacklistState.candidates.length === 0 ? (
+                        <div>
+                            <p className='text-center text-lg'>No candidates in Blacklist</p>
+                        </div>
+                    ) :
+                        <BlacklistTable columns={columns} data={blacklistState.candidates} />
+                    }
                 </div>
             )}
         </div>
