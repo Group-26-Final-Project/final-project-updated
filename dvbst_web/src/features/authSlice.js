@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from 'axios';
 import jwtDecode from "jwt-decode";
 
-const API_URL = 'http://localhost:8080';
+const API_URL = 'https://final-project-dvbst.herokuapp.com';
 
 // const initialState = user
 //     ? { isLoggedIn: true, user }

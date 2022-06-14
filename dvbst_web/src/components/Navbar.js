@@ -1,10 +1,10 @@
 import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
+// import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 
-import { Avatar, Container, Grid, Button, makeStyles } from '@material-ui/core';
+import { Container, Grid, makeStyles } from '@material-ui/core';
 import * as React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import NavbarDropdown from './NavbarDropdown';
 
 

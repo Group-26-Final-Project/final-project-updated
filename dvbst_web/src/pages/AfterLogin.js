@@ -1,16 +1,8 @@
-import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom';
+import React from 'react'
 import { CgDanger } from 'react-icons/cg'
 
 
 export default function AfterRegistration() {
-    const navigate = useNavigate()
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        navigate('/login')
-    };
-
     return (
         <div class="flex items-center justify-center min-h-screen bg-[#F6FAFA]">
             <div class="px-5 py-8 mt-4 text-left bg-white shadow-lg  w-[30vw]">

@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux'
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { SpinnerCircularFixed } from "spinners-react";
 import { verify } from "../features/authSlice";
 import { CgDanger } from 'react-icons/cg'
@@ -10,20 +10,19 @@ export default function VerifyLogin(props) {
     const dispatch = useDispatch()
     let params = useParams();
     console.log("params", params)
-    let navigate = useNavigate();
     const authState = useSelector((state) => state.authState)
 
     useEffect(() => {
         if (params.link) {
             dispatch(verify(params))
-                // .unwrap()
-                // .then((response) => {
-                //     setTimeout(function () {
-                //         window.close();
-                //     }, 10000);
-                // })
+                .unwrap()
+                .then((response) => {
+                    setTimeout(function () {
+                        window.close();
+                    }, 10000);
+                })
         }
-    }, [dispatch]);
+    }, [dispatch, params]);
 
     return (
         <div class="flex items-center justify-center min-h-screen bg-[#F6FAFA]">

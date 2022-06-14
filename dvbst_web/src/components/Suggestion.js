@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { Button, Typography, TextField, Grid } from '@material-ui/core'
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom'
+// import { useNavigate } from 'react-router-dom'
 import { addIdeas } from '../features/ideasSlice';
 
 export default function Suggestion() {
-    const navigate = useNavigate()
+    // const navigate = useNavigate()
     const dispatch = useDispatch()
-    const ideasState = useSelector((state) => state.ideasState)
+    // const ideasState = useSelector((state) => state.ideasState)
     const authState = useSelector((state) => state.authState)
 
     const initialValues = {

@@ -1,7 +1,7 @@
 // import { makeStyles } from "@material-ui/core";
 // import { purple } from "@material-ui/core/colors";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import Login from "./pages/Login";
 import Profile from "./pages/Profile";
@@ -18,7 +18,6 @@ import { getUser } from "./features/userSlice";
 function App() {
   const dispatch = useDispatch()
   const authState = useSelector((state) => state.authState)
-  const userState = useSelector((state) => state.userState)
 
   console.log("Here")
   React.useEffect(() => {

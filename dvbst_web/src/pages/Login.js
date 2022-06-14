@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { SpinnerCircularFixed } from "spinners-react";
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
-import { login, loadUser } from '../features/authSlice';
+import { login } from '../features/authSlice';
 import { CgDanger } from 'react-icons/cg'
 
 export default function Login() {
@@ -11,7 +11,6 @@ export default function Login() {
 
     const [email, setEmail] = useState("")
     const [emailError, setEmailError] = useState("")
-    const [isSubmit, setIsSubmit] = useState(false)
     const authState = useSelector((state) => state.authState)
 
     const changeHandler = (event) => {

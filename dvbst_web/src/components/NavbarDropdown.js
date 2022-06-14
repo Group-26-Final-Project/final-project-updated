@@ -1,15 +1,12 @@
 import * as React from 'react';
 import { Avatar } from '@material-ui/core'
-import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { logoutUser } from '../features/authSlice';
-import { getUser } from '../features/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 export default function NavbarDropdown() {
-    const { id } = useSelector((state) => state.authState)
     const userState = useSelector((state) => state.userState)
 
     const dispatch = useDispatch()

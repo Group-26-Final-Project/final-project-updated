@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios'
 
-const baseURL = "https://1d10-197-156-103-47.eu.ngrok.io"
+const baseURL = "https://final-project-dvbst.herokuapp.com"
 
 
 const initialState = {
