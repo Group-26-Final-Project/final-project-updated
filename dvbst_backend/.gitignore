@@ -60,6 +60,9 @@ web_modules/
 
 # dotenv environment variable files
 .env
+config.js
+dbconnecction.js
+Procfile
 .env.development.local
 .env.test.local
 .env.production.local

@@ -8,38 +8,44 @@ import { CgDanger } from 'react-icons/cg'
 export default function Login() {
     const navigate = useNavigate();
     const dispatch = useDispatch()
-
-    const [email, setEmail] = useState("")
-    const [emailError, setEmailError] = useState("")
     const authState = useSelector((state) => state.authState)
 
+    const initialValues = { email: "", password: "" }
+
+    const [formValues, setFormValues] = useState(initialValues)
+    const [formErrors, setFormErrors] = useState({})
+
     const changeHandler = (event) => {
-        setEmail(event.target.value)
+        const { name, value } = event.target;
+        setFormValues({ ...formValues, [name]: value })
     };
 
     const handleSubmit = async (e) => {
-        e.preventDefault()
-        var error = validate(email);
-        if (!error) {
-            dispatch(login({ email }))
+        e.preventDefault();
+        const errors = validate(formValues);
+        if (Object.keys(formErrors).length === 0) {
+            dispatch(login(formValues))
                 .unwrap()
                 .then((response) => {
-                    navigate('/verify')
-                })
-                .catch((err) => {
-                    setEmail(email)
+                    navigate('/')
+                    window.location.reload()
+                    setFormValues(initialValues)
                 })
         } else {
-            setEmailError(error);
+            setFormErrors(errors);
         }
     }
 
     const validate = (values) => {
-        var error = ""
-        if (!values) {
-            error = "Email is a Required Field"
+        const errors = {}
+
+        if (!values.email) {
+            errors.email = "Email is a Required Field"
         }
-        return error
+        if (!values.password) {
+            errors.password = "Password is a Required Field"
+        }
+        return errors
     }
 
     return (
@@ -73,7 +79,13 @@ export default function Login() {
                                 <label class="block" for="email">Email</label>
                                 <input type="text" name="email" onChange={changeHandler}
                                     class="w-full px-2 py-1 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600" />
-                                <p class="text-red-500 text-xs italic">{emailError}</p>
+                                <p class="text-red-500 text-xs italic">{formErrors.email}</p>
+                            </div>
+                            <div class="mt-4">
+                                <label class="block" for="password">Password</label>
+                                <input type="password" name="password" onChange={changeHandler}
+                                    class="w-full px-2 py-1 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600" />
+                                <p class="text-red-500 text-xs italic">{formErrors.password}</p>
                             </div>
                             <div class="flex items-baseline justify-center">
                                 <button class="px-6 py-2 mt-4 text-white bg-[#00D05A] rounded-lg hover:bg-blue-900">Login</button>
