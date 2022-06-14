@@ -1,8 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { useFonts } from 'expo-font';
 import AppLoading from 'expo-app-loading';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
-import OtpInputs from 'react-native-otp-inputs';
+import { StyleSheet, Text, View, TouchableOpacity, Pressable } from 'react-native';
+import { TextInput } from 'react-native-gesture-handler';
+import { verify } from '../features/authSlice';
+import { useDispatch } from 'react-redux';
 
 const customFonts = {
     poppinsRegular: require('../assets/fonts/Poppins-Regular.ttf'),
@@ -10,34 +12,76 @@ const customFonts = {
     poppinsSemi: require('../assets/fonts/Poppins-SemiBold.ttf'),
 }
 
-export default OTPBody = (props) => {
+export default OTPBody = ({ email, setOtpReady, otp, setOtp, maxLength }) => {
+    const dispatch = useDispatch()
+    const codeDigitsArray = new Array(maxLength).fill(0)
+    const textInputRef = useRef(null)
     const [isLoaded] = useFonts(customFonts);
-    const [otp, setOtp] = useState('')
+    const [isFocused, setIsFocused] = useState(false)
 
-    const handleChange = (text) => {
-        setOtp(text)
+    const toCodeDigitInput = (_value, index) => {
+        const emptyInputChar = " "
+        const digit = otp[index] || emptyInputChar
+
+        const isCurrentDigit = index === otp.length;
+        const isLastDigit = index === maxLength - 1;
+        const isCodeFull = otp.length === maxLength;
+
+        const isDigitFocused = isCurrentDigit || (isLastDigit && isCodeFull)
+
+        return (
+            <View style={(isFocused && isDigitFocused) ? styles.otpInputFocus : styles.otpInput} key={index}>
+                <Text style={styles.otpInputText}>{digit}</Text>
+            </View>
+        )
     }
 
-    const handleSubmit = () => {
-        console.log(otp)        
+    const handlePress = () => {
+        setIsFocused(true)
+        textInputRef?.current?.focus();
     }
+
+    const handleOnBlur = () => {
+        setIsFocused(false)
+
+    }
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (otp.length === maxLength) {
+            dispatch(verify({email,otp}))
+        } else {
+            setFormErrors(errors);
+        }
+    }
+
+    // useEffect(() => {
+    //     setOtpReady(otp.length === maxLength)
+    //     return () => setOtpReady(false)
+    // }, [otp])
 
     if (!isLoaded) {
         return <AppLoading />;
     } else {
         return (
             <View>
-                <Text>{otp}</Text>
                 <View style={styles.container}>
-                    <OtpInputs
-                        autofillFromClipboard={false}
-                        numberOfInputs={6}
-                        blurOnSubmit={true}
-                        keyboardType={'ascii-capable'}
-                        style={styles.otp}
-                        inputStyles={styles.inputOtp}
-                        handleChange={handleChange}
-                    />
+                    <View style={styles.otp}>
+                        <Pressable onPress={handlePress} style={styles.otpInputContainer}>
+                            {codeDigitsArray.map(toCodeDigitInput)}
+                        </Pressable>
+                    </View>
+                    <TextInput
+                        ref={textInputRef}
+                        value={otp}
+                        onChangeText={setOtp}
+                        maxLength={maxLength}
+                        keyboardType="number-pad"
+                        returnKeyType='done'
+                        textContentType='oneTimeCode'
+                        onBlur={handleOnBlur}
+                        style={styles.hiddenOtpInput} />
+
                 </View>
                 <View style={styles.container}>
                     <View>
@@ -45,12 +89,12 @@ export default OTPBody = (props) => {
                         <Text style={styles.resend}>Resend OTP</Text>
                     </View>
                     <View>
-                        <TouchableOpacity style={styles.button}>
-                            <Text style={styles.buttonText} onPress={handleSubmit}>Submit</Text>
+                        <TouchableOpacity onPress={handleSubmit} style={styles.button}>
+                            <Text style={styles.buttonText}>Submit</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
-            </View>
+            </View >
 
         );
     }
@@ -58,6 +102,7 @@ export default OTPBody = (props) => {
 
 const styles = StyleSheet.create({
     container: {
+        flexDirection: 'column',
         paddingHorizontal: 10,
         paddingTop: 40,
         backgroundColor: '#fff',
@@ -66,15 +111,39 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         backgroundColor: "#fff",
         justifyContent: 'center',
+        alignItems: 'center',
     },
-    inputOtp: {
+    otpInputContainer: {
+        width: '100%',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
+    otpInput: {
+        minWidth: '15%',
         borderRadius: 10,
         padding: 12,
-        margin: 6,
-        color: "#000",
-        fontSize: 24,
-        textAlign: 'center',
         backgroundColor: '#00D05A20'
+    },
+    otpInputFocus: {
+        minWidth: '15%',
+        borderColor: '#000',
+        backgroundColor: '#00D05A20',
+        borderWidth: 1,
+        borderRadius: 10,
+        padding: 12
+    },
+    hiddenOtpInput: {
+        position: 'absolute',
+        width: 1,
+        height: 1,
+        opacity: 0,
+    },
+    otpInputText: {
+        //text
+        fontSize: 16,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        color: '#000',
     },
     quest: {
         fontFamily: 'poppinsThin',
@@ -99,9 +168,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     buttonText: {
-        color: 'white', 
-        fontSize: 18, 
-        letterSpacing: 1, 
+        color: 'white',
+        fontSize: 18,
+        letterSpacing: 1,
         fontFamily: 'poppinsRegular'
     }
 })

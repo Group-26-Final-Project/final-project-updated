@@ -1,0 +1,14 @@
+[
+    {
+        "relation": [
+            "delegate_permission/common.handle_all_urls"
+        ],
+        "target": {
+            "namespace": "android_app",
+            "package_name": "dvbst.mobile",
+            "sha256_cert_fingerprints": [
+                "B98B854F6C3CB84EA353AC19769A42472711D8DB1CD03A26F6EA5FE3FD79FE58"
+            ]
+        }
+    }
+]
