@@ -1,34 +1,23 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, SafeAreaView } from 'react-native';
 import MainContainer from './navigation/MainContainer';
-import AuthContainer from './navigation/AuthContainer';
-import { Provider, useSelector } from 'react-redux';
-import { store } from './app/store';
-import { AsyncStorage } from '@react-native-async-storage/async-storage';
-// const token = await AsyncStorage.getItem("token")
-import deviceStorage from './services/deviceStorage';
-import { useEffect } from 'react';
+import { Provider } from 'react-redux'
+import { store } from './app/store'
+import RegisterScreen from './screens/RegisterScreen';
+import LoginScreen from './screens/LoginScreen';
+import HomeScreen from './screens/HomeScreen';
 
-export default function AppWrapper() {
+export default function App() {
   return (
     <Provider store={store}>
-      <App />
+      <SafeAreaView style={styles.container}>
+        {/* <HomeScreen/> */}
+        {/* <LoginScreen/> */}
+        <RegisterScreen/>
+        {/* <MainContainer /> */}
+        <StatusBar style='auto' />
+      </SafeAreaView>
     </Provider>
-  )
-}
-
-const App = () => {
-  const authState = useSelector((state) => state.authState)
-  console.log(authState)
-  // useEffect(() => {
-  //   deviceStorage.getItem()
-  // })
-  return (
-    <SafeAreaView  style={styles.container}>
-      {/* <MainContainer/> */}
-      {authState.token ? <MainContainer/> : <AuthContainer/>}
-      <StatusBar style='auto' />
-    </SafeAreaView>
   );
 }
 

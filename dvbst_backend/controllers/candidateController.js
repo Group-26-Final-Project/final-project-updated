@@ -6,11 +6,8 @@ const Voter = require('../models/voter')
 const User = require('../models/user')
 const upload = require('../middleware/upload')
 const bcrypt = require('bcryptjs')
-var generator = require('generate-password');
 const cors = require('cors');
 const Blacklist = require('../models/blacklist');
-const { send_password } = require("./emailController");
-
 
 //get all candidates
 router.get('/', cors(), async (req, res, next) => {
@@ -131,18 +128,12 @@ router.post(
       const salt = await bcrypt.genSalt(10);
       const user = new User({
         userId: newCandidate._id,
-        phone: newCandidate.phone,
         email: newCandidate.email,
         role: "candidate",
       });
-      var password = generator.generate({
-        length: 8,
-        numbers: true,
-        excludeSimilarCharacters: true
-      });
-      user.password = await bcrypt.hash(password, salt);
+      user.password = await bcrypt.hash("password", salt);
       await user.save();
-      await send_password(user.email, password);
+
       res.json(newCandidate).status(201)
     } catch (err) {
       res.status(400).json({ message: err.message });

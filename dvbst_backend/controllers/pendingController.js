@@ -5,8 +5,6 @@ const Pending = require("../models/pending");
 const Candidate = require("../models/candidate");
 const User = require("../models/user");
 const bcrypt = require("bcryptjs");
-var generator = require('generate-password');
-const { send_password } = require("./emailController");
 var cors = require("cors");
 
 //get all users waiting for approval
@@ -104,17 +102,10 @@ router.delete('/:id', async (req, res, next) => {
     const user = new User({
       userId: newVoter._id,
       email: newVoter.email,
-      phone: newVoter.phone,
       role: "voter",
     });
-    var password = generator.generate({
-      length: 8,
-      numbers: true,
-      excludeSimilarCharacters: true
-    });
-    user.password = await bcrypt.hash(password, salt);
+    user.password = await bcrypt.hash("password", salt);
     await user.save();
-    await send_password(email, password);
     return res.status(201).json(newVoter);
 
   } catch (error) {

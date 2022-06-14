@@ -7,7 +7,6 @@ const User = require("../models/user");
 const jwt = require("jsonwebtoken");
 const config = require("../config");
 const bcrypt = require("bcryptjs");
-const client = require("twilio")(config.accountSID, config.authToken)
 const { v4: uuidv4 } = require("uuid");
 const { send_magic_link } = require("./emailController");
 var cors = require("cors");
@@ -80,79 +79,6 @@ router.post("/enter", cors(), async (req, res) => {
 //   }
 // });
 
-//mobile login
-router.post("/mobile", async (req, res) => {
-  try {
-    const { email, password } = req.body;
-    console.log(req.body)
-    const user = await User.findOne({ email: email });
-    if (!user) {
-      return res.status(404).json("Email/Password is Incorrect");
-    }
-    const validPassword = await bcrypt.compare(
-      password,
-      user.password
-    );
-    if (!validPassword) {
-      return res.status(404).json("Email/Password is Incorrect");
-    } else {
-      client
-        .verify
-        .services(config.serviceID)
-        .verifications
-        .create({
-          to: `+251${user.phone.substring(1)}`,
-          channel: 'sms'
-        })
-        .then((data) => {
-          res.status(200).json(data)
-        })
-        .catch((e) => {
-          res.status(500).json("Something went wrong!")
-        })
-    }
-  } catch (e) {
-    console.log(e)
-    return res.status(500).send("Something went wrong")
-  }
-})
-
-router.post("/verify", async (req, res) => {
-  console.log("VErify got here")
-  try {
-    console.log(req.body)
-    const { email, otp } = req.body;
-    const user = await User.findOne({ email: email });
-    if (!user) {
-      return res.status(404).send("Email/Password is Incorrect");
-    } else {
-      client
-        .verify
-        .services(config.serviceID)
-        .verificationChecks
-        .create({
-          to: `+251${user.phone.substring(1)}`,
-          code: otp
-        })
-        .then((data) => {
-          if (data.status == "success"){
-            const token = jwt.sign({ id: user.userId }, config.secret, {
-              expiresIn: "24h",
-            });
-            res.status(200).json({"data": data, "token": token})
-          } else {
-            res.status(400).send("Wrong OTP found!")
-          }
-        })
-        .catch((e) => {
-          res.status(500).send("Something went wrong!")
-        })
-    }
-
-  } catch (e) {
-    res.status(500).send("Something went wrong. Couldn't verify!")
-  }
-})
 router.post("/admin", async (req, res) => {
   console.log("Request", req.body)
   try {
@@ -186,13 +112,13 @@ router.post("/logout", auth, hasRole(["admin", "voter", "candidate"]), function 
 
 // [auth, hasRole(["admin", "voter", "candidate"])],
 
-// const verify_token = (req, res) => {
-//   const token = req.headers.authorization;
-//   jwt.verify(token, config.secret, (err, succ) => {
-//     err
-//       ? res.json({ ok: false, message: "something went wrong" })
-//       : res.json({ ok: true, succ });
-//   });
-// };
+const verify_token = (req, res) => {
+  const token = req.headers.authorization;
+  jwt.verify(token, config.secret, (err, succ) => {
+    err
+      ? res.json({ ok: false, message: "something went wrong" })
+      : res.json({ ok: true, succ });
+  });
+};
 
 module.exports = router;
