@@ -1,7 +1,6 @@
 {
   "expo": {
     "name": "dvbst_mobile",
-    "scheme": "dvbst",
     "slug": "dvbst_mobile",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -18,9 +17,6 @@
       "**/*"
     ],
     "ios": {
-      "associatedDomains": [
-        "applinks:62a8f852b895971ca483f82f--tubular-churros-16cbaf.netlify.app"
-      ],
       "supportsTablet": true
     },
     "android": {
@@ -28,30 +24,7 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      },
-      "intentFilters": [
-        {
-          "autoVerify": true,
-          "action": "VIEW",
-          "data": [
-            {
-              "scheme": "https",
-              "host": "62a8f852b895971ca483f82f--tubular-churros-16cbaf.netlify.app",
-              "pathPrefix": "/"
-            },
-            {
-              "scheme": "https",
-              "host": "62a8f852b895971ca483f82f--tubular-churros-16cbaf.netlify.app",
-              "pathPrefix": "/login/enter"
-            }
-          ],
-          "category": [
-            "BROWSABLE",
-            "DEFAULT"
-          ]
-        }
-      ],
-      "package": "dvbst.mobile"
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"
