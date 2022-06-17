@@ -8,7 +8,6 @@ import { useNavigate } from 'react-router-dom';
 
 export default function NavbarDropdown() {
     const userState = useSelector((state) => state.userState)
-
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -56,7 +55,7 @@ export default function NavbarDropdown() {
                     horizontal: 'left',
                 }}
             >
-                <MenuItem disabled={userState.user?.completed} onClick={editProfile}>Profile</MenuItem>
+                <MenuItem disabled={userState.user?.completed || userState.user?.role === 'voter'} onClick={editProfile}>Profile</MenuItem>
                 <MenuItem onClick={handleLogout}>Logout</MenuItem>
             </Menu>
         </div>

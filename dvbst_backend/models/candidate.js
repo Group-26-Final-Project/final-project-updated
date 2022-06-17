@@ -78,6 +78,11 @@ const candidateSchema = new mongoose.Schema({
 		required: true,
 		default: false
 	},
+    role: {
+        type: String,
+        required: true,
+        default: "candidate"
+    },
 })
 
 candidateSchema.path('plans').required(function () {

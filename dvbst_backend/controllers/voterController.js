@@ -41,7 +41,7 @@ router.post("/", async function (req, res, next) {
     id: req.body.id,
     dept: req.body.dept,
     section: req.body.section,
-    year: req.body.year,
+    year: req.body.year
   });
   try {
     var check = await User.findOne({ email: req.body.email });

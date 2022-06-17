@@ -12,21 +12,19 @@ import AfterLogin from "./pages/AfterLogin";
 import VerifyLogin from "./pages/VerifyLogin";
 import PrivateRoute from "./PrivateRoute"
 import HomeScreen from "./pages/HomeScreen";
-import PublicRoute from "./PublicRoute";
 import Navbar from "./components/Navbar";
-import { SpinnerCircularFixed } from "spinners-react";
-import userSlice, { getUser } from "./features/userSlice";
-import { loadUser } from "./features/authSlice";
+import { getUser } from "./features/userSlice";
 
 function App() {
   const dispatch = useDispatch()
   const authState = useSelector((state) => state.authState)
   const userState = useSelector((state) => state.userState)
 
-  React.useEffect(() => {
-    // dispatch(getUser(authState.id))
-    dispatch(loadUser())
-  }, [dispatch])
+  console.log("Here")
+  // React.useEffect(() => {
+  //   dispatch(getUser(authState.id))
+
+  // }, [dispatch, authState.id])
 
   // useEffect(() => {  
   //   return () => {
@@ -36,17 +34,6 @@ function App() {
 
   return (
     <Router>
-      {userState.getUserStatus === "loading" && (
-        <div class="flex items-center justify-center">
-          <SpinnerCircularFixed
-            size={50}
-            thickness={100}
-            speed={100}
-            color="#36ad47"
-            secondaryColor="rgba(0, 0, 0, 0.44)"
-          />
-        </div>
-      )}
       <Routes>
         <Route path="/" element={
           <PrivateRoute>
@@ -54,42 +41,34 @@ function App() {
             <HomeScreen />
           </PrivateRoute>
         } />
-        {/* <Route path="/pending" element={
+        <Route path="/pending" element={
           <PrivateRoute>
             <Navbar />
             <PendingPage />
           </PrivateRoute>
-        } /> */}
+        } />
         <Route path="/profile" element={
           <PrivateRoute>
             <Profile />
           </PrivateRoute>
         } />
         <Route path="/login" element={
-          <PublicRoute>
-            <Login />
-          </PublicRoute>
+          <Login />
         } />
         <Route path="/signup" element={
-          <PublicRoute>
-            <RegistrationPage />
-          </PublicRoute>
+          <RegistrationPage />
         } />
         <Route path="/after" element={
-          <PublicRoute>
-            <AfterRegistration />
-          </PublicRoute>
+          <AfterRegistration />
         } />
         <Route path="/verify" element={
-          <PublicRoute>
-            <AfterLogin />
-          </PublicRoute>
+          <AfterLogin />
         } />
         {/* <Route path="/login" element={<Login />} /> */}
         {/* <Route path="/signup" element={<RegistrationPage />} />
         <Route path="/after" element={<AfterRegistration />} /> */}
         <Route path="/login/enter/:email/:link" exact element={<VerifyLogin />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
+        {/* <Route path="*" element={<Navigate to="/" replace />} /> */}
       </Routes>
     </Router>
   );

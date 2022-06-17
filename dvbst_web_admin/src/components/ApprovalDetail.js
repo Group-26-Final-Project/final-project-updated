@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
-// import { addCandidate } from "../features/candidatesSlice";
+import { addCandidate } from "../features/candidatesSlice";
 import { addVoter } from "../features/pendingSlice";
 
 export default function ApprovalDetail() {
@@ -10,7 +10,7 @@ export default function ApprovalDetail() {
   let navigate = useNavigate();
   const pendingState = useSelector((state) => state.pendingState)
   const user = pendingState.pendingUsers.filter((el) => el._id === location.state)[0]
-  console.log(user)
+  console.log("Pending", user)
 
   const deptTypes = [
     "Biomedical Engineering",
@@ -26,12 +26,12 @@ export default function ApprovalDetail() {
   };
 
   const onApprove = () => {
-    // if (user.role === "voter"){
+    if (user.role === "voter"){
       dispatch(addVoter(user._id))
-      navigate('/approval')
-    // } else {
-    //   dispatch(addCandidate(user))
-    // }
+    } else {
+      dispatch(addCandidate(user))
+    }
+    navigate('/approval')
   };
 
   // const getProfileUrl = () => {

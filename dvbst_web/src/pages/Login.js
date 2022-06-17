@@ -1,8 +1,8 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { SpinnerCircularFixed } from "spinners-react";
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
-import { login } from '../features/authSlice';
+import { loadUser, login } from '../features/authSlice';
 import { CgDanger } from 'react-icons/cg'
 
 export default function Login() {
@@ -47,6 +47,10 @@ export default function Login() {
         }
         return errors
     }
+
+    useEffect(()=>{
+        loadUser() && navigate('/')
+    }, [navigate])
 
     return (
         <div class="flex flex-col items-center justify-center min-h-screen bg-[#2F313D]">

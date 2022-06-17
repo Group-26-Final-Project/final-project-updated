@@ -51,6 +51,11 @@ const voterSchema = new mongoose.Schema({
 		required: true,
 		default: false
 	},
+    role: {
+        type: String,
+        required: true,
+        default: "voter"
+    },
 })
 
 module.exports = mongoose.model('Voter', voterSchema)

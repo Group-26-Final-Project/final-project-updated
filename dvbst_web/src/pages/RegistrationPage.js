@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux';
 import { register } from '../features/authSlice';
@@ -107,6 +107,10 @@ export default function RegistrationPage() {
         }
         return errors;
     };
+
+    useEffect(()=>{
+        authState.token && navigate('/')
+    }, [authState.token, navigate])
 
     return (
         <div class="flex items-center justify-center min-h-screen bg-[#2F313D]">

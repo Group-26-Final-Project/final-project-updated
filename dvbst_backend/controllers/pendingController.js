@@ -84,15 +84,17 @@ router.get('/:id', async (req, res, next) => {
 router.delete('/:id', async (req, res, next) => {
   try {
     const approvedUser = await Pending.findByIdAndDelete(req.params.id);
+    console.log("First", approvedUser)
     if (!approvedUser) {
       return res.status(400).json({ message: "User doesn't exist!" });
     }
     if (approvedUser.role === 'voter'){
-      const userApproved = await Voter.updateOne({ userId: approvedUser.userId }, { $set: { approved : true }})
-      return res.status(204).json(userApproved);
+      const userApproved = await Voter.updateOne({ _id: approvedUser.userId }, { $set: { approved : true }})
+      console.log("Second", userApproved)
+      return res.status(204);
     } else {
-      const userApproved = await Candidate.updateOne({ userId: approvedUser.userId }, { $set: { approved : true }})
-      return res.status(204).json(userApproved);
+      const userApproved = await Candidate.updateOne({ _id: approvedUser.userId }, { $set: { approved : true }})
+      return res.status(204);
     }
   } catch (error) {
     res.status(400).json({ message: error.message });
