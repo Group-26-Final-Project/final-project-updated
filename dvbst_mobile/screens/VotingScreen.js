@@ -7,6 +7,12 @@ const VotingScreen = (props) => {
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView>
+                <VoteComponent name={'Candidate #1'}/>
+                <VoteComponent name={'Candidate #2'}/>
+                <VoteComponent name={'Candidate #3'}/>
+                {/* <VoteComponent />
+                <VoteComponent /> */}
+                {/* <VoteComponent />
                 <VoteComponent />
                 <VoteComponent />
                 <VoteComponent />
@@ -16,11 +22,7 @@ const VotingScreen = (props) => {
                 <VoteComponent />
                 <VoteComponent />
                 <VoteComponent />
-                <VoteComponent />
-                <VoteComponent />
-                <VoteComponent />
-                <VoteComponent />
-                <VoteComponent />
+                <VoteComponent /> */}
             </ScrollView>
         </SafeAreaView>
     );

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack'
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -39,8 +39,34 @@ function LoginStack() {
 
 function AuthContainer() {
     const linking = {
-      prefixes: [Linking.createURL('/'), 'https://62a8f852b895971ca483f82f--tubular-churros-16cbaf.netlify.app'],
+        prefixes: ['https://tubular-churros-16cbaf.netlify.app'],
     };
+    useEffect(() => {
+
+        const getUrl = async () => {
+
+            const initialUrl = await Linking.getInitialURL();
+
+            if (initialUrl === null) {
+
+                return;
+
+            }
+
+
+            if (initialUrl.includes('login')) {
+
+                Alert.alert(initialUrl);
+
+                RootNavigation.navigate('loginStack');
+
+            }
+
+        };
+
+        getUrl();
+
+    });
     return (
         <NavigationContainer linking={linking}>
             <Stack.Navigator
@@ -49,7 +75,7 @@ function AuthContainer() {
                     headerTitle: "",
                     headerTransparent: true
                 }}
-                >
+            >
                 <Stack.Screen name="loginStack" component={LoginStack} />
                 <Stack.Screen name={registerName} component={RegistrationScreen} />
 

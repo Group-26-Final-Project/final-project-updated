@@ -24,7 +24,7 @@ export default function NavbarDropdown() {
 
     const handleLogout = () => {
         dispatch(logoutUser())
-        navigate('/')
+        window.location.reload()
     }
 
     const editProfile = () => {

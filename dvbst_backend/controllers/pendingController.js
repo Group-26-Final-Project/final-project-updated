@@ -87,36 +87,13 @@ router.delete('/:id', async (req, res, next) => {
     if (!approvedUser) {
       return res.status(400).json({ message: "User doesn't exist!" });
     }
-    const voter = new Voter({
-      name: approvedUser.name,
-      fname: approvedUser.fname,
-      gname: approvedUser.gname,
-      email: approvedUser.email,
-      phone: approvedUser.phone,
-      id: approvedUser.id,
-      dept: approvedUser.dept,
-      year: approvedUser.year,
-      section: approvedUser.section,
-      fullName: approvedUser.name + " " + approvedUser.fname + " " + approvedUser.gname
-    })
-    const newVoter = await voter.save()
-    const salt = await bcrypt.genSalt(10);
-    const user = new User({
-      userId: newVoter._id,
-      email: newVoter.email,
-      phone: newVoter.phone,
-      role: "voter",
-    });
-    var password = generator.generate({
-      length: 8,
-      numbers: true,
-      excludeSimilarCharacters: true
-    });
-    user.password = await bcrypt.hash(password, salt);
-    await user.save();
-    await send_password(email, password);
-    return res.status(201).json(newVoter);
-
+    if (approvedUser.role === 'voter'){
+      const userApproved = await Voter.updateOne({ userId: approvedUser.userId }, { $set: { approved : true }})
+      return res.status(204).json(userApproved);
+    } else {
+      const userApproved = await Candidate.updateOne({ userId: approvedUser.userId }, { $set: { approved : true }})
+      return res.status(204).json(userApproved);
+    }
   } catch (error) {
     res.status(400).json({ message: error.message });
   }

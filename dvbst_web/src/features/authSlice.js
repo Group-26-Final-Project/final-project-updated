@@ -2,7 +2,8 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from 'axios';
 import jwtDecode from "jwt-decode";
 
-const API_URL = 'https://final-project-dvbst.herokuapp.com';
+// const API_URL = 'https://final-project-dvbst.herokuapp.com';
+const API_URL = 'http://localhost:8080';
 
 // const initialState = user
 //     ? { isLoggedIn: true, user }
@@ -22,23 +23,38 @@ const initialState = {
 export const register = createAsyncThunk("auth/register", async (newUser,
     rejectWithValue) => {
     try {
-        const response = await axios.post(API_URL + "/pending", newUser); 
+        const response = (newUser.role === 'voter') ? await axios.post(API_URL + "/voters", newUser) : await axios.post(API_URL + "/candidates", newUser); 
         return response.data;
+    } catch (error) {
+        console.log(error)
+        return rejectWithValue(error.response.data);
+    }
+});
+
+// export const login = createAsyncThunk("auth/login", async ({ email, link }, {
+//     rejectWithValue }) => {
+//     try {
+//         console.log("Email", email, link)
+//         const response = await axios.post(API_URL + "/login/enter", { email, link });
+//         return response.data
+//     } catch (error) {
+//         return rejectWithValue(error.response.data);
+//     }
+// });
+export const login = createAsyncThunk("auth/login", async ({ email, password }, {
+    rejectWithValue }) => {
+    try {
+        const { data: result } = await axios.post(API_URL + "/login", { email, password })
+        if (result) {
+            localStorage.setItem("token", result)
+        }
+        console.log("result", result)
+        return result;
     } catch (error) {
         return rejectWithValue(error.response.data);
     }
 });
 
-export const login = createAsyncThunk("auth/login", async ({ email, link }, {
-    rejectWithValue }) => {
-    try {
-        console.log("Email", email, link)
-        const response = await axios.post(API_URL + "/login/enter", { email, link });
-        return response.data
-    } catch (error) {
-        return rejectWithValue(error.response.data);
-    }
-});
 
 export const verify = createAsyncThunk("auth/verify", async ({ email, link }, {
     rejectWithValue }) => {
@@ -69,10 +85,10 @@ const authSlice = createSlice({
                 return {
                     ...state,
                     token,
-                    id: user._name,
+                    id: user.id,
                     userLoaded: true,
                 };
-            } else return { ...state, userLoaded: true };
+            } else return { ...state, userLoaded: false };
         },
         logoutUser(state, action) {
             localStorage.removeItem("token");
@@ -112,8 +128,11 @@ const authSlice = createSlice({
             }
         },
         [login.fulfilled]: (state, action) => {
+            const user = jwtDecode(action.payload);
             return {
                 ...state,
+                token: action.payload,
+                id: user.id,
                 loginStatus: "success",
             };
         },

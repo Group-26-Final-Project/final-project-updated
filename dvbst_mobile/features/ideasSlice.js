@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios'
 
-const baseURL = "https://1d10-197-156-103-47.eu.ngrok.io"
+const baseURL = "https://fa79-197-156-86-235.eu.ngrok.io"
 
 const initialState = {
     ideas: [],
@@ -33,8 +33,10 @@ export const getIdeas = createAsyncThunk("ideas/getIdeas", async (id=null, {
         try{
             await timeout(1000)
             const response = await axios.get(baseURL+"/ideas")
+            console.log("Response", response)
             return response.data
         } catch(err){
+            console.log("Response", err)
             return rejectWithValue(error.response.data)
         }
 })

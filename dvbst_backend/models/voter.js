@@ -17,6 +17,10 @@ const voterSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    phone: {
+        type: String,
+        required: true,
+    },
     id: {
         type: String,
         required: true,
@@ -41,7 +45,12 @@ const voterSchema = new mongoose.Schema({
     fullName: {
         type: String, 
         require: true
-    }
+    },
+    approved: {
+		type: Boolean,
+		required: true,
+		default: false
+	},
 })
 
 module.exports = mongoose.model('Voter', voterSchema)

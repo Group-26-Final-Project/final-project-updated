@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import React from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import Login from "./pages/Login";
+import PendingPage from "./pages/PendingPage";
 import Profile from "./pages/Profile";
 import RegistrationPage from "./pages/RegistrationPage";
 import AfterRegistration from "./pages/AfterRegistration";
@@ -13,16 +14,19 @@ import PrivateRoute from "./PrivateRoute"
 import HomeScreen from "./pages/HomeScreen";
 import PublicRoute from "./PublicRoute";
 import Navbar from "./components/Navbar";
-import { getUser } from "./features/userSlice";
+import { SpinnerCircularFixed } from "spinners-react";
+import userSlice, { getUser } from "./features/userSlice";
+import { loadUser } from "./features/authSlice";
 
 function App() {
   const dispatch = useDispatch()
   const authState = useSelector((state) => state.authState)
+  const userState = useSelector((state) => state.userState)
 
-  console.log("Here")
   React.useEffect(() => {
-    dispatch(getUser(authState.id))
-  }, [dispatch, authState.id])
+    // dispatch(getUser(authState.id))
+    dispatch(loadUser())
+  }, [dispatch])
 
   // useEffect(() => {  
   //   return () => {
@@ -32,6 +36,17 @@ function App() {
 
   return (
     <Router>
+      {userState.getUserStatus === "loading" && (
+        <div class="flex items-center justify-center">
+          <SpinnerCircularFixed
+            size={50}
+            thickness={100}
+            speed={100}
+            color="#36ad47"
+            secondaryColor="rgba(0, 0, 0, 0.44)"
+          />
+        </div>
+      )}
       <Routes>
         <Route path="/" element={
           <PrivateRoute>
@@ -39,15 +54,21 @@ function App() {
             <HomeScreen />
           </PrivateRoute>
         } />
-        <Route path="/login" element={
-          <PublicRoute>
-            <Login />
-          </PublicRoute>
-        } />
+        {/* <Route path="/pending" element={
+          <PrivateRoute>
+            <Navbar />
+            <PendingPage />
+          </PrivateRoute>
+        } /> */}
         <Route path="/profile" element={
           <PrivateRoute>
             <Profile />
           </PrivateRoute>
+        } />
+        <Route path="/login" element={
+          <PublicRoute>
+            <Login />
+          </PublicRoute>
         } />
         <Route path="/signup" element={
           <PublicRoute>

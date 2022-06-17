@@ -72,7 +72,12 @@ const candidateSchema = new mongoose.Schema({
         type: Boolean,
         require: true,
         default: true
-    }
+    },
+    approved: {
+		type: Boolean,
+		required: true,
+		default: false
+	},
 })
 
 candidateSchema.path('plans').required(function () {

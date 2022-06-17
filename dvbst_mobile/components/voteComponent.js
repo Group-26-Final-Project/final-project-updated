@@ -31,10 +31,10 @@ const VoteComponent = (props) => {
                         />
                     </View>
                     <View style={styles.description}>
-                        <Text style={styles.name}>Hana Samuael</Text>
+                        <Text style={styles.name}>{props.name}</Text>
                         <Text style={styles.detail}>Department: Software</Text>
                         <Text style={styles.detail}>Year: 5</Text>
-                        <Text style={styles.detail}>Section: 1</Text>
+                        <Text style={styles.detail}>Section: 2</Text>
                         <TouchableOpacity style={styles.button}>
                             <Text style={{ color: '#00d05a', fontSize: 16 }}>Vote</Text>
                         </TouchableOpacity>

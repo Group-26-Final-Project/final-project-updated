@@ -6,6 +6,16 @@ const Voter = require('../models/voter')
 const User = require('../models/user')
 const cors = require('cors');
 
+// router.get("/", cors(), async (req, res, next) => {
+//   try {
+//     var users = await User.find();
+//     res.json(users).status(200);
+//   } catch (e) {
+//     res.json("User doesn't exist").status(500);
+//   }
+// });
+
+
 // get user detail
 router.get("/:id", cors(), async (req, res, next) => {
   try {
