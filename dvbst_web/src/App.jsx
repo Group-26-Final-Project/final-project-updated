@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import React from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import Login from "./pages/Login";
+import PendingPage from "./pages/PendingPage";
 import Profile from "./pages/Profile";
 import RegistrationPage from "./pages/RegistrationPage";
 import AfterRegistration from "./pages/AfterRegistration";
@@ -11,18 +12,19 @@ import AfterLogin from "./pages/AfterLogin";
 import VerifyLogin from "./pages/VerifyLogin";
 import PrivateRoute from "./PrivateRoute"
 import HomeScreen from "./pages/HomeScreen";
-import PublicRoute from "./PublicRoute";
 import Navbar from "./components/Navbar";
 import { getUser } from "./features/userSlice";
 
 function App() {
   const dispatch = useDispatch()
   const authState = useSelector((state) => state.authState)
+  const userState = useSelector((state) => state.userState)
 
   console.log("Here")
-  React.useEffect(() => {
-    dispatch(getUser(authState.id))
-  }, [dispatch, authState.id])
+  // React.useEffect(() => {
+  //   dispatch(getUser(authState.id))
+
+  // }, [dispatch, authState.id])
 
   // useEffect(() => {  
   //   return () => {
@@ -39,36 +41,34 @@ function App() {
             <HomeScreen />
           </PrivateRoute>
         } />
-        <Route path="/login" element={
-          <PublicRoute>
-            <Login />
-          </PublicRoute>
+        <Route path="/pending" element={
+          <PrivateRoute>
+            <Navbar />
+            <PendingPage />
+          </PrivateRoute>
         } />
         <Route path="/profile" element={
           <PrivateRoute>
             <Profile />
           </PrivateRoute>
         } />
+        <Route path="/login" element={
+          <Login />
+        } />
         <Route path="/signup" element={
-          <PublicRoute>
-            <RegistrationPage />
-          </PublicRoute>
+          <RegistrationPage />
         } />
         <Route path="/after" element={
-          <PublicRoute>
-            <AfterRegistration />
-          </PublicRoute>
+          <AfterRegistration />
         } />
         <Route path="/verify" element={
-          <PublicRoute>
-            <AfterLogin />
-          </PublicRoute>
+          <AfterLogin />
         } />
         {/* <Route path="/login" element={<Login />} /> */}
         {/* <Route path="/signup" element={<RegistrationPage />} />
         <Route path="/after" element={<AfterRegistration />} /> */}
         <Route path="/login/enter/:email/:link" exact element={<VerifyLogin />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
+        {/* <Route path="*" element={<Navigate to="/" replace />} /> */}
       </Routes>
     </Router>
   );

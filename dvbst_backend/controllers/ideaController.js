@@ -7,17 +7,18 @@ var cors = require('cors')
 
 
 router.get('/', async function (req, res) {
-	var token = req.headers.authorization;
-    token = token.split(" ")[1];
-    var decoded = jwt.decode(token, config.secret);
+    // var token = req.headers.authorization;
+    // token = token.split(" ")[1];
+    // var decoded = jwt.decode(token, config.secret);
     try {
         const ideas = await Idea.find().lean()
-        const response = ideas.map(idea => {
-            idea.likedUser = idea.likes.includes(decoded.id)
-            idea.likes = []
-            return idea
-        })
-        res.json(response);
+        // const response = ideas.map(idea => {
+        //     idea.likedUser = idea.likes.includes(decoded.id)
+        //     idea.likes = []
+        //     return idea
+        // })
+        res.json(ideas).status(200);
+        // res.json(response);
     } catch (err) {
         res.status(500).json({ message: err.message });
     }

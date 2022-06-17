@@ -1,6 +1,10 @@
 const mongoose = require('mongoose')
 
 const pendingSchema = new mongoose.Schema({
+    userId: {
+        type: String,
+        required: true,
+    },
     name: {
         type: String,
         required: true,
@@ -38,8 +42,12 @@ const pendingSchema = new mongoose.Schema({
         required: true,
     },
     fullName: {
-        type: String, 
+        type: String,
         require: true
+    },
+    role: {
+        type: String,
+        required: true,
     }
 })
 

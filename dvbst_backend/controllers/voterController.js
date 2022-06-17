@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Voter = require("../models/voter");
 const Candidate = require("../models/candidate");
+const Pending  = require("../models/pending");
 const User = require("../models/user");
 const bcrypt = require("bcryptjs");
 var cors = require("cors");
@@ -36,11 +37,11 @@ router.post("/", async function (req, res, next) {
     gname: req.body.gname,
     fullName: req.body.name + " " + req.body.fname + " " + req.body.gname,
     email: req.body.email,
+    phone: req.body.phone,
     id: req.body.id,
     dept: req.body.dept,
     section: req.body.section,
-    year: req.body.year,
-    wallet: req.body.wallet,
+    year: req.body.year
   });
   try {
     var check = await User.findOne({ email: req.body.email });
@@ -56,14 +57,30 @@ router.post("/", async function (req, res, next) {
       return res.status(404).send("User Already Exists!");
     }
     const newVoter = await voter.save();
+    const pending = new Pending({
+      userId: newVoter._id,
+      name: newVoter.name,
+      fname: newVoter.fname,
+      gname: newVoter.gname,
+      email: newVoter.email,
+      phone: newVoter.phone,
+      id: newVoter.id,
+      dept: newVoter.dept,
+      year: newVoter.year,
+      section: newVoter.section,
+      fullName: newVoter.fullName,
+      role: "voter"
+    });
     const salt = await bcrypt.genSalt(10);
     const user = new User({
       userId: newVoter._id,
+      phone: newVoter.phone,
       email: newVoter.email,
       role: "voter",
     });
-    user.password = await bcrypt.hash("password", salt);
+    user.password = await bcrypt.hash(req.body.password, salt);
     await user.save();
+    await pending.save();
     res.json({
       status: "success",
       code: 201,

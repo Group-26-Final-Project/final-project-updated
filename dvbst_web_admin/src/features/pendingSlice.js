@@ -27,7 +27,7 @@ export const getUsers = createAsyncThunk("pending/getUsers", async (query, {
     }
 })
 
-export const addVoter = createAsyncThunk("voters/addVoter", async (id, {
+export const addVoter = createAsyncThunk("pending/addVoter", async (id, {
     rejectWithValue})=>{
         try{
             await timeout(1000)

@@ -2,8 +2,14 @@ import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { login } from '../features/authSlice'
 import { useNavigation } from '@react-navigation/native';
+import { useFonts } from 'expo-font';
 
+import AppLoading from 'expo-app-loading'
 import { StyleSheet, Text, View, TextInput, Dimensions, TouchableOpacity, ActivityIndicator } from 'react-native';
+
+const customFonts = {
+    poppinsLight: require('../assets/fonts/Poppins-Light.ttf'),
+}
 
 const LoginScreen = (props) => {
     const dispatch = useDispatch()
@@ -15,6 +21,7 @@ const LoginScreen = (props) => {
 
     const [formValues, setFormValues] = useState(initialValues)
     const [formErrors, setFormErrors] = useState({})
+    const [isLoaded] = useFonts(customFonts);
 
     const changeHandler = (inputName, inputValue) => {
         setFormValues(prev => ({
@@ -22,6 +29,7 @@ const LoginScreen = (props) => {
             [inputName]: inputValue
         }))
     }
+
 
 
     //navigate to OTP page and pass email info to otp page as well!
@@ -59,46 +67,53 @@ const LoginScreen = (props) => {
         return errors
     }
 
-    return (
-        <View style={styles.container}>
-            {authState.loginStatus === "pending" && (
-                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                    <ActivityIndicator size="large" color='#00d05a' />
-                </View>
-            )}
-            {authState.loginStatus === "failed" && (
-                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                    <Text style={styles.text}>{authState.loginError}</Text>
-                </View>
-            )}
-            {authState.loginStatus !== "pending" && authState.loginStatus !== "failed" && (
-                <View>
-
-                    <View style={{ justifyContent: 'flex-start', alignItems: 'flex-end', marginBottom: 15 }}>
-                        <Text style={{ fontSize: 36 }}>Login</Text>
-                        <View style={styles.line}></View>
+    if (!isLoaded) {
+        return <AppLoading />;
+    } else {
+        return (
+            <View style={styles.container}>
+                {authState.loginStatus === "pending" && (
+                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                        <ActivityIndicator size="large" color='#00d05a' />
                     </View>
+                )}
+                {authState.loginStatus === "failed" && (
+                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                        <Text style={styles.text}>{authState.loginError}</Text>
+                    </View>
+                )}
+                {authState.loginStatus !== "pending" && authState.loginStatus !== "failed" && (
                     <View>
-                        <View>
-                            <Text style={styles.label}>Email</Text>
-                            <TextInput style={styles.textinput} value={formValues.email}
-                                onChangeText={value => changeHandler('email', value)} />
-                            <Text style={styles.error}>{formErrors.email}</Text>
+    
+                        <View style={{alignSelf: 'flex-start', marginBottom: 15 }}>
+                            <Text style={{ fontSize: 36 }}>Login</Text>
+                            <View style={styles.line}></View>
                         </View>
                         <View>
-                            <Text style={styles.label}>Password</Text>
-                            <TextInput style={styles.textinput} value={formValues.password}
-                                onChangeText={value => changeHandler('password', value)} />
-                            <Text style={styles.error}>{formErrors.password}</Text>
+                            <View>
+                                <Text style={styles.label}>Email</Text>
+                                <TextInput style={styles.textinput} value={formValues.email}
+                                    onChangeText={value => changeHandler('email', value)} />
+                                <Text style={styles.error}>{formErrors.email}</Text>
+                            </View>
+                            <View>
+                                <Text style={styles.label}>Password</Text>
+                                <TextInput secureTextEntry={true} style={styles.textinput} value={formValues.password}
+                                    onChangeText={value => changeHandler('password', value)} />
+                                <Text style={styles.error}>{formErrors.password}</Text>
+                            </View>
+                        </View>
+                        <TouchableOpacity onPress={handleSubmit} style={styles.button}>
+                            <Text style={{ color: '#fff', fontSize: 20 }}>Login</Text>
+                        </TouchableOpacity>
+                        <View style={{marginTop: 6, justifyContent: 'center', alignSelf: 'center'}}>
+                            <Text style={{ color: '#4B4B4B', fontSize: 16, fontFamily: 'poppinsLight'}}>Don't have an account? <Text onPress={()=>navigation.reset({index: 0, routes: [{name: 'Register'}]})} style={{ color: '#00d05a', fontSize: 16, fontFamily: 'poppinsLight'}}>Sign Up</Text></Text>
                         </View>
                     </View>
-                    <TouchableOpacity onPress={handleSubmit} style={styles.button}>
-                        <Text style={{ color: '#fff', fontSize: 20 }}>Login</Text>
-                    </TouchableOpacity>
-                </View>
-            )}
-        </View>
-    );
+                )}
+            </View>
+        );
+    }
 }
 
 const styles = StyleSheet.create({
@@ -114,12 +129,12 @@ const styles = StyleSheet.create({
         width: Dimensions.get('window').width * 0.14,
         height: Dimensions.get('window').height * 0.005,
         backgroundColor: '#00d05a',
-        alignItems: 'flex-end',
+        alignSelf: 'flex-end',
         justifyContent: 'flex-end',
     },
     textinput: {
         padding: 10,
-        marginBottom: 20,
+        marginBottom: 12,
         width: Dimensions.get('window').width * 0.84,
         height: Dimensions.get('window').height * 0.06,
         borderWidth: 0.5,
@@ -128,7 +143,7 @@ const styles = StyleSheet.create({
     },
     label: {
         fontSize: 16,
-        paddingBottom: 10,
+        paddingBottom: 6,
     },
     button: {
         alignSelf: 'center',

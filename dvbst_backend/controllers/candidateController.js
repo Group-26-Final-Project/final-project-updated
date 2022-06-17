@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const auth = require('../middleware/auth');
 const Candidate = require('../models/candidate')
+const Pending  = require("../models/pending");
 const Voter = require('../models/voter')
 const User = require('../models/user')
 const upload = require('../middleware/upload')
@@ -110,7 +111,7 @@ router.post(
       id: req.body.id,
       dept: req.body.dept,
       section: req.body.section,
-      year: req.body.year,
+      year: req.body.year
     });
     
     try {
@@ -128,6 +129,20 @@ router.post(
       }
 
       const newCandidate = await candidate.save();
+      const pending = new Pending({
+        userId: newCandidate._id,
+        name: newVoter.name,
+        fname: newVoter.fname,
+        gname: newVoter.gname,
+        email: newVoter.email,
+        phone: newVoter.phone,
+        id: newVoter.id,
+        dept: newVoter.dept,
+        year: newVoter.year,
+        section: newVoter.section,
+        fullName: newVoter.fullName,
+        role: "candidate"
+      });
       const salt = await bcrypt.genSalt(10);
       const user = new User({
         userId: newCandidate._id,
@@ -135,14 +150,9 @@ router.post(
         email: newCandidate.email,
         role: "candidate",
       });
-      var password = generator.generate({
-        length: 8,
-        numbers: true,
-        excludeSimilarCharacters: true
-      });
-      user.password = await bcrypt.hash(password, salt);
+      user.password = await bcrypt.hash(req.body.password, salt);
+      await pending.save();
       await user.save();
-      await send_password(user.email, password);
       res.json(newCandidate).status(201)
     } catch (err) {
       res.status(400).json({ message: err.message });

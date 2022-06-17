@@ -17,16 +17,16 @@ export default function Approval() {
         [
             {
                 Header: "Name",
-                accessor: "name",
+                accessor: "fullName",
             },
             {
                 Header: "Email",
                 accessor: "email",
             },
-            // {
-            //     Header: "User Type",
-            //     accessor: "role",
-            // },
+            {
+                Header: "User Type",
+                accessor: "role",
+            },
             {
                 Header: "Date Added",
                 accessor: "dateAdded",

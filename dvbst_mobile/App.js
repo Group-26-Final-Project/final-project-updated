@@ -26,7 +26,7 @@ const App = () => {
   return (
     <SafeAreaView  style={styles.container}>
       {/* <MainContainer/> */}
-      {authState.token ? <MainContainer/> : <AuthContainer/>}
+      {authState.token ? <AuthContainer/> : <MainContainer/>}
       <StatusBar style='auto' />
     </SafeAreaView>
   );

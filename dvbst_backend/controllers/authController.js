@@ -13,6 +13,56 @@ const { send_magic_link } = require("./emailController");
 var cors = require("cors");
 
 // Login router
+router.post("/", cors(), async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email: email });
+    if (!user) {
+      return res.status(404).send("Email/Password is Incorrect");
+    }
+    const validPassword = await bcrypt.compare(
+      req.body.password,
+      user.password
+    );
+    if (!validPassword) {
+      return res.status(404).send("Email/Password is Incorrect");
+    } else {
+      const token = jwt.sign({ id: user.userId }, config.secret, {
+        expiresIn: '1h',
+      });
+      res.status(200).json(token);
+    }
+  } catch (e) {
+    res.status(500).send('Plese try again , "Can not Login"');
+  }
+});
+
+router.post("/admin", async (req, res) => {
+  console.log("Request", req.body)
+  try {
+    const { email, password } = req.body;
+    const admin = await Admin.findOne({ email: email });
+    if (!admin) {
+      return res.status(404).send("Email/Password is Incorrect");
+    }
+    const validPassword = await bcrypt.compare(
+      req.body.password,
+      admin.password
+    );
+    if (!validPassword) {
+      return res.status(404).send("Email/Password is Incorrect");
+    } else {
+      const token = jwt.sign({ id: admin._id }, config.secret, {
+        expiresIn: "1h",
+      });
+      return res.status(200).json(token);
+    }
+  } catch (e) {
+    res.status(500).send('Plese try again , "Can not Login"');
+  }
+});
+
+// magic link verify
 router.post("/enter", cors(), async (req, res) => {
   const { email, link } = req.body;
   console.log("Enter value", email, link)
@@ -56,32 +106,9 @@ router.post("/enter", cors(), async (req, res) => {
   }
 });
 
-// router.post("/", async (req, res) => {
-//   try {
-//     const { email, password } = req.body;
-//     const user = await User.findOne({ email: email });
-//     if (!user) {
-//       return res.status(404).send("Email/Password is Incorrect");
-//     }
-//     const validPassword = await bcrypt.compare(
-//       req.body.password,
-//       user.password
-//     );
-//     if (!validPassword) {
-//       return res.status(404).send("Email/Password is Incorrect");
-//     } else {
-//       const token = jwt.sign({ id: user.userId }, config.secret, {
-//         expiresIn: "24h",
-//       });
-//       res.status(200).json({ auth: true, token });
-//     }
-//   } catch (e) {
-//     res.status(500).send('Plese try again , "Can not Login"');
-//   }
-// });
 
 //mobile login
-router.post("/mobile", async (req, res) => {
+router.post("/mobile", cors(), async (req, res) => {
   try {
     const { email, password } = req.body;
     console.log(req.body)
@@ -117,7 +144,8 @@ router.post("/mobile", async (req, res) => {
   }
 })
 
-router.post("/verify", async (req, res) => {
+//otp verify
+router.post("/verify", cors(), async (req, res) => {
   console.log("VErify got here")
   try {
     console.log(req.body)
@@ -153,30 +181,7 @@ router.post("/verify", async (req, res) => {
     res.status(500).send("Something went wrong. Couldn't verify!")
   }
 })
-router.post("/admin", async (req, res) => {
-  console.log("Request", req.body)
-  try {
-    const { email, password } = req.body;
-    const admin = await Admin.findOne({ email: email });
-    if (!admin) {
-      return res.status(404).send("Email/Password is Incorrect");
-    }
-    const validPassword = await bcrypt.compare(
-      req.body.password,
-      admin.password
-    );
-    if (!validPassword) {
-      return res.status(404).send("Email/Password is Incorrect");
-    } else {
-      const token = jwt.sign({ id: admin._id }, config.secret, {
-        expiresIn: "24h",
-      });
-      return res.status(200).json(token);
-    }
-  } catch (e) {
-    res.status(500).send('Plese try again , "Can not Login"');
-  }
-});
+
 
 // Logout router
 

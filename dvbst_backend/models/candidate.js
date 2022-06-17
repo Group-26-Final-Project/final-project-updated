@@ -72,7 +72,17 @@ const candidateSchema = new mongoose.Schema({
         type: Boolean,
         require: true,
         default: true
-    }
+    },
+    approved: {
+		type: Boolean,
+		required: true,
+		default: false
+	},
+    role: {
+        type: String,
+        required: true,
+        default: "candidate"
+    },
 })
 
 candidateSchema.path('plans').required(function () {

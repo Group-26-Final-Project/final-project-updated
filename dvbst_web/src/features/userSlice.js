@@ -1,7 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios'
 
-const baseURL = "https://final-project-dvbst.herokuapp.com"
+const baseURL = "http://localhost:8080"
+// const baseURL = "https://final-project-dvbst.herokuapp.com"
 
 const initialState = {
     user: null,
@@ -16,32 +17,41 @@ function timeout(ms) {
 }
 
 export const getUser = createAsyncThunk("user/getUser", async (id, {
-    rejectWithValue})=>{
-        try{
-            await timeout(1000)
-            const response = await axios.get(baseURL+"/user/" + id)
-            return response.data
-        } catch(err){
-            return rejectWithValue(err.response.data)
-        }
+    rejectWithValue }) => {
+    try {
+        const response = await axios.get(baseURL + "/user/" + id)
+        console.log(response)
+        return response.data
+    } catch (err) {
+        return rejectWithValue(err.response.data)
+    }
 })
 
-export const editUser = createAsyncThunk("user/editUser", async ({id, user}, {
-    rejectWithValue})=>{
-        try{
-            await timeout(1000)
-            console.log("Here", id, user)
-            const response = await axios.patch(baseURL+"/candidates/complete/" + id, user)
-            return response.data
-        } catch(err){
-            return rejectWithValue(err.response.data)
-        }
+export const editUser = createAsyncThunk("user/editUser", async ({ id, user }, {
+    rejectWithValue }) => {
+    try {
+        console.log("Here", id, user)
+        const response = await axios.patch(baseURL + "/candidates/complete/" + id, user)
+        return response.data
+    } catch (err) {
+        return rejectWithValue(err.response.data)
+    }
 })
 
 const userSlice = createSlice({
     name: "user",
     initialState,
-    reducers: {},
+    reducers: {
+        clearUser(state, action) {
+            return {
+                user: null,
+                getUserStatus: "",
+                getUserError: "",
+                editUserStatus: "",
+                editUserError: "",
+            };
+        }
+    },
     extraReducers: {
         [getUser.pending]: (state, action) => {
             return {
