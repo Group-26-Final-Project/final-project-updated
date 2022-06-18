@@ -10,6 +10,10 @@ import RegistrationPage from "./pages/RegistrationPage";
 import AfterRegistration from "./pages/AfterRegistration";
 import AfterLogin from "./pages/AfterLogin";
 import VerifyLogin from "./pages/VerifyLogin";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
+import ConfirmCodePage from "./pages/ConfirmCodePage";
+import ResetPasswordPage from "./pages/ResetPasswordPage";
+import AfterResetPassword from "./pages/AfterResetPassword";
 import PrivateRoute from "./PrivateRoute"
 import HomeScreen from "./pages/HomeScreen";
 import Navbar from "./components/Navbar";
@@ -51,6 +55,18 @@ function App() {
           <PrivateRoute>
             <Profile />
           </PrivateRoute>
+        } />
+        <Route path="/forgot" element={
+          <ForgotPasswordPage />
+        } />
+        <Route path="/reset" element={
+          <ResetPasswordPage />
+        } />
+        <Route path="/confirm" element={
+          <ConfirmCodePage />
+        } />
+        <Route path="/reset/success" element={
+          <AfterResetPassword />
         } />
         <Route path="/login" element={
           <Login />

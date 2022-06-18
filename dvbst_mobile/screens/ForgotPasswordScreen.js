@@ -66,19 +66,19 @@ const ForgotPasswordScreen = (props) => {
         return (
             <View style={styles.container}>
                 {resetPasswordState.forgotPasswordStatus === "pending" && (
-                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                    <View style={{ flex: 1, justifyContent: 'center', alignSelf: 'center', alignItems: 'center' }}>
                         <ActivityIndicator size="large" color='#00d05a' />
                     </View>
                 )}
                 {resetPasswordState.forgotPasswordStatus === "failed" && (
                     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                        <Text style={styles.text}>{resetPasswordState.forgotPasswordError}</Text>
+                        <Text style={styles.text}>{resetPasswordState.forgotPasswordError.message}</Text>
                     </View>
                 )}
                 {resetPasswordState.forgotPasswordStatus !== "pending" && resetPasswordState.forgotPasswordStatus !== "failed" && (
                     <View>
                         <View style={{alignSelf: 'flex-start', marginBottom: 15 }}>
-                            <Text style={{ fontSize: 36 }}>Reset Password</Text>
+                            <Text style={{ fontSize: 36 }}>Forgot Password</Text>
                             <View style={styles.line}></View>
                         </View>
                         <View style={{marginBottom: 6}}>
