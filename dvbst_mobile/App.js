@@ -19,14 +19,14 @@ export default function AppWrapper() {
 
 const App = () => {
   const authState = useSelector((state) => state.authState)
-  console.log(authState)
+  // console.log(authState)
   // useEffect(() => {
   //   deviceStorage.getItem()
   // })
   return (
     <SafeAreaView  style={styles.container}>
       {/* <MainContainer/> */}
-      {authState.token ? <AuthContainer/> : <MainContainer/>}
+      {authState.token ? <MainContainer/> : <AuthContainer/>}
       <StatusBar style='auto' />
     </SafeAreaView>
   );

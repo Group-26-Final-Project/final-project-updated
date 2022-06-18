@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios'
 
-const baseURL = "https://fa79-197-156-86-235.eu.ngrok.io"
+const baseURL = "https://7add-197-156-103-216.eu.ngrok.io"
 
 const initialState = {
     ideas: [],

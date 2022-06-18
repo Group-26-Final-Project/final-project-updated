@@ -1,84 +1,70 @@
 import React, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack'
-import Material from 'react-native-vector-icons/MaterialCommunityIcons';
-import * as Linking from 'expo-linking';
 
 // Screens
 import LoginScreen from '../screens/LoginScreen'
-import OTPScreen from '../screens/OTPScreen'
 import RegistrationScreen from '../screens/RegisterScreen'
+import ForgotPasswordScreen from '../screens/ForgotPasswordScreen';
+import ConfirmCodeScreen from '../screens/ConfirmCodeScreen';
+import ResetPasswordScreen from '../screens/ResetPasswordScreen';
+import ResetPasswordSuccessScreen from '../screens/ResetPasswordSuccessScreen';
 
 //Screen names
 const loginName = "Login";
 const registerName = "Register";
-const otpName = "Otp";
+const forgotName = "ForgotPassword";
+const confirmName = "ConfirmCode";
+const resetName = "ResetPassword";
+const successName = "ResetSuccess";
 
 const Stack = createStackNavigator();
 
-function LoginStack() {
+
+function ResetPasswordStack() {
     return (
         <Stack.Navigator
-            initialRouteName={loginName}
+            initialRouteName={forgotName}
             screenOptions={{
                 headerTitle: "",
-                headerTransparent: true
+                headerTransparent: true,
+                headerShown: false,
+                headerBackVisible:false
             }}
         >
             <Stack.Screen
-                name={loginName}
-                component={LoginScreen}
+                name={forgotName}
+                component={ForgotPasswordScreen}
             />
             <Stack.Screen
-                name={otpName}
-                component={OTPScreen}
+                name={confirmName}
+                component={ConfirmCodeScreen}
+            />
+            <Stack.Screen
+                name={resetName}
+                component={ResetPasswordScreen}
+            />
+            <Stack.Screen
+                name={successName}
+                component={ResetPasswordSuccessScreen}
             />
         </Stack.Navigator>
     )
 }
 
 function AuthContainer() {
-    const linking = {
-        prefixes: ['https://tubular-churros-16cbaf.netlify.app'],
-    };
-    useEffect(() => {
-
-        const getUrl = async () => {
-
-            const initialUrl = await Linking.getInitialURL();
-
-            if (initialUrl === null) {
-
-                return;
-
-            }
-
-
-            if (initialUrl.includes('login')) {
-
-                Alert.alert(initialUrl);
-
-                RootNavigation.navigate('loginStack');
-
-            }
-
-        };
-
-        getUrl();
-
-    });
     return (
-        <NavigationContainer linking={linking}>
+        <NavigationContainer>
             <Stack.Navigator
-                initialRouteName="loginStack"
+                initialRouteName={loginName}
                 screenOptions={{
                     headerTitle: "",
                     headerTransparent: true
                 }}
             >
-                <Stack.Screen name="loginStack" component={LoginStack} />
+                <Stack.Screen name="resetPassStack" component={ResetPasswordStack} />
+                <Stack.Screen name={loginName} component={LoginScreen} />
                 <Stack.Screen name={registerName} component={RegistrationScreen} />
-
             </Stack.Navigator>
         </NavigationContainer>
     );

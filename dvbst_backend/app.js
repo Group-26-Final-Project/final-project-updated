@@ -13,6 +13,7 @@ const candidateRouter = require('./controllers/candidateController');
 const electionRouter = require('./controllers/electionController');
 const ideaRouter = require('./controllers/ideaController');
 const pendingRouter = require('./controllers/pendingController');
+const resetRouter = require('./controllers/resetController');
 const resultRouter = require('./controllers/resultController');
 const userRouter = require('./controllers/userController');
 const voterRouter = require('./controllers/voterController');
@@ -25,6 +26,7 @@ app.use('/candidates', candidateRouter)
 app.use('/elections', electionRouter)
 app.use('/ideas', ideaRouter)
 app.use('/pending', pendingRouter)
+app.use('/reset', resetRouter)
 app.use('/results', resultRouter)
 app.use('/user', userRouter)
 app.use('/voters', voterRouter)
