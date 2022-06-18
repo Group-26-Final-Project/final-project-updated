@@ -1,6 +1,6 @@
 import React from 'react'
 import { useNavigation } from '@react-navigation/native';
-import { StyleSheet, Text, SafeAreaView, Button } from 'react-native';
+import { StyleSheet, Text, SafeAreaView, Dimensions, TouchableOpacity } from 'react-native';
 
 const ResetPasswordSuccessScreen = (props) => {
     const navigation = useNavigation();
@@ -8,7 +8,9 @@ const ResetPasswordSuccessScreen = (props) => {
     return (
         <SafeAreaView style={styles.container}>
             <Text>Password reset was successful!</Text>
-            <Button title='Go to Login Page' onPress={()=>navigation.navigate("Login")}/>
+            <TouchableOpacity onPress={handleSubmit} style={styles.button}>
+                <Text style={{ color: '#fff', fontSize: 18 }}>Back to Login</Text>
+            </TouchableOpacity>
         </SafeAreaView>
     );
 }
@@ -20,6 +22,16 @@ const styles = StyleSheet.create({
         paddingTop: 40,
         backgroundColor: '#fff',
         justifyContent: 'center'
+    },
+    button: {
+        alignSelf: 'center',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#00d05a',
+        width: Dimensions.get('window').width * 0.84,
+        height: Dimensions.get('window').height * 0.07,
+        marginTop: 20,
+        borderRadius: 10
     },
 });
 
