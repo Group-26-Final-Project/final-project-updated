@@ -50,6 +50,7 @@ export default function NewCandidate() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
+    console.log("abt to add candidate");
     const errors = validate(formValues);
     if (Object.keys(errors).length === 0) {
       dispatch(addCandidate({
@@ -58,6 +59,7 @@ export default function NewCandidate() {
       }))
         .unwrap()
         .then(() => {
+          console.log("candidate added");
           navigate('/candidates')
           setFormValues(initialValues)
         })

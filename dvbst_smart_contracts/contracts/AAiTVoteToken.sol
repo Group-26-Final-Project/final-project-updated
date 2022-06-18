@@ -4,15 +4,13 @@ pragma solidity ^0.8.9;
 import "@opengsn/contracts/src/BaseRelayRecipient.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "./AAiTElection.sol";
-import "./AAiTElectionHandler.sol";
 
 contract AAiTVoteToken is ERC20, BaseRelayRecipient {
     address public owner;
-    address private AAiTElectionHandlerAddress;
     address private AAiTElectionAddress;
     modifier onlyOwner() {
         require(
-            owner == msg.sender || msg.sender == AAiTElectionHandlerAddress || msg.sender == AAiTElectionAddress,
+            owner == msg.sender || msg.sender == AAiTElectionAddress,
             "This function is restricted to the contract's owner"
         );
         _;
@@ -51,10 +49,8 @@ contract AAiTVoteToken is ERC20, BaseRelayRecipient {
     }
 
     function setAddresses(
-        address _AAiTElectionHandlerAddress,
         address _AAiTElectionAddress
     ) public onlyOwner {
-        AAiTElectionHandlerAddress = _AAiTElectionHandlerAddress;
         AAiTElectionAddress = _AAiTElectionAddress;
     }
 

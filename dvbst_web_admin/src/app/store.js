@@ -5,6 +5,7 @@ import electionsReducer from '../features/electionsSlice';
 import votersReducer from '../features/votersSlice';
 import blacklistReducer from '../features/blacklistSlice';
 import pendingReducer from '../features/pendingSlice';
+import phaseReducer from '../features/phaseSlice';
 
 export const store = configureStore({
   reducer: {
@@ -14,5 +15,6 @@ export const store = configureStore({
     candidatesState: candidatesReducer,
     electionsState: electionsReducer,
     votersState: votersReducer,
+    phaseState: phaseReducer,
   },
 });
