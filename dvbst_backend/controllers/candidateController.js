@@ -131,16 +131,16 @@ router.post(
       const newCandidate = await candidate.save();
       const pending = new Pending({
         userId: newCandidate._id,
-        name: newVoter.name,
-        fname: newVoter.fname,
-        gname: newVoter.gname,
-        email: newVoter.email,
-        phone: newVoter.phone,
-        id: newVoter.id,
-        dept: newVoter.dept,
-        year: newVoter.year,
-        section: newVoter.section,
-        fullName: newVoter.fullName,
+        name: newCandidate.name,
+        fname: newCandidate.fname,
+        gname: newCandidate.gname,
+        email: newCandidate.email,
+        phone: newCandidate.phone,
+        id: newCandidate.id,
+        dept: newCandidate.dept,
+        year: newCandidate.year,
+        section: newCandidate.section,
+        fullName: newCandidate.fullName,
         role: "candidate"
       });
       const salt = await bcrypt.genSalt(10);
