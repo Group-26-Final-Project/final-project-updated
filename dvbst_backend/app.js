@@ -16,6 +16,8 @@ const pendingRouter = require('./controllers/pendingController');
 const resultRouter = require('./controllers/resultController');
 const userRouter = require('./controllers/userController');
 const voterRouter = require('./controllers/voterController');
+const phaseRoute = require('./controllers/phaseController');
+
 // const verifyRouter = require('./controllers/verificationController');
 
 // app.use('/auth', authRouter)
@@ -28,6 +30,8 @@ app.use('/pending', pendingRouter)
 app.use('/results', resultRouter)
 app.use('/user', userRouter)
 app.use('/voters', voterRouter)
+app.use('/phase', phaseRoute);
+
 // app.use('/verify', verifyRouter)
 
 module.exports = app;
