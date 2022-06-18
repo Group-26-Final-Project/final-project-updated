@@ -24,7 +24,7 @@
 // const mnemonic = fs.readFileSync(".secret").toString().trim();
 
 module.exports = {
-  contracts_build_directory: "../dvbst_web_admin/src/contracts",
+  contracts_build_directory: ["../dvbst_web_admin/src/contracts","../dvbst_backend/build/contracts"],
   plugins: ["truffle-contract-size"],
   /**
    * Networks define how you connect to your ethereum client and let you set the

@@ -52,7 +52,7 @@ export default function Voters() {
       },
       {
         Header: "Department",
-        accessor: "departmentName",
+        accessor: "dept",
       },
       {
         Header: "Year",
