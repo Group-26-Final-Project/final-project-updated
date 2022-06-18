@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { login } from '../features/authSlice'
+import { forgotPassword } from '../features/resetPassSlice'
 import { useNavigation } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 
@@ -9,14 +9,15 @@ import { StyleSheet, Text, View, TextInput, Dimensions, TouchableOpacity, Activi
 
 const customFonts = {
     poppinsLight: require('../assets/fonts/Poppins-Light.ttf'),
+    poppinsRegular: require('../assets/fonts/Poppins-Regular.ttf'),
 }
 
-const LoginScreen = (props) => {
+const ForgotPasswordScreen = (props) => {
     const dispatch = useDispatch()
     const navigation = useNavigation();
-    const authState = useSelector((state) => state.authState)
+    const resetPasswordState = useSelector((state) => state.resetPasswordState)
     const initialValues = {
-        email: "", password: ""
+        email: ""
     };
 
     const [formValues, setFormValues] = useState(initialValues)
@@ -34,9 +35,13 @@ const LoginScreen = (props) => {
         e.preventDefault();
         const errors = validate(formValues);
         if (Object.keys(errors).length === 0) {
-            dispatch(login(formValues))
+            dispatch(forgotPassword(formValues))
                 .unwrap()
                 .then((response) => {
+                    navigation.navigate("resetPassStack", {
+                        screen: 'ConfirmCode',
+                        params: { email: formValues.email },
+                    })
                     setFormValues(initialValues)
                 })
                 .catch((e) => {
@@ -49,12 +54,8 @@ const LoginScreen = (props) => {
 
     const validate = (values) => {
         const errors = {}
-
         if (!values.email) {
             errors.email = "Email is a Required Field"
-        }
-        if (!values.password) {
-            errors.password = "Password is a Required Field"
         }
         return errors
     }
@@ -64,22 +65,24 @@ const LoginScreen = (props) => {
     } else {
         return (
             <View style={styles.container}>
-                {authState.loginStatus === "pending" && (
+                {resetPasswordState.forgotPasswordStatus === "pending" && (
                     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                         <ActivityIndicator size="large" color='#00d05a' />
                     </View>
                 )}
-                {authState.loginStatus === "failed" && (
+                {resetPasswordState.forgotPasswordStatus === "failed" && (
                     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                        <Text style={styles.text}>{authState.loginError}</Text>
+                        <Text style={styles.text}>{resetPasswordState.forgotPasswordError}</Text>
                     </View>
                 )}
-                {authState.loginStatus !== "pending" && authState.loginStatus !== "failed" && (
+                {resetPasswordState.forgotPasswordStatus !== "pending" && resetPasswordState.forgotPasswordStatus !== "failed" && (
                     <View>
-    
                         <View style={{alignSelf: 'flex-start', marginBottom: 15 }}>
-                            <Text style={{ fontSize: 36 }}>Login</Text>
+                            <Text style={{ fontSize: 36 }}>Reset Password</Text>
                             <View style={styles.line}></View>
+                        </View>
+                        <View style={{marginBottom: 6}}>
+                            <Text style={styles.text}>Enter the email associated with your account and we'll send an email with instructions to reset your password</Text>
                         </View>
                         <View>
                             <View>
@@ -88,22 +91,10 @@ const LoginScreen = (props) => {
                                     onChangeText={value => changeHandler('email', value)} />
                                 <Text style={styles.error}>{formErrors.email}</Text>
                             </View>
-                            <View>
-                                <Text style={styles.label}>Password</Text>
-                                <TextInput secureTextEntry={true} style={styles.textinput} value={formValues.password}
-                                    onChangeText={value => changeHandler('password', value)} />
-                                <Text style={styles.error}>{formErrors.password}</Text>
-                            </View>
-                        </View>
-                        <View style={{justifyContent: 'center', alignSelf: 'center'}}>
-                            <Text style={{ color: '#00d05a', fontSize: 14, fontFamily: 'poppinsLight'}} onPress={()=>navigation.navigate('resetPassStack', {screen: 'ForgotPassword'})}>Forgot Password?</Text>
                         </View>
                         <TouchableOpacity onPress={handleSubmit} style={styles.button}>
-                            <Text style={{ color: '#fff', fontSize: 20 }}>Login</Text>
+                            <Text style={{ color: '#fff', fontSize: 18 }}>Receive Email</Text>
                         </TouchableOpacity>
-                        <View style={{marginTop: 6, justifyContent: 'center', alignSelf: 'center'}}>
-                            <Text style={{ color: '#4B4B4B', fontSize: 16, fontFamily: 'poppinsLight'}}>Don't have an account? <Text onPress={()=>navigation.reset({index: 0, routes: [{name: 'Register'}]})} style={{ color: '#00d05a', fontSize: 16, fontFamily: 'poppinsLight'}}>Sign Up</Text></Text>
-                        </View>
                     </View>
                 )}
             </View>
@@ -127,6 +118,12 @@ const styles = StyleSheet.create({
         alignSelf: 'flex-end',
         justifyContent: 'flex-end',
     },
+    text: {
+        fontFamily: 'poppinsRegular',
+        fontSize: 14,
+        color: '#4B4B4B',
+        marginBottom: 10
+    },
     textinput: {
         padding: 10,
         marginBottom: 12,
@@ -145,11 +142,11 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: '#00d05a',
-        width: Dimensions.get('window').width * 0.6,
+        width: Dimensions.get('window').width * 0.84,
         height: Dimensions.get('window').height * 0.07,
         marginTop: 20,
         borderRadius: 10
     },
 });
 
-export default LoginScreen;
+export default ForgotPasswordScreen;
