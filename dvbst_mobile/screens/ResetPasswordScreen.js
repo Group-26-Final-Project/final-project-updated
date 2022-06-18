@@ -77,14 +77,12 @@ const ResetPasswordScreen = (props) => {
         return (
             <View style={styles.container}>
                 {resetPasswordState.resetPasswordStatus === "pending" && (
-                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                    <View style={{ flex: 1, justifyContent: 'center', alignSelf: 'center', alignItems: 'center' }}>
                         <ActivityIndicator size="large" color='#00d05a' />
                     </View>
                 )}
                 {resetPasswordState.resetPasswordStatus === "failed" && (
-                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                        <Text style={styles.text}>{resetPasswordState.resetPasswordError.message}</Text>
-                    </View>
+                    <Text style={styles.error}>{resetPasswordState.resetPasswordError.message}</Text>
                 )}
                 {resetPasswordState.resetPasswordStatus !== "pending" && (
                     <View>
@@ -136,11 +134,16 @@ const styles = StyleSheet.create({
         alignSelf: 'flex-end',
         justifyContent: 'flex-end',
     },
+    error: {
+        fontSize: 10,
+        marginBottom: 10,
+        color: '#ff0000'
+    },
     text: {
         fontFamily: 'poppinsRegular',
         fontSize: 14,
         color: '#4B4B4B',
-        marginBottom: 10
+        marginBottom: 10,
     },
     textinput: {
         padding: 10,

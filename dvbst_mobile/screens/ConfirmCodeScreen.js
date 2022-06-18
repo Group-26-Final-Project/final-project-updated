@@ -4,7 +4,6 @@ import { login } from '../features/authSlice'
 import { useNavigation } from '@react-navigation/native';
 import { confirmCode } from '../features/resetPassSlice'
 import { useFonts } from 'expo-font';
-import EmailSVG from '../assets/email-message-svgrepo-com.svg';
 
 import AppLoading from 'expo-app-loading'
 import { StyleSheet, Text, View, TextInput, Dimensions, TouchableOpacity, ActivityIndicator } from 'react-native';
@@ -76,20 +75,24 @@ const ConfirmCodeScreen = (props) => {
         return (
             <View style={styles.container}>
                 {resetPasswordState.confirmCodeStatus === "pending" && (
-                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                    <View style={{ flex: 1, justifyContent: 'center', alignSelf: 'center', alignItems: 'center' }}>
                         <ActivityIndicator size="large" color='#00d05a' />
                     </View>
                 )}
                 {resetPasswordState.confirmCodeStatus === "failed" && (
-                    <Text style={styles.text}>{resetPasswordState.confirmCodeError.message}</Text>
+                    <Text style={styles.error}>{resetPasswordState.confirmCodeError.message}</Text>
 
                 )}
                 {resetPasswordState.confirmCodeStatus !== "pending" && (
                     <View>
-                        {/* <EmailSVG /> */}
-                        <View>
-                            <Text>Verify Code</Text>
+                        <View style={{ alignSelf: 'flex-start', marginBottom: 15 }}>
+                            <Text style={{ fontSize: 36 }}>Confirm Code</Text>
+                            <View style={styles.line}></View>
                         </View>
+                        <View>
+                            <Text style={styles.text}>Enter the 6-digit OTP you received in your email.</Text>
+                        </View>
+
                         <View>
                             <View>
                                 <Text style={styles.label}>Code</Text>
@@ -99,7 +102,7 @@ const ConfirmCodeScreen = (props) => {
                             </View>
                         </View>
                         <TouchableOpacity onPress={handleSubmit} style={styles.button}>
-                            <Text style={{ color: '#fff', fontSize: 20 }}>Login</Text>
+                            <Text style={{ color: '#fff', fontSize: 20 }}>Submit</Text>
                         </TouchableOpacity>
                     </View>
                 )}
@@ -124,6 +127,17 @@ const styles = StyleSheet.create({
         alignSelf: 'flex-end',
         justifyContent: 'flex-end',
     },
+    text: {
+        fontFamily: 'poppinsRegular',
+        fontSize: 14,
+        color: '#4B4B4B',
+        marginBottom: 10,
+    },
+    error: {
+        fontSize: 10,
+        marginBottom: 10,
+        color: '#ff0000'
+    },
     textinput: {
         padding: 10,
         marginBottom: 12,
@@ -142,7 +156,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: '#00d05a',
-        width: Dimensions.get('window').width * 0.6,
+        width: Dimensions.get('window').width * 0.84,
         height: Dimensions.get('window').height * 0.07,
         marginTop: 20,
         borderRadius: 10
