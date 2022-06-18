@@ -3,7 +3,7 @@ import axios from 'axios';
 import jwtDecode from "jwt-decode";
 import { AsyncStorage } from '@react-native-async-storage/async-storage';
 
-const API_URL = 'https://1b5b-196-191-52-34.eu.ngrok.io';
+const API_URL = 'https://7add-197-156-103-216.eu.ngrok.io';
 
 const initialState = {
     token: null,
@@ -14,7 +14,6 @@ const initialState = {
     registerError: "",
     verifyStatus: "",
     verifyError: "",
-    userLoaded: false,
 };
 
 export const register = createAsyncThunk("auth/register", async (newUser,
@@ -31,7 +30,8 @@ export const login = createAsyncThunk("auth/login", async ({ email, password }, 
     rejectWithValue }) => {
     try {
         const response = await axios.post(API_URL + "/login/mobile", { email, password });
-        return response.status
+        console.log(response.data)
+        return response.data
     } catch (error) {
         return rejectWithValue(error.response.data);
     }
@@ -107,8 +107,12 @@ const authSlice = createSlice({
             }
         },
         [login.fulfilled]: (state, action) => {
+            const user = jwtDecode(action.payload);
+            console.log(user)
             return {
                 ...state,
+                token: action.payload,
+                id: user.id,
                 loginStatus: "success",
             };
         },

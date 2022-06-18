@@ -10,7 +10,7 @@ const bcrypt = require("bcryptjs");
 const client = require("twilio")(config.accountSID, config.authToken)
 const { v4: uuidv4 } = require("uuid");
 const { send_magic_link } = require("./emailController");
-var cors = require("cors");
+const cors = require('cors');
 
 // Login router
 router.post("/", cors(), async (req, res) => {
@@ -123,20 +123,10 @@ router.post("/mobile", cors(), async (req, res) => {
     if (!validPassword) {
       return res.status(404).json("Email/Password is Incorrect");
     } else {
-      client
-        .verify
-        .services(config.serviceID)
-        .verifications
-        .create({
-          to: `+251${user.phone.substring(1)}`,
-          channel: 'sms'
-        })
-        .then((data) => {
-          res.status(200).json(data)
-        })
-        .catch((e) => {
-          res.status(500).json("Something went wrong!")
-        })
+      const token = jwt.sign({ id: user.userId }, config.secret, {
+        expiresIn: '1h',
+      });
+      res.status(200).json(token);
     }
   } catch (e) {
     console.log(e)
@@ -163,11 +153,11 @@ router.post("/verify", cors(), async (req, res) => {
           code: otp
         })
         .then((data) => {
-          if (data.status == "success"){
+          if (data.status == "success") {
             const token = jwt.sign({ id: user.userId }, config.secret, {
               expiresIn: "24h",
             });
-            res.status(200).json({"data": data, "token": token})
+            res.status(200).json({ "data": data, "token": token })
           } else {
             res.status(400).send("Wrong OTP found!")
           }

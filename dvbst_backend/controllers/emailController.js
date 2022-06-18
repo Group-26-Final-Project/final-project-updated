@@ -42,11 +42,10 @@ const send_magic_link = async (email, link, which) => {
     }
 }
 
-const send_password = async (email, password) => {
+const send_password = async (email, otp) => {
     var subj, body;
-    URL = "https://tubular-churros-16cbaf.netlify.app/login/enter/"
-    subj = "Welcome to DVBST"
-    body = '<p>Welcome to our website. This is your password for this account: ' + password + '</p><br><p>Please keep it somewhere safe. If you forget your password, contact the admin</p>'
+    subj = "Password Reset"
+    body = '<p>This is your password reset Otp :' + otp + '.' + '</p>'
 
     const mailOptions = {
         to: email,
