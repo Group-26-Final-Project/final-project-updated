@@ -1,7 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios'
 
-const baseURL = "https://final-project-dvbst.herokuapp.com"
+const baseURL = "http://localhost:8080"
+// const baseURL = "https://final-project-dvbst.herokuapp.com"
 
 
 const initialState = {
@@ -36,6 +37,18 @@ export const getElectionResult = createAsyncThunk("elections/getElectionResult",
             return response.data
         } catch(err){
             return rejectWithValue(err.response.data)
+        }
+})
+
+export const renderElectionResult = createAsyncThunk("elections/renderElectionResult", async (election, {
+    rejectWithValue})=>{
+        try{
+            // await timeout(1000)
+            // const response = await axios.get(baseURL+"/results/" + electionId)
+            const response = election.sort((a, b) => a.voteCount < b.voteCount ? 1 : -1)
+            return response
+        } catch(err){
+            return rejectWithValue("Somethings off")
         }
 })
 
@@ -84,6 +97,27 @@ const electionsSlice = createSlice({
                 getElectionResultError: action.payload,
             }
         },
+        [renderElectionResult.pending]: (state, action) => {
+            return {
+                ...state,
+                getElectionResultStatus: "pending",
+            }
+        },
+        [renderElectionResult.fulfilled]: (state, action) => {
+            return {
+                ...state,
+                election: action.payload,
+                getElectionResultStatus: "success"
+            }
+        },
+        [renderElectionResult.rejected]: (state, action) => {
+            return {
+                ...state,
+                getElectionResultStatus: "failed",
+                getElectionResultError: action.payload,
+            }
+        },
+        
     }
 })
 
