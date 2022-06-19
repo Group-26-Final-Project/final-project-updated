@@ -1,8 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import axios from 'axios'
-
-const baseURL = "http://localhost:8080"
-// const baseURL = "https://final-project-dvbst.herokuapp.com"
+import CustomAxios from '../Api/CustomAxios'
 
 const initialState = {
     user: null,
@@ -19,7 +16,7 @@ function timeout(ms) {
 export const getUser = createAsyncThunk("user/getUser", async (id, {
     rejectWithValue }) => {
     try {
-        const response = await axios.get(baseURL + "/user/" + id)
+        const response = await CustomAxios.get("/user/" + id)
         console.log(response)
         return response.data
     } catch (err) {
@@ -31,7 +28,7 @@ export const editUser = createAsyncThunk("user/editUser", async ({ id, user }, {
     rejectWithValue }) => {
     try {
         console.log("Here", id, user)
-        const response = await axios.patch(baseURL + "/candidates/complete/" + id, user)
+        const response = await CustomAxios.patch("/candidates/complete/" + id, user)
         return response.data
     } catch (err) {
         return rejectWithValue(err.response.data)

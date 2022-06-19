@@ -1,10 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import CustomAxios from '../Api/CustomAxios'
-import axios from 'axios'
 import jwtDecode from "jwt-decode";
-
-// const API_URL = 'https://final-project-dvbst.herokuapp.com';
-const API_URL = 'http://localhost:8080';
 
 // const initialState = user
 //     ? { isLoggedIn: true, user }
@@ -24,7 +20,7 @@ const initialState = {
 export const register = createAsyncThunk("auth/register", async (newUser,
     rejectWithValue) => {
     try {
-        const response = (newUser.role === 'voter') ? await axios.post(API_URL + "/voters", newUser) : await axios.post(API_URL + "/candidates", newUser); 
+        const response = (newUser.role === 'voter') ? await CustomAxios.post("/voters", newUser) : await CustomAxios.post("/candidates", newUser); 
         return response.data;
     } catch (error) {
         console.log(error)
@@ -46,21 +42,6 @@ export const login = createAsyncThunk("auth/login", async ({ email, password }, 
     rejectWithValue }) => {
     try {
         const { data: result } = await CustomAxios.post("/login", { email, password })
-        if (result) {
-            localStorage.setItem("token", result)
-        }
-        console.log("result", result)
-        return result;
-    } catch (error) {
-        return rejectWithValue(error.response.data);
-    }
-});
-
-
-export const verify = createAsyncThunk("auth/verify", async ({ email, link }, {
-    rejectWithValue }) => {
-    try {
-        const { data: result } = await axios.post(API_URL + "/login/enter", { email, link })
         if (result) {
             localStorage.setItem("token", result)
         }
@@ -142,29 +123,6 @@ const authSlice = createSlice({
                 ...state,
                 loginStatus: "failed",
                 loginError: action.payload,
-            }
-        },
-        [verify.pending]: (state, action) => {
-            return {
-                ...state,
-                verifyStatus: "pending"
-            }
-        },
-        [verify.fulfilled]: (state, action) => {
-            const user = jwtDecode(action.payload);
-            console.log(user)
-            return {
-                ...state,
-                token: action.payload,
-                id: user.id,
-                verifyStatus: "success",
-            };
-        },
-        [verify.rejected]: (state, action) => {
-            return {
-                ...state,
-                verifyStatus: "failed",
-                verifyError: action.payload,
             }
         },
         // [register.fulfilled]: (state, action) => {

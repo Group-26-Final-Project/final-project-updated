@@ -1,8 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import axios from 'axios'
-
-// const baseURL = "https://dvbst.herokuapp.com"
-const baseURL = "http://localhost:8080"
+import CustomAxios from '../Api/CustomAxios'
 
 const initialState = {
     candidates: [],
@@ -18,7 +15,7 @@ export const getCandidates = createAsyncThunk("blacklist/getCandidates", async (
     rejectWithValue }) => {
     try {
         await timeout(1000)
-        const response = await axios.get(baseURL + "/blacklist")
+        const response = await CustomAxios.get("/blacklist")
         return response.data
     } catch (err) {
         return rejectWithValue(err.response.data)

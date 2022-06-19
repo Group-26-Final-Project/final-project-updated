@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import axios from 'axios'
+import CustomAxios from '../Api/CustomAxios'
 
 const baseURL = "http://localhost:8080"
 // const baseURL = "https://final-project-dvbst.herokuapp.com"
@@ -22,7 +22,7 @@ export const getElections = createAsyncThunk("elections/getElections", async (id
     rejectWithValue})=>{
         try{
             await timeout(1000)
-            const response = await axios.get(baseURL+"/elections")
+            const response = await CustomAxios.get("/elections")
             return response.data
         } catch(err){
             return rejectWithValue(err.response.data)
@@ -33,7 +33,7 @@ export const getElectionResult = createAsyncThunk("elections/getElectionResult",
     rejectWithValue})=>{
         try{
             await timeout(1000)
-            const response = await axios.get(baseURL+"/results/" + electionId)
+            const response = await CustomAxios.get("/results/" + electionId)
             return response.data
         } catch(err){
             return rejectWithValue(err.response.data)
@@ -44,7 +44,7 @@ export const renderElectionResult = createAsyncThunk("elections/renderElectionRe
     rejectWithValue})=>{
         try{
             // await timeout(1000)
-            // const response = await axios.get(baseURL+"/results/" + electionId)
+            // const response = await CustomAxios.get(baseURL+"/results/" + electionId)
             const response = election.sort((a, b) => a.voteCount < b.voteCount ? 1 : -1)
             return response
         } catch(err){
