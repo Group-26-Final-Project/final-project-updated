@@ -1,9 +1,5 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
-import CustomAxios from "../Api/CustomAxios";
-
-const baseURL = "http://localhost:8080";
-// const baseURL = "https://final-project-dvbst.herokuapp.com"
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import CustomAxios from '../Api/CustomAxios'
 
 const initialState = {
   election: null,
@@ -20,12 +16,9 @@ export const verifyMagic = createAsyncThunk(
   async ({ email, link }, { rejectWithValue }) => {
     console.log("Verify", email, link);
     try {
-      const { data: result } = await axios.post(baseURL + "/verify", {
-        email,
-        link,
-      });
-      console.log("Verify", result);
-      return result;
+        const { data: result } = await CustomAxios.post("/verify", {email, link})
+        console.log("Verify", result)
+        return result
     } catch (err) {
       return rejectWithValue(err.response.data);
     }
@@ -49,13 +42,8 @@ export const voteCandidate = createAsyncThunk(
   "voting/voteCandidate",
   async ({ electionId, candidateId, voterId }, { rejectWithValue }) => {
     try {
-        console.log("Vote", electionId, candidateId, voterId);
-      const response = await axios.patch(baseURL + "/elections", {
-        electionId,
-        candidateId,
-        voterId,
-      });
-      return response.data;
+        const response = await CustomAxios.patch("/elections", {electionId, candidateId, voterId})
+        return response.data
     } catch (err) {
       return rejectWithValue(err.response.data);
     }

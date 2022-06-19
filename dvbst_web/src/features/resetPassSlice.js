@@ -1,7 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from 'axios';
-
-const API_URL = 'http://localhost:8080';
+import CustomAxios from '../Api/CustomAxios'
 
 const initialState = {
     resetToken: "",
@@ -17,7 +15,7 @@ export const forgotPassword = createAsyncThunk("reset/forgotPassword", async ({ 
     rejectWithValue }) => {
         console.log("Forgot", email)
     try {
-        const response = await axios.post(API_URL + "/reset", { email });
+        const response = await CustomAxios.post("/reset", { email });
         return response.status
     } catch (error) {
         return rejectWithValue(error.response.data);
@@ -28,7 +26,7 @@ export const confirmCode = createAsyncThunk("reset/confirmCode", async ({ email,
     rejectWithValue }) => {
         console.log(email, code, "Slice")
     try {
-        const response = await axios.post(API_URL + "/reset/confirm", { email, code });
+        const response = await CustomAxios.post("/reset/confirm", { email, code });
         return response.data.resetToken
     } catch (error) {
         return rejectWithValue(error.response.data);
@@ -38,7 +36,7 @@ export const confirmCode = createAsyncThunk("reset/confirmCode", async ({ email,
 export const resetPassword = createAsyncThunk("reset/resetPassword", async ({ resetToken , password }, {
     rejectWithValue }) => {
     try {
-        const response = await axios.post(API_URL + "/reset/newpass", { resetToken, password });
+        const response = await CustomAxios.post("/reset/newpass", { resetToken, password });
         return response.status
     } catch (error) {
         return rejectWithValue(error.response.data);

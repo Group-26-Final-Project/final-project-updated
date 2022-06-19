@@ -1,8 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import axios from 'axios'
-
-// const baseURL = "https://dvbst.herokuapp.com"
-const baseURL = "http://localhost:8080"
+import CustomAxios from '../Api/CustomAxios'
 
 const initialState = {
     candidates: [],
@@ -24,7 +21,7 @@ export const getCandidates = createAsyncThunk("candidates/getCandidates", async 
     rejectWithValue }) => {
     try {
         await timeout(1000)
-        const response = await axios.get(baseURL + "/candidates?query=" + query)
+        const response = await CustomAxios.get("/candidates?query=" + query)
         return response.data
     } catch (err) {
         return rejectWithValue(err.response.data)
@@ -35,7 +32,7 @@ export const addCandidate = createAsyncThunk("candidates/addCandidate", async (c
     rejectWithValue})=>{
         try{
             await timeout(1000)
-            const response = await axios.post(baseURL+"/candidates", candidate)
+            const response = await CustomAxios.post("/candidates", candidate)
             return response.data
         } catch(err){
             return rejectWithValue(err.response.data)
@@ -46,7 +43,7 @@ export const editCandidate = createAsyncThunk("candidates/editCandidate", async 
     rejectWithValue})=>{
         try{
             await timeout(1000)
-            const response = await axios.put(baseURL+"/candidates", candidate)
+            const response = await CustomAxios.put("/candidates", candidate)
             return response.data
         } catch(err){
             return rejectWithValue(err.response.data)
@@ -57,7 +54,7 @@ export const disqualifyCandidate = createAsyncThunk("candidates/disqualifyCandid
     rejectWithValue})=>{
         try{
             await timeout(1000)
-            const response = await axios.delete(baseURL+"/candidates/" + id)
+            const response = await CustomAxios.delete("/candidates/" + id)
             return response.data
         } catch(err){
             return rejectWithValue(err.response.data)

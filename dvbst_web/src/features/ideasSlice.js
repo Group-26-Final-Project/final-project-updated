@@ -1,10 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import axios from 'axios'
 import CustomAxios from '../Api/CustomAxios'
-
-
-const baseURL = "http://localhost:8080"
-// const baseURL = "https://final-project-dvbst.herokuapp.com"
 
 const initialState = {
     ideas: [],
@@ -43,10 +38,10 @@ export const getIdeas = createAsyncThunk("ideas/getIdeas", async (id=null, {
         }
 })
 
-export const voteIdea = createAsyncThunk("ideas/voteIdea", async ({idea_id, user_id}, {
+export const voteIdea = createAsyncThunk("ideas/voteIdea", async ({idea_id}, {
     rejectWithValue})=>{
         try{
-            const response = await axios.patch(baseURL+"/ideas/"+idea_id, {"user_id": user_id})
+            const response = await CustomAxios.patch("/ideas/"+idea_id)
             return response.data
         } catch(err){
             return rejectWithValue(err.response.data)

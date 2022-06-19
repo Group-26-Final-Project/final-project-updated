@@ -38,7 +38,7 @@ router.post("/", cors(), async (req, res) => {
   }
 });
 
-router.post("/admin", async (req, res) => {
+router.post("/admin", cors(), async (req, res) => {
   console.log("Request", req.body)
   try {
     const { email, password } = req.body;

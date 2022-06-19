@@ -1,13 +1,13 @@
 const express = require('express')
 const router = express.Router()
 const auth = require('../middleware/auth');
+const hasRole = require('../middleware/hasRole');
 const Candidate = require('../models/candidate')
 const Pending  = require("../models/pending");
 const Voter = require('../models/voter')
 const User = require('../models/user')
 const upload = require('../middleware/upload')
 const bcrypt = require('bcryptjs')
-var generator = require('generate-password');
 const cors = require('cors');
 const Blacklist = require('../models/blacklist');
 const { send_password } = require("./emailController");
@@ -16,7 +16,7 @@ const blacklistCandidate = require('../helpers/blacklistCandidate');
 
 
 //get all candidates
-router.get('/', cors(), async (req, res, next) => {
+router.get('/', cors(), auth, hasRole, async (req, res, next) => {
   try {
     let query = {}
     if (req.query.query) {
@@ -36,7 +36,7 @@ router.get('/', cors(), async (req, res, next) => {
 });
 
 // get candidate detail
-router.get("/:id", cors(), async (req, res, next) => {
+router.get("/:id", cors(), auth, hasRole, async (req, res, next) => {
   try {
     var candidate = await Candidate.findById(req.params.id);
     res.json({
@@ -54,7 +54,7 @@ router.get("/:id", cors(), async (req, res, next) => {
 });
 
 //disqualify
-router.patch("/", cors(), async function (req, res, next) {
+router.patch("/", cors(), auth, hasRole, async function (req, res, next) {
   const candidate = await Candidate.findOne({ email: req.body.email });
   try {
     const updatedCandidate = await Candidate.findByIdAndUpdate(candidate._id, {
@@ -67,7 +67,7 @@ router.patch("/", cors(), async function (req, res, next) {
 });
 
 //complete profile
-router.patch("/complete/:id", cors(), async function (req, res, next) {
+router.patch("/complete/:id", cors(), auth, hasRole, async function (req, res, next) {
   console.log("Got here", req.body)
   try {
     const updatedCandidate = await Candidate.findByIdAndUpdate(req.params.id, {
@@ -82,7 +82,8 @@ router.patch("/complete/:id", cors(), async function (req, res, next) {
   }
 });
 
-router.delete("/:id", cors(), async function (req, res, next) {
+//blacklist
+router.delete("/:id", cors(), auth, hasRole, async function (req, res, next) {
   try {
     const deletedCandidate = await Candidate.findByIdAndDelete(req.params.id);
     await blacklistCandidate(deletedCandidate.uniqueID);
@@ -102,6 +103,9 @@ router.delete("/:id", cors(), async function (req, res, next) {
 //add new candidate
 router.post(
   "/",
+  cors(),
+  auth, 
+  hasRole,
   upload.single("profile"),
   async function (req, res, next) {
     const uniqueID = await generateAddress();

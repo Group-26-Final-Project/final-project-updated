@@ -32,8 +32,6 @@ router.get("/", cors(), async (req, res, next) => {
 // get election detail
 router.get("/details/:id", cors(), async (req, res, next) => {
   try {
-    console.log(req.params.id);
-    console.log("gugugugugagagagaga");
     var election = await Election.findById(req.params.id);
     const voters = await Voter.find({
       dept: 0,
@@ -54,6 +52,31 @@ router.get("/details/:id", cors(), async (req, res, next) => {
       code: 500,
       message: "Election doesn't exist!",
     });
+  }
+});
+
+router.get("/myelection/:id", cors(), async (req, res, next) => {
+  try {
+    var token = req.headers.authorization;
+    token = token.split(" ")[1];
+    var decoded = jwt.decode(token, config.secret);
+    var temp = await User.findById(decoded.id)
+    if (!temp) {
+      return res.status(400).send("User doesn't exist!")
+    }
+    var user = temp.role === 'voter' ?
+      await Voter.findOne({ userId: temp.userId }) :
+      await Candidate.findOne({ userId: temp.userId })
+    if (!user) {
+      return res.status(400).send("User doesn't exist!")
+    }
+    var election = await Election.findOne({ department: user.dept, batch: user.year, section: user.section })
+    if (!election) {
+      return res.status(400).send("Election doesn't exist yet!")
+    }
+    return res.status(200).send(election);
+  } catch (err) {
+    return res.status(500).send("Something went wrong!")
   }
 });
 
