@@ -11,7 +11,8 @@ var generator = require('generate-password');
 const cors = require('cors');
 const Blacklist = require('../models/blacklist');
 const { send_password } = require("./emailController");
-const generateAddress = require('../helpers/generateAddress')
+const generateAddress = require('../helpers/generateAddress');
+const blacklistCandidate = require('../helpers/blacklistCandidate');
 
 
 //get all candidates
@@ -84,6 +85,7 @@ router.patch("/complete/:id", cors(), async function (req, res, next) {
 router.delete("/:id", cors(), async function (req, res, next) {
   try {
     const deletedCandidate = await Candidate.findByIdAndDelete(req.params.id);
+    await blacklistCandidate(deletedCandidate.uniqueID);
     await User.remove({userId: req.params.id});
     const blacklist = new Blacklist({
       userId: deletedCandidate._id,
