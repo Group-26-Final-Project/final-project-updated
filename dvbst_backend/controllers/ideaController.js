@@ -10,7 +10,6 @@ router.get('/', async function (req, res) {
     var token = req.headers.authorization;
     token = token.split(" ")[1];
     var decoded = jwt.decode(token, config.secret);
-    console.log(token)
     try {
         const ideas = await Idea.find().lean()
         const response = ideas.map(idea => {
@@ -39,15 +38,19 @@ router.post('/', async function (req, res) {
 });
 
 router.patch('/:id', async function (req, res) {
+    var token = req.headers.authorization;
+    token = token.split(" ")[1];
+    var decoded = jwt.decode(token, config.secret);
+    console.log(decoded)
     const idea = await Idea.findOne({ _id: req.params.id })
     if (!idea) {
         return res.status(200).send("No ideas yet!");
     } else {
-        if (idea.likes.includes(req.body.user_id)) {
-            idea.likes = (idea.likes).filter(e => e !== req.body.user_id)
+        if (idea.likes.includes(decoded.id)) {
+            idea.likes = (idea.likes).filter(e => e !== decoded.id)
             idea.likeCount--
         } else {
-            idea.likes.push(req.body.user_id)
+            idea.likes.push(decoded.id)
             idea.likeCount++
         }
     }

@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import axios from 'axios'
+import CustomAxios from '../Api/CustomAxios'
+import { getData } from '../Api/RetrieveToken';
 
 const baseURL = "https://7add-197-156-103-216.eu.ngrok.io"
 
@@ -21,19 +22,27 @@ export const addIdeas = createAsyncThunk("ideas/addIdeas", async (idea, {
     rejectWithValue})=>{
         try{
             await timeout(1000)
-            const response = await axios.post(baseURL+"/ideas", idea)
+            const response = await CustomAxios.post("/ideas", idea, {
+                headers: {
+                    Authorization: 'Bearer ' + await getData()  //the token is a variable which holds the token
+                }
+            })
             return response.data
         } catch(err){
             return rejectWithValue(error.response.data)
         }
 })
 
+
 export const getIdeas = createAsyncThunk("ideas/getIdeas", async (id=null, {
     rejectWithValue})=>{
+        // console.log("Reducer", token)
         try{
-            await timeout(1000)
-            const response = await axios.get(baseURL+"/ideas")
-            console.log("Response", response)
+            const response = await CustomAxios.get("/ideas", {
+                headers: {
+                    Authorization: 'Bearer ' + await getData()  //the token is a variable which holds the token
+                }
+            })
             return response.data
         } catch(err){
             console.log("Response", err)
@@ -44,7 +53,13 @@ export const getIdeas = createAsyncThunk("ideas/getIdeas", async (id=null, {
 export const voteIdea = createAsyncThunk("ideas/voteIdea", async (idea_id, {
     rejectWithValue})=>{
         try{
-            const response = await axios.patch(baseURL+"/ideas/"+idea_id, {"user_id": 1})
+            await timeout(1000)
+
+            const response = await CustomAxios.patch("/ideas/"+idea_id, {}, {
+                headers: {
+                    Authorization: 'Bearer ' + await getData()  //the token is a variable which holds the token
+                }
+            })
             return response.data
         } catch(err){
             return rejectWithValue(error.response.data)

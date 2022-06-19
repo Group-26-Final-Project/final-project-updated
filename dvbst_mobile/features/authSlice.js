@@ -2,6 +2,8 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from 'axios';
 import jwtDecode from "jwt-decode";
 import { AsyncStorage } from '@react-native-async-storage/async-storage';
+import { storeData } from "../Api/StoreToken";
+import { removeData } from "../Api/RemoveToken";
 
 const API_URL = 'https://7add-197-156-103-216.eu.ngrok.io';
 
@@ -12,8 +14,7 @@ const initialState = {
     loginError: "",
     registerStatus: "",
     registerError: "",
-    verifyStatus: "",
-    verifyError: "",
+    logoutStatus: "",
 };
 
 export const register = createAsyncThunk("auth/register", async (newUser,
@@ -30,27 +31,19 @@ export const login = createAsyncThunk("auth/login", async ({ email, password }, 
     rejectWithValue }) => {
     try {
         const response = await axios.post(API_URL + "/login/mobile", { email, password });
-        console.log(response.data)
+        // console.log(response, "Response")
+        if (response.data) {
+            storeData(response.data)
+        }
         return response.data
     } catch (error) {
-        return rejectWithValue(error.response.data);
-    }
-});
-
-export const verify = createAsyncThunk("auth/verify", async ({ email, otp }, {
-    rejectWithValue }) => {
-    try {
-        const response = await axios.post(API_URL + "/login/verify", { email, otp })
-        console.log("Success", response)
-        return response.data.token;
-    } catch (error) {
-        console.log("Error", error)
+        // console.log("error", error)
         return rejectWithValue(error.response.data);
     }
 });
 
 export const logout = createAsyncThunk("auth/logout", async () => {
-    await AsyncStorage.removeItem("token")
+    removeData()
 });
 
 const authSlice = createSlice({
@@ -68,16 +61,6 @@ const authSlice = createSlice({
                     userLoaded: true,
                 };
             } else return { ...state, userLoaded: true };
-        },
-        logoutUser(state, action) {
-            AsyncStorage.removeItem("token");
-            return {
-                ...state,
-                token: "",
-                id: "",
-                loginStatus: "",
-                loginError: "",
-            };
         }
     },
     extraReducers: {
@@ -123,28 +106,25 @@ const authSlice = createSlice({
                 loginError: action.payload,
             }
         },
-        [verify.pending]: (state, action) => {
+        [logout.pending]: (state, action) => {
             return {
                 ...state,
-                verifyStatus: "pending"
+                logoutStatus: "pending"
             }
         },
-        [verify.fulfilled]: (state, action) => {
-            const user = jwtDecode(action.payload);
-            console.log(user)
+        [logout.fulfilled]: (state, action) => {
             return {
                 ...state,
-                token: action.payload,
-                id: user.id,
-                verifyStatus: "success",
+                token: "",
+                id: "",
+                logoutStatus: "success"
             };
         },
-        [verify.rejected]: (state, action) => {
+        [logout.rejected]: (state, action) => {
             console.log("ACtion", action)
             return {
                 ...state,
-                verifyStatus: "failed",
-                verifyError: action.payload,
+                logoutStatus: "failed"
             }
         },
         // [register.fulfilled]: (state, action) => {
@@ -168,5 +148,5 @@ const authSlice = createSlice({
     },
 });
 
-export const { loadUser, logoutUser } = authSlice.actions;
+export const { loadUser } = authSlice.actions;
 export default authSlice.reducer;

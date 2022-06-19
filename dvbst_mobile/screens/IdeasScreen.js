@@ -23,12 +23,9 @@ const IdeasScreen = (props) => {
     const [isLoaded] = useFonts(customFonts);
 
     useEffect(() => {
-        if (ideasState.getIdeasStatus === '') {
-            dispatch(getIdeas())
-        }
-    }, [dispatch, ideasState.getIdeasStatus])
-
-    console.log(ideasState.ideas, ideasState.getIdeasStatus)
+        dispatch(getIdeas())
+    }, [dispatch])
+    
     if (!isLoaded) {
         return <AppLoading />;
     } else {
@@ -56,7 +53,7 @@ const IdeasScreen = (props) => {
                                 <SearchBar />
                                 <SearchFilter />
 
-                                <ScrollView>
+                                <ScrollView style={{marginBottom: 120}}>
                                     {ideasState.ideas.map((idea) => (
                                         <IdeaDetail
                                             key={idea._id}
@@ -65,7 +62,7 @@ const IdeasScreen = (props) => {
                                             title={idea.title}
                                             description={idea.description}
                                             voteCount={idea.likeCount}
-                                            liked={idea.likedUser}
+                                            likes={idea.likes}
                                         />
                                     ))}
                                 </ScrollView>
@@ -82,7 +79,7 @@ const IdeasScreen = (props) => {
 const styles = StyleSheet.create({
     container: {
         paddingHorizontal: 10,
-        paddingTop: 40,
+        paddingVertical: 40,
         backgroundColor: '#fff',
         flex: 1,
     },
