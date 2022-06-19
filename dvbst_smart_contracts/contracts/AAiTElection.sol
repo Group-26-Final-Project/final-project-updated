@@ -659,7 +659,7 @@ function getCurrentPhase() public view returns (ElectionPhase memory) {
                 return true;
             }
         }
-        revert("Invalid Operation");
+        // revert("Invalid Operation");
     }
 
     function burnAllTokens(address[] memory users) public onlyOwner {
