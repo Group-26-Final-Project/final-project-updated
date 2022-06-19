@@ -486,12 +486,13 @@ function getCurrentPhase() public view returns (ElectionPhase memory) {
                     voted.push(voterAddress);
                     return;
                 } else {
-                    revert("Invalid Operation");
+                    revert("Invalid Phase");
                 }
             }
+            continue;
         }
 
-        revert("Invalid Operation");
+        revert("Couldn't Vote");
 
         // require(
         //     ,

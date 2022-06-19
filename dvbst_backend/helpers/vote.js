@@ -17,17 +17,23 @@ const { getLocalElectionByCandidate } = require("./createElection");
 const Voter = require("../models/voter");
 const Election = require("../models/election");
 const Candidate = require("../models/candidate");
+const { getPhase } = require("./changePhase");
 // const Voter = require("../models/voter");
 
-async function vote(from, to,phase) {
+async function vote(voter, candidate, election) {
   try {
-    console.log("in vote",to);
-    var check = await Voter.findOne({ uniqueID: from });
-    if (!check) {
-      console.log("Uknown voter");
-      return "Unknown voter";
-    }
-    if (check.voted) {
+    // console.log("in vote",to);
+    const phase = await getPhase();
+    console.log("phase",phase.phaseName);
+    if(!(phase.phaseName === 2 || phase.phaseName === 4 || phase.phaseName === 6)) throw Error("Invalid Phase");
+
+
+    // var check = await Voter.findOne({ uniqueID: from });
+    // if (!check) {
+    //   console.log("Uknown voter");
+    //   return "Unknown voter";
+    // }
+    if (voter.voted) {
       console.log("Voter already voted");
       return "Voter already voted";
     }
@@ -38,60 +44,61 @@ async function vote(from, to,phase) {
     // });
     // 
     // // // // // // // // // // // // // // // dont forget to bring phase check from mockvoting to here
-    if (phase === 2) {
-      election = await Election.findOne({
-        department: check.dept,
-        section: check.section,
-        year: check.year,
-      });
-    } else if (phase === 4) {
-      election = await Election.findOne({
-        department: check.dept,
-        year: check.year,
-      });
-    } else if (phase === 6) {
-      election = await Election.findOne({
-        department: check.dept,
-      });
-    } else {
-      console.log("Invalid phase");
-      return "Invalid phase";
-    }
+    // if (phase === 2) {
+    //   election = await Election.findOne({
+    //     department: check.dept,
+    //     section: check.section,
+    //     year: check.year,
+    //   });
+    // } else if (phase === 4) {
+    //   election = await Election.findOne({
+    //     department: check.dept,
+    //     year: check.year,
+    //   });
+    // } else if (phase === 6) {
+    //   election = await Election.findOne({
+    //     department: check.dept,
+    //   });
+    // } else {
+    //   console.log("Invalid phase");
+    //   return "Invalid phase";
+    // }
 
-    if (!election) {
-        console.log("Unknown election");
-        return "Unknown election";
-      }
+    // if (!election) {
+    //     console.log("Unknown election");
+    //     return "Unknown election";
+    //   }
 
     // console.log("am here");
     for (let index = 0; index < election.candidates.length; index++) {
       // console.log("am in for loop");
-      if (election.candidates[index].uniqueID === to) {
+      if (election.candidates[index].uniqueID === candidate.uniqueID) {
+        console.log(voter, candidate.uniqueID);
         // console.log("am in if");
         const contract = await initContract();
 
-        const transaction = await contract.vote(from, to);
+        const transaction = await contract.vote(voter.uniqueID, candidate.uniqueID);
         const transactionReceipt = await transaction.wait();
         if (transactionReceipt.status !== 1) {
           console.log("Error", transactionReceipt);
         } else {
           // const election = getLocalElectionByCandidate(to);
           // console.log("got election:", election);
-          const count = await updateResult(election.name, to);
+          const count = await updateResult(election.name, candidate.uniqueID);
           if (Number.isInteger(count)) {
-            const candidate = await Candidate.findOneAndUpdate(
-              { uniqueID: to },
+            await Candidate.findOneAndUpdate(
+              { uniqueID: candidate.uniqueID },
               { voteCount: count }
             );
             await Election.findOneAndUpdate(
-              { name: election.name, 'candidates.uniqueID':to },
+              { name: election.name, 'candidates.uniqueID':candidate.uniqueID },
               { $set:
                 { 'candidates.$.voteCount': count }
               }
             );
-            await Voter.findOneAndUpdate({ uniqueID: from }, { voted: true });
+            await Voter.findOneAndUpdate({ uniqueID: voter.uniqueID }, { voted: true });
 
-            console.log(`${from} voted for ${to}`);
+            console.log(`${voter.uniqueID} voted for ${candidate.uniqueID}`);
             return "Success";
           }
         }
@@ -101,7 +108,7 @@ async function vote(from, to,phase) {
     return "Unknown candidate";
   } catch (error) {
     console.log("Error", error);
-    return;
+    throw Error(error.message);
   }
   //   await initMoralis();
   // const web3provider = await Moralis.enableWeb3({

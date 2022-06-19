@@ -20,7 +20,7 @@ async function mintAndSendTokens() {
   const contract = await initContract();
   const voters = await Voter.find({});
   var voterAddresses = [];
-  for (let i = 0; i < voters.length; i++) {
+  for (let i = 1; i < voters.length; i++) {
     voterAddresses.push(voters[i].uniqueID);
   }
   if (voterAddresses.length === 0) return;

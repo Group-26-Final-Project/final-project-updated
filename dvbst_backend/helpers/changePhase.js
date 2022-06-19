@@ -60,7 +60,7 @@ async function changePhase(duration) {
             console.log(`election address set successful`);
           });
         });
-        // await createMockUsers();
+        await createMockUsers();
         await setLocalPhase(duration);
         console.log("phase changed from 7 - 0");
         console.log("try adding candidates and voters");
@@ -81,8 +81,8 @@ async function changePhase(duration) {
         // allow voting and disqualifying
 
 
-        // await generateElections(currentPhase.phaseName);
-        // await mintAndSendTokens();
+        await generateElections(currentPhase.phaseName);
+        await mintAndSendTokens();
         await setLocalPhase(duration);
         console.log("phase changed from 1 - 2");
         console.log("try voting now!!!");
@@ -93,12 +93,12 @@ async function changePhase(duration) {
         // switch loosing candidate to voter
 
 
-        // contract = await initContract();
-        // elections = await contract.getAllCurrentElections();
-        // await endOngoingElections(elections);
-        // completed = await contract.getAllCompletedElections();
-        // await saveCompletedElections(completed, currentPhase.phaseName);
-        // await burnAllTokens();
+        contract = await initContract();
+        elections = await contract.getAllCurrentElections();
+        await endOngoingElections(elections);
+        completed = await contract.getAllCompletedElections();
+        await saveCompletedElections(completed, currentPhase.phaseName);
+        await burnAllTokens();
 
         await setLocalPhase(duration);
         console.log("phase changed from 2 - 3");
@@ -112,8 +112,8 @@ async function changePhase(duration) {
         // allow voting and disqualifying
 
 
-        // await generateElections(currentPhase.phaseName);
-        // await mintAndSendTokens();
+        await generateElections(currentPhase.phaseName);
+        await mintAndSendTokens();
         await setLocalPhase(duration);
         console.log("phase changed from 3 - 4");
         console.log("try voting now!!!");
@@ -126,12 +126,12 @@ async function changePhase(duration) {
         // switch loosing candidate to voter
 
 
-        // contract = await initContract();
-        // elections = await contract.getAllCurrentElections();
-        // await endOngoingElections(elections);
-        // completed = await contract.getAllCompletedElections();
-        // await saveCompletedElections(completed, currentPhase.phaseName);
-        // await burnAllTokens();
+        contract = await initContract();
+        elections = await contract.getAllCurrentElections();
+        await endOngoingElections(elections);
+        completed = await contract.getAllCompletedElections();
+        await saveCompletedElections(completed, currentPhase.phaseName);
+        await burnAllTokens();
 
         await setLocalPhase(duration);
         console.log("phase changed from 4 - 5");
@@ -143,8 +143,9 @@ async function changePhase(duration) {
         // create year elections
         // mint and send tokens
         // allow voting and disqualifying
-        // await generateElections(currentPhase.phaseName);
-        // await mintAndSendTokens();
+
+        await generateElections(currentPhase.phaseName);
+        await mintAndSendTokens();
         await setLocalPhase(duration);
 
         console.log("phase changed from 5 - 6");
@@ -154,13 +155,13 @@ async function changePhase(duration) {
       case 6:
         // end all ongoing elections
         // burn tokens
-        // contract = await initContract();
-        // elections = await contract.getAllCurrentElections();
-        // await endOngoingElections(elections);
-        // completed = await contract.getAllCompletedElections();
-        // await saveCompletedElections(completed, currentPhase.phaseName);
-        // await burnAllTokens();
-        // await archiveElections();
+        contract = await initContract();
+        elections = await contract.getAllCurrentElections();
+        await endOngoingElections(elections);
+        completed = await contract.getAllCompletedElections();
+        await saveCompletedElections(completed, currentPhase.phaseName);
+        await burnAllTokens();
+        await archiveElections();
         await setLocalPhase(duration);
 
         console.log("phase changed from 6 - 7");
@@ -197,8 +198,8 @@ async function getPhase() {
     return currentPhase;
   } catch (e) {
     console.log("error", e);
-
-    return e;
+    throw Error ("error getting phase");
+    // return e;
   }
 }
 
@@ -241,30 +242,30 @@ async function setLocalPhase(duration) {
     console.log("waiting to mine phase change");
     await tx.wait().then(async (txReceipt) => {
       console.log(`phase change successful`);
-      const phase = await getLocalPhase();
-      console.log(phase.phaseName);
+      // const phase = await getLocalPhase();
+      // console.log(phase.phaseName);
       // console.log(txReceipt);
-      if (phase.phaseName === 7) {
-        const newphase = {
-          phaseName: 0,
-          start: Math.floor(Date.now() / 1000),
-          end: Math.floor(Date.now() / 1000) + duration,
-        };
-        await Phase.findOneAndUpdate({ phaseName: phase.phaseName }, newphase);
-      } else {
-        const nextPhaseName = (phase.phaseName += 1);
-        console.log(nextPhaseName);
-        const newphase = {
-          phaseName: nextPhaseName,
-          start: Math.floor(Date.now() / 1000),
-          end: Math.floor(Date.now() / 1000) + duration,
-        };
-        await Phase.findOneAndUpdate({ phaseName: phase.phaseName }, newphase);
-      }
+      // if (phase.phaseName === 7) {
+      //   const newphase = {
+      //     phaseName: 0,
+      //     start: Math.floor(Date.now() / 1000),
+      //     end: Math.floor(Date.now() / 1000) + duration,
+      //   };
+      //   await Phase.findOneAndUpdate({ phaseName: phase.phaseName }, newphase);
+      // } else {
+      //   const nextPhaseName = (phase.phaseName += 1);
+      //   console.log(nextPhaseName);
+      //   const newphase = {
+      //     phaseName: nextPhaseName,
+      //     start: Math.floor(Date.now() / 1000),
+      //     end: Math.floor(Date.now() / 1000) + duration,
+      //   };
+      //   await Phase.findOneAndUpdate({ phaseName: phase.phaseName }, newphase);
+      // }
     });
   });
 
-  console.log("new local phase: ", await getLocalPhase());
+  // console.log("new local phase: ", await getLocalPhase());
   console.log("new onchain phase: ", await contract.getCurrentPhase());
 }
 module.exports = { changePhase, getLocalPhase, getPhase, extendPhase };

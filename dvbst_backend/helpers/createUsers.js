@@ -61,6 +61,7 @@ async function createMockCandidates() {
       const user = new User({
         userId: newCandidate._id,
         email: newCandidate.email,
+        phone: newCandidate.phone,
         role: "candidate",
       });
       user.password = await bcrypt.hash("password", salt);
@@ -126,6 +127,8 @@ async function createMockVoters() {
       const user = new User({
         userId: newVoter._id,
         email: newVoter.email,
+        phone: newVoter.phone,
+
         role: "voter",
       });
       user.password = await bcrypt.hash("password", salt);

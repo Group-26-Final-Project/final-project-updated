@@ -8,7 +8,8 @@ const User = require("../models/user");
 var cors = require("cors");
 const getPersonalizedElection = require("../helpers/getPersonalizedElection");
 const jwt = require('jsonwebtoken')
-const config = require('../config')
+const config = require('../config');
+const { vote } = require("../helpers/vote");
 
 const deptTypes = [
   "Software Engineering",
@@ -116,30 +117,42 @@ router.post("/", async function (req, res, next) {
 
 //Vote
 router.patch("/", async function (req, res, next) {
+  try {
+console.log(req.body);
   const election = await Election.findOne({
     _id: req.body.electionId,
   });
 
-  if (!election) {
-    return res.status(400).send("Election doesn't Exist!");
-  } else {
-    for (var i = 0; i < election.candidates.length; i++) {
-      if (election.candidates[i]._id.equals(req.body.candidateId)) {
-        election.candidates[i].voteCount += 1;
-        election.markModified("candidates");
-      }
-    }
-  }
-  try {
-    const updatedElection = await election.save();
+  if (!election) return res.status(400).send("Election doesn't Exist!");
+  const candidate = await Candidate.findOne({
+    _id: req.body.candidateId,
+  });
+
+  if (!candidate) return res.status(400).send("Candidate doesn't Exist!");
+  const voter = await Voter.findOne({
+    id: req.body.voterId,
+  });
+
+  if (!voter) return res.status(400).send("Voter doesn't Exist!");
+     
+  
+  // for (var i = 0; i < election.candidates.length; i++) {
+  //     if (election.candidates[i]._id.equals(req.body.candidateId)) {
+  //       election.candidates[i].voteCount += 1;
+  //       election.markModified("candidates");
+  //     }
+  //   }
+  
+  await vote(voter, candidate, election);
+    // const updatedElection = await election.save();
     return res.json({
       status: "success",
       code: 204,
-      message: "Vote Successful",
-      data: updatedElection,
+      message: "Voting Successful",
+      // data: updatedElection,
     });
   } catch (err) {
-    return res.status(500).json({ message: "Can't Vote" });
+    return res.status(500).json({ message: err.message });
   }
 });
 
