@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from 'axios';
+import CustomAxios from '../Api/CustomAxios'
+import axios from 'axios'
 import jwtDecode from "jwt-decode";
 
 // const API_URL = 'https://final-project-dvbst.herokuapp.com';
@@ -44,7 +45,7 @@ export const register = createAsyncThunk("auth/register", async (newUser,
 export const login = createAsyncThunk("auth/login", async ({ email, password }, {
     rejectWithValue }) => {
     try {
-        const { data: result } = await axios.post(API_URL + "/login", { email, password })
+        const { data: result } = await CustomAxios.post("/login", { email, password })
         if (result) {
             localStorage.setItem("token", result)
         }

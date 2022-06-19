@@ -17,7 +17,7 @@ const resetRouter = require('./controllers/resetController');
 const resultRouter = require('./controllers/resultController');
 const userRouter = require('./controllers/userController');
 const voterRouter = require('./controllers/voterController');
-// const verifyRouter = require('./controllers/verificationController');
+const verifyRouter = require('./controllers/verificationController');
 
 // app.use('/auth', authRouter)
 app.use('/login', authRouter)
@@ -30,6 +30,6 @@ app.use('/reset', resetRouter)
 app.use('/results', resultRouter)
 app.use('/user', userRouter)
 app.use('/voters', voterRouter)
-// app.use('/verify', verifyRouter)
+app.use('/verify', verifyRouter)
 
 module.exports = app;

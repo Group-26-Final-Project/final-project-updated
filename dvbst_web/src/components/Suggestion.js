@@ -8,7 +8,7 @@ export default function Suggestion() {
     // const navigate = useNavigate()
     const dispatch = useDispatch()
     // const ideasState = useSelector((state) => state.ideasState)
-    const authState = useSelector((state) => state.authState)
+    const userState = useSelector((state) => state.userState)
 
     const initialValues = {
         title: "", description: ""
@@ -28,7 +28,7 @@ export default function Suggestion() {
             errors.description = "Description is required"
         } else if (values.description.length > 250) {
             errors.description = "Description cant exceed 250 characters"
-        } 
+        }
         else if (values.description.length < 50) {
             errors.description = "Description cant be smaller than 50 characters"
         }
@@ -42,16 +42,21 @@ export default function Suggestion() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setFormErrors(validate(formValues))
-        setIsSubmit(true)
-        if (Object.keys(formErrors).length === 0 && isSubmit){
+        const errors = validate(formValues)
+        console.log(errors)
+        if (Object.keys(errors).length === 0) {
             dispatch(addIdeas({
-                user_id: authState.user._id,
-                username: authState.user.name + " " + authState.user.fname,
+                user_id: userState.user._id,
+                username: userState.user.name + " " + userState.user.fname,
                 ...formValues
             }))
-            window.location.reload();
-            setFormValues(initialValues)
+                .unwrap()
+                .then((response) => {
+                    setFormValues(initialValues)
+                    setFormErrors({})
+                })
+        } else {
+            setFormErrors(errors);
         }
     }
 
@@ -77,7 +82,7 @@ export default function Suggestion() {
                         value={formValues.title}
                         onChange={changeHandler}
                     />
-                    <Typography data-cy="suggestion-title-error" variant="caption">{formErrors.title}</Typography>
+                    <Typography data-cy="suggestion-title-error" style={{color: 'red'}} variant="caption">{formErrors.title}</Typography>
                 </Grid>
                 <Grid item xs={12}>
                     <TextField
@@ -92,11 +97,11 @@ export default function Suggestion() {
                         value={formValues.description}
                         onChange={changeHandler}
                     />
-                    <Typography data-cy="suggestion-desc-error" variant="caption">{formErrors.description}</Typography>
+                    <Typography data-cy="suggestion-desc-error" style={{color: 'red', alignItems: 'center'}} variant="caption">{formErrors.description}</Typography>
                 </Grid>
                 <Grid item xs={12} >
                     <Button fullWidth variant="contained"
-                    data-cy="suggestion-submit"
+                        data-cy="suggestion-submit"
                         type='submit'
                         style={{
                             borderRadius: 5,
