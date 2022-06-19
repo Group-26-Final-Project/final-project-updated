@@ -36,10 +36,11 @@ export const getMyElection = createAsyncThunk(
   "voting/getMyElection",
   async (id = null, { rejectWithValue }) => {
     try {
-        const response = await CustomAxios.get("/elections/myelection");
-                return response
+      const response = await CustomAxios.get("/elections/myelection");
+      console.log(response);
+      return response.data;
     } catch (err) {
-        return rejectWithValue(err.response)
+      return rejectWithValue(err.response.data);
     }
   }
 );
