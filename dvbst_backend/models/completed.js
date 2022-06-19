@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-const electionSchema = new mongoose.Schema({
+const completedSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
@@ -27,14 +27,19 @@ const electionSchema = new mongoose.Schema({
         required: false,
         default: 0,
     },
-    // voters: {
-    //     type: Array,
-    //     required: true,
-    // },
     candidates: {
         type: Array,
         required: true,
-    }
+    },
+    winners: {
+        type: Array,
+        required: false,
+    },
+    type: {
+        type: String,
+        required: false,
+        default: "section",
+    },
 })
 
-module.exports = mongoose.model('Election', electionSchema)
+module.exports = mongoose.model('Completed', completedSchema)

@@ -11,6 +11,8 @@ var generator = require('generate-password');
 const cors = require('cors');
 const Blacklist = require('../models/blacklist');
 const { send_password } = require("./emailController");
+const generateAddress = require('../helpers/generateAddress');
+const blacklistCandidate = require('../helpers/blacklistCandidate');
 
 
 //get all candidates
@@ -83,6 +85,7 @@ router.patch("/complete/:id", cors(), async function (req, res, next) {
 router.delete("/:id", cors(), async function (req, res, next) {
   try {
     const deletedCandidate = await Candidate.findByIdAndDelete(req.params.id);
+    await blacklistCandidate(deletedCandidate.uniqueID);
     await User.remove({userId: req.params.id});
     const blacklist = new Blacklist({
       userId: deletedCandidate._id,
@@ -101,6 +104,7 @@ router.post(
   "/",
   upload.single("profile"),
   async function (req, res, next) {
+    const uniqueID = await generateAddress();
     const candidate = new Candidate({
       name: req.body.name,
       fname: req.body.fname,
@@ -111,7 +115,8 @@ router.post(
       id: req.body.id,
       dept: req.body.dept,
       section: req.body.section,
-      year: req.body.year
+      year: req.body.year,
+      uniqueID: uniqueID,
     });
     
     try {
@@ -131,16 +136,16 @@ router.post(
       const newCandidate = await candidate.save();
       const pending = new Pending({
         userId: newCandidate._id,
-        name: newVoter.name,
-        fname: newVoter.fname,
-        gname: newVoter.gname,
-        email: newVoter.email,
-        phone: newVoter.phone,
-        id: newVoter.id,
-        dept: newVoter.dept,
-        year: newVoter.year,
-        section: newVoter.section,
-        fullName: newVoter.fullName,
+        name: newCandidate.name,
+        fname: newCandidate.fname,
+        gname: newCandidate.gname,
+        email: newCandidate.email,
+        phone: newCandidate.phone,
+        id: newCandidate.id,
+        dept: newCandidate.dept,
+        year: newCandidate.year,
+        section: newCandidate.section,
+        fullName: newCandidate.fullName,
         role: "candidate"
       });
       const salt = await bcrypt.genSalt(10);

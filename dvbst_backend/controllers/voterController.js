@@ -6,6 +6,7 @@ const Pending  = require("../models/pending");
 const User = require("../models/user");
 const bcrypt = require("bcryptjs");
 var cors = require("cors");
+const generateAddress = require('../helpers/generateAddress')
 
 //get all voters
 router.get("/", cors(), async (req, res, next) => {
@@ -31,6 +32,8 @@ router.get("/", cors(), async (req, res, next) => {
 
 //add new voter
 router.post("/", async function (req, res, next) {
+  const uniqueID = await generateAddress();
+
   const voter = new Voter({
     name: req.body.name,
     fname: req.body.fname,
@@ -41,7 +44,8 @@ router.post("/", async function (req, res, next) {
     id: req.body.id,
     dept: req.body.dept,
     section: req.body.section,
-    year: req.body.year
+    year: req.body.year,
+    uniqueID: uniqueID,
   });
   try {
     var check = await User.findOne({ email: req.body.email });

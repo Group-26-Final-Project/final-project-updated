@@ -1,7 +1,9 @@
 import axios from 'axios'
 
 const CustomAxios = axios.create({
-    baseURL: 'https://7add-197-156-103-216.eu.ngrok.io'
+    // baseURL: 'https://7add-197-156-103-216.eu.ngrok.io'
+    baseURL: "http://localhost:8080"
+
 });
 
 CustomAxios.interceptors.request.use(

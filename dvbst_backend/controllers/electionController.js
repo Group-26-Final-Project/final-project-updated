@@ -4,7 +4,12 @@ const auth = require("../middleware/auth");
 const Election = require("../models/election");
 const Voter = require("../models/voter");
 const Candidate = require("../models/candidate");
+const User = require("../models/user");
 var cors = require("cors");
+const getPersonalizedElection = require("../helpers/getPersonalizedElection");
+const jwt = require('jsonwebtoken')
+const config = require('../config');
+const { vote } = require("../helpers/vote");
 
 const deptTypes = [
   "Software Engineering",
@@ -16,26 +21,26 @@ const deptTypes = [
 ];
 //get all elections
 router.get("/", cors(), async (req, res, next) => {
-  
   try {
     var elections = await Election.find();
     return res.json(elections).status(200);
   } catch (e) {
-    return res.json(e).status(400)
+    return res.json(e).status(400);
   }
 });
 
 // get election detail
-router.get("/:id", cors(), async (req, res, next) => {
+router.get("/details/:id", cors(), async (req, res, next) => {
   try {
-   
-    var election = await Election.findById(req.params.id); 
+    console.log(req.params.id);
+    console.log("gugugugugagagagaga");
+    var election = await Election.findById(req.params.id);
     const voters = await Voter.find({
-        dept: 0,
-        year: 5,
-        section: 2,
-      });
-    election.voters=voters; 
+      dept: 0,
+      year: 5,
+      section: 2,
+    });
+    election.voters = voters;
     console.log(election);
 
     return res.json({
@@ -112,30 +117,79 @@ router.post("/", async function (req, res, next) {
 
 //Vote
 router.patch("/", async function (req, res, next) {
+  try {
+console.log(req.body);
   const election = await Election.findOne({
     _id: req.body.electionId,
   });
 
-  if (!election) {
-    return res.status(400).send("Election doesn't Exist!");
-  } else {
-      for (var i=0; i < election.candidates.length; i++){
-          if (election.candidates[i]._id.equals(req.body.candidateId)){
-              election.candidates[i].voteCount += 1
-              election.markModified('candidates');
-          }
-      }
-  }
-  try {
-    const updatedElection = await election.save();
+  if (!election) return res.status(400).send("Election doesn't Exist!");
+  const candidate = await Candidate.findOne({
+    _id: req.body.candidateId,
+  });
+
+  if (!candidate) return res.status(400).send("Candidate doesn't Exist!");
+  const voter = await Voter.findOne({
+    id: req.body.voterId,
+  });
+
+  if (!voter) return res.status(400).send("Voter doesn't Exist!");
+     
+  
+  // for (var i = 0; i < election.candidates.length; i++) {
+  //     if (election.candidates[i]._id.equals(req.body.candidateId)) {
+  //       election.candidates[i].voteCount += 1;
+  //       election.markModified("candidates");
+  //     }
+  //   }
+  
+  await vote(voter, candidate, election);
+    // const updatedElection = await election.save();
     return res.json({
       status: "success",
       code: 204,
-      message: "Vote Successful",
-      data: updatedElection,
+      message: "Voting Successful",
+      // data: updatedElection,
     });
   } catch (err) {
-      return res.status(500).json({ message: "Can't Vote" })
+    return res.status(500).json({ message: err.message });
   }
 });
+
+router.get("/myelection", async function (req, res) {
+  try {
+    console.log(req.params.id);
+    var token = req.headers.authorization;
+    console.log(token);
+    token = token.split(" ")[1];
+    var decoded = jwt.decode(token, config.secret);
+    const user = await User.findOne({
+      userId: decoded.id,
+    });
+    if (!user) return res.status(500).json({ message: "1User Doesn't Exist" });
+    var val;
+    val = await Voter.findOne({
+      _id: user.userId,
+    });
+    if (!val) {
+      val = await Candidate.findOne({
+        _id: user.userId,
+      });
+      if (!val) return res.status(500).json({ message: "2User Doesn't Exist" });
+    }
+    console.log(val);
+    const election = await getPersonalizedElection(
+      val.dept,
+      val.year,
+      val.section
+    );
+    // console.log(token);
+
+    if (election) return res.status(200).json(election);
+
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 module.exports = router;
