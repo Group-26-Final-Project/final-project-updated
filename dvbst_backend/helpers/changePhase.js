@@ -197,6 +197,8 @@ async function getPhase() {
     return currentPhase;
   } catch (e) {
     console.log("error", e);
+
+    return e;
   }
 }
 

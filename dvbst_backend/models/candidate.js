@@ -49,7 +49,7 @@ const candidateSchema = new mongoose.Schema({
         type: String,
         required: false,
     },
-    wallet: {
+    uniqueID: {
         type: String,
         required: false,
         default: '',

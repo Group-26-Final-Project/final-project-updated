@@ -37,7 +37,7 @@ const voterSchema = new mongoose.Schema({
         type: Number,
         required: true,
     },
-    wallet: {
+    uniqueID: {
         type: String,
         required: false,
         default: '',

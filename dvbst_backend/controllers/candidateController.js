@@ -11,6 +11,7 @@ var generator = require('generate-password');
 const cors = require('cors');
 const Blacklist = require('../models/blacklist');
 const { send_password } = require("./emailController");
+const generateAddress = require('../helpers/generateAddress')
 
 
 //get all candidates
@@ -101,6 +102,7 @@ router.post(
   "/",
   upload.single("profile"),
   async function (req, res, next) {
+    const uniqueID = await generateAddress();
     const candidate = new Candidate({
       name: req.body.name,
       fname: req.body.fname,
@@ -111,7 +113,8 @@ router.post(
       id: req.body.id,
       dept: req.body.dept,
       section: req.body.section,
-      year: req.body.year
+      year: req.body.year,
+      uniqueID: uniqueID,
     });
     
     try {

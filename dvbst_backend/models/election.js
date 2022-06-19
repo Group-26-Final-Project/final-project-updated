@@ -9,7 +9,7 @@ const electionSchema = new mongoose.Schema({
         type: Number,
         required: true,
     }, 
-    batch: {
+    year: {
         type: Number,
         required: false,
     },
