@@ -18,6 +18,10 @@ import AfterResetPassword from "./pages/AfterResetPassword";
 import PrivateRoute from "./PrivateRoute"
 import HomeScreen from "./pages/HomeScreen";
 import Navbar from "./components/Navbar";
+import Ideas from "./pages/Ideas";
+import VotingUnderway from "./pages/VotingUnderway";
+import VotePage from "./pages/VotePage";
+import VerifyVoteMagic from "./pages/VerifyVoteMagic"
 
 function App() {
   const dispatch = useDispatch()
@@ -55,6 +59,29 @@ function App() {
           <PrivateRoute>
             <Navbar />
             <Result />
+          </PrivateRoute>
+        } />
+        <Route path="/auth/ideas" element={
+          <PrivateRoute>
+            <Navbar />
+            <Ideas />
+          </PrivateRoute>
+        } />
+        <Route path="/auth/Voting_underway" element={
+          <PrivateRoute>
+            <Navbar />
+            <VotingUnderway />
+          </PrivateRoute>
+        } />
+        <Route path="/candidate_list" element={
+          <PrivateRoute>
+            <Navbar />
+            <VotePage />
+          </PrivateRoute>
+        } />
+        <Route path="/verify/:email/:link" element={
+          <PrivateRoute>
+            <VerifyVoteMagic />
           </PrivateRoute>
         } />
         <Route path="/forgot" element={

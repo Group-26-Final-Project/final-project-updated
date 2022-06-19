@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios'
+import CustomAxios from '../Api/CustomAxios'
 
 
 const baseURL = "http://localhost:8080"
@@ -24,7 +25,7 @@ export const addIdeas = createAsyncThunk("ideas/addIdeas", async (idea, {
     rejectWithValue})=>{
         try{
             await timeout(1000)
-            const response = await axios.post(baseURL+"/ideas", idea)
+            const response = await CustomAxios.post("/ideas", idea)
             return response.data
         } catch(err){
             return rejectWithValue(err.response.data)
@@ -35,7 +36,7 @@ export const getIdeas = createAsyncThunk("ideas/getIdeas", async (id=null, {
     rejectWithValue})=>{
         try{
             await timeout(1000)
-            const response = await axios.get(baseURL+"/ideas")
+            const response = await CustomAxios.get("/ideas")
             return response.data
         } catch(err){
             return rejectWithValue(err.response.data)

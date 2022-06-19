@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import SearchBar from '../components/SearchBar';
 import FilterComponent from '../components/FilterComponent';
 import IdeaDetails from '../components/IdeaDetails'
-import Suggestion from '../components/suggestion';
+import Suggestion from '../components/Suggestion';
 import { getIdeas } from '../features/ideasSlice';
 
 export default function Ideas() {

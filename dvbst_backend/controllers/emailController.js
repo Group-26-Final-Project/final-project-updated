@@ -20,7 +20,8 @@ const send_magic_link = async (email, link, which) => {
         subj = "Signin link"
         body = '<p>Welcome to our website. This is your link to sign in to your account: ' + (URL + email + '/' + link) + '</p><p>Needless to remind you not to share this link with anyone</p>'
     } else {
-        URL = "https://tubular-churros-16cbaf.netlify.app/verify/"
+        // URL = "https://tubular-churros-16cbaf.netlify.app/verify/"
+        URL = "http://localhost:3000/verify/"
         subj = "Voting Verification Link"
         body = '<p>This is your Voting Verification link: ' + (URL + email + '/' + link) + '</p><p>Click on the link and you will be redirected to the voting page</p>'
     }
