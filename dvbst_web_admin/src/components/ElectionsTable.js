@@ -148,7 +148,7 @@ export function Detail({ value }) {
   const result = (
     <Link
       data-cy="elections-details"
-      to="/results"
+      to="/resultsDetail"
       state={value}
       class="text-blue-600 dark:text-blue-500 hover:underline"
     >
