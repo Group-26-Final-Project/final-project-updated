@@ -1,5 +1,9 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import CustomAxios from '../Api/CustomAxios'
+import axios from 'axios'
+import CustomAxios from '../Api/CustomAxios';
+
+const baseURL = "http://localhost:8080"
+// const baseURL = "https://final-project-dvbst.herokuapp.com"
 
 const initialState = {
   election: null,
@@ -29,11 +33,10 @@ export const getMyElection = createAsyncThunk(
   "voting/getMyElection",
   async (id = null, { rejectWithValue }) => {
     try {
-      const response = await CustomAxios.get("/elections/myelection");
-      console.log(response);
-      return response.data;
+        const response = await CustomAxios.get("/elections/myelection");
+                return response
     } catch (err) {
-      return rejectWithValue(err.response.data);
+        return rejectWithValue(err.response)
     }
   }
 );
