@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import React from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import Login from "./pages/Login";
+import Result from "./pages/Result";
 import PendingPage from "./pages/PendingPage";
 import Profile from "./pages/Profile";
 import RegistrationPage from "./pages/RegistrationPage";
@@ -17,7 +18,6 @@ import AfterResetPassword from "./pages/AfterResetPassword";
 import PrivateRoute from "./PrivateRoute"
 import HomeScreen from "./pages/HomeScreen";
 import Navbar from "./components/Navbar";
-import { getUser } from "./features/userSlice";
 
 function App() {
   const dispatch = useDispatch()
@@ -25,11 +25,6 @@ function App() {
   const userState = useSelector((state) => state.userState)
 
   console.log("Here")
-  // React.useEffect(() => {
-  //   dispatch(getUser(authState.id))
-
-  // }, [dispatch, authState.id])
-
   // useEffect(() => {  
   //   return () => {
   //     localStorage.clear()
@@ -54,6 +49,12 @@ function App() {
         <Route path="/profile" element={
           <PrivateRoute>
             <Profile />
+          </PrivateRoute>
+        } />
+        <Route path="/auth/Result" element={
+          <PrivateRoute>
+            <Navbar />
+            <Result />
           </PrivateRoute>
         } />
         <Route path="/forgot" element={
