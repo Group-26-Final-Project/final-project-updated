@@ -38,6 +38,7 @@ const LoginScreen = (props) => {
                 .unwrap()
                 .then((response) => {
                     setFormValues(initialValues)
+                    setFormErrors({})
                 })
                 .catch((e) => {
                     console.log("Here")
@@ -65,22 +66,19 @@ const LoginScreen = (props) => {
         return (
             <View style={styles.container}>
                 {authState.loginStatus === "pending" && (
-                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                    <View style={{ flex: 1, alignSelf: 'center', justifyContent: 'center', alignItems: 'center' }}>
                         <ActivityIndicator size="large" color='#00d05a' />
                     </View>
                 )}
-                {authState.loginStatus === "failed" && (
-                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                        <Text style={styles.text}>{authState.loginError}</Text>
-                    </View>
-                )}
-                {authState.loginStatus !== "pending" && authState.loginStatus !== "failed" && (
+                {authState.loginStatus !== "pending" && (
                     <View>
-    
-                        <View style={{alignSelf: 'flex-start', marginBottom: 15 }}>
+                        <View style={{ alignSelf: 'flex-start', marginBottom: 15 }}>
                             <Text style={{ fontSize: 36 }}>Login</Text>
                             <View style={styles.line}></View>
                         </View>
+                        {authState.loginStatus === "failed" && (
+                            <Text style={styles.error}>{authState.loginError}</Text>
+                        )}
                         <View>
                             <View>
                                 <Text style={styles.label}>Email</Text>
@@ -95,14 +93,14 @@ const LoginScreen = (props) => {
                                 <Text style={styles.error}>{formErrors.password}</Text>
                             </View>
                         </View>
-                        <View style={{justifyContent: 'center', alignSelf: 'center'}}>
-                            <Text style={{ color: '#00d05a', fontSize: 14, fontFamily: 'poppinsLight'}} onPress={()=>navigation.navigate('resetPassStack', {screen: 'ForgotPassword'})}>Forgot Password?</Text>
+                        <View style={{ justifyContent: 'center', alignSelf: 'center' }}>
+                            <Text style={{ color: '#00d05a', fontSize: 14, fontFamily: 'poppinsLight' }} onPress={() => navigation.navigate('resetPassStack', { screen: 'ForgotPassword' })}>Forgot Password?</Text>
                         </View>
                         <TouchableOpacity onPress={handleSubmit} style={styles.button}>
                             <Text style={{ color: '#fff', fontSize: 20 }}>Login</Text>
                         </TouchableOpacity>
-                        <View style={{marginTop: 6, justifyContent: 'center', alignSelf: 'center'}}>
-                            <Text style={{ color: '#4B4B4B', fontSize: 16, fontFamily: 'poppinsLight'}}>Don't have an account? <Text onPress={()=>navigation.reset({index: 0, routes: [{name: 'Register'}]})} style={{ color: '#00d05a', fontSize: 16, fontFamily: 'poppinsLight'}}>Sign Up</Text></Text>
+                        <View style={{ marginTop: 6, justifyContent: 'center', alignSelf: 'center' }}>
+                            <Text style={{ color: '#4B4B4B', fontSize: 16, fontFamily: 'poppinsLight' }}>Don't have an account? <Text onPress={() => navigation.reset({ index: 0, routes: [{ name: 'Register' }] })} style={{ color: '#00d05a', fontSize: 16, fontFamily: 'poppinsLight' }}>Sign Up</Text></Text>
                         </View>
                     </View>
                 )}
@@ -139,6 +137,12 @@ const styles = StyleSheet.create({
     label: {
         fontSize: 16,
         paddingBottom: 6,
+    },
+    error: {
+        fontSize: 10,
+        marginBottom: 10,
+        color: '#ff0000',
+        alignSelf: 'center'
     },
     button: {
         alignSelf: 'center',

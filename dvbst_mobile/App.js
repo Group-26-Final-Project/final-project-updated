@@ -2,12 +2,13 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, SafeAreaView } from 'react-native';
 import MainContainer from './navigation/MainContainer';
 import AuthContainer from './navigation/AuthContainer';
-import { Provider, useSelector } from 'react-redux';
+import { Provider, useDispatch, useSelector } from 'react-redux';
 import { store } from './app/store';
-import { AsyncStorage } from '@react-native-async-storage/async-storage';
 // const token = await AsyncStorage.getItem("token")
 import deviceStorage from './services/deviceStorage';
 import { useEffect } from 'react';
+import { Provider as PaperProvider } from 'react-native-paper';
+import { getUser } from './features/userSlice';
 
 export default function AppWrapper() {
   return (
@@ -19,15 +20,25 @@ export default function AppWrapper() {
 
 const App = () => {
   const authState = useSelector((state) => state.authState)
+  const userState = useSelector((state) => state.userState)
+  const dispatch = useDispatch()
+
+  console.log(authState)
   // console.log(authState)
-  // useEffect(() => {
-  //   deviceStorage.getItem()
-  // })
+  useEffect(() => {
+    dispatch(getUser(authState.id))
+  }, [dispatch, authState.id])
+
+  console.log(userState.user)
+
   return (
-    <SafeAreaView  style={styles.container}>
+    <SafeAreaView style={styles.container}>
       {/* <MainContainer/> */}
-      {authState.token ? <MainContainer/> : <AuthContainer/>}
-      <StatusBar style='auto' />
+      {authState.token ?
+        <PaperProvider>
+          <MainContainer />
+        </PaperProvider> : <AuthContainer />}
+      <StatusBar style='light' />
     </SafeAreaView>
   );
 }

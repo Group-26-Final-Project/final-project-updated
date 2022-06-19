@@ -1,6 +1,7 @@
 import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
 import ideasReducer from '../features/ideasSlice';
 import authReducer from '../features/authSlice';
+import userReducer from '../features/userSlice';
 import resetPasswordReducer from '../features/resetPassSlice';
 
 export const store = configureStore({
@@ -8,5 +9,6 @@ export const store = configureStore({
     authState: authReducer,
     ideasState: ideasReducer,
     resetPasswordState: resetPasswordReducer,
+    userState: userReducer
   },
 });

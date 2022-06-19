@@ -15,7 +15,7 @@ function IdeaDetails(props) {
     
     const clickHandler = () => {
         if (!ideaState.closed){
-            dispatch(voteIdea(props.id, authState.user.id))
+            dispatch(voteIdea(props.id))
         }
     }
     
