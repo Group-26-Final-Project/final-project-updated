@@ -1,8 +1,8 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import axios from 'axios'
-import CustomAxios from '../Api/CustomAxios';
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import axios from "axios";
+import CustomAxios from "../Api/CustomAxios";
 
-const baseURL = "http://localhost:8080"
+const baseURL = "http://localhost:8080";
 // const baseURL = "https://final-project-dvbst.herokuapp.com"
 
 const initialState = {
@@ -20,9 +20,12 @@ export const verifyMagic = createAsyncThunk(
   async ({ email, link }, { rejectWithValue }) => {
     console.log("Verify", email, link);
     try {
-        const { data: result } = await CustomAxios.post("/verify", {email, link})
-        console.log("Verify", result)
-        return result
+      const { data: result } = await axios.post(baseURL + "/verify", {
+        email,
+        link,
+      });
+      console.log("Verify", result);
+      return result;
     } catch (err) {
       return rejectWithValue(err.response.data);
     }
@@ -33,10 +36,11 @@ export const getMyElection = createAsyncThunk(
   "voting/getMyElection",
   async (id = null, { rejectWithValue }) => {
     try {
-        const response = await CustomAxios.get("/elections/myelection");
-                return response
+      const response = await CustomAxios.get("/elections/myelection");
+      console.log(response);
+      return response.data;
     } catch (err) {
-        return rejectWithValue(err.response)
+      return rejectWithValue(err.response.data);
     }
   }
 );
@@ -45,8 +49,13 @@ export const voteCandidate = createAsyncThunk(
   "voting/voteCandidate",
   async ({ electionId, candidateId, voterId }, { rejectWithValue }) => {
     try {
-        const response = await CustomAxios.patch("/elections", {electionId, candidateId, voterId})
-        return response.data
+        console.log("Vote", electionId, candidateId, voterId);
+      const response = await axios.patch(baseURL + "/elections", {
+        electionId,
+        candidateId,
+        voterId,
+      });
+      return response.data;
     } catch (err) {
       return rejectWithValue(err.response.data);
     }
