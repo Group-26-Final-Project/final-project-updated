@@ -1,14 +1,20 @@
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from "react-redux";
+import { disqualifyCandidate } from "../features/candidatesSlice";
+import { SpinnerCircularFixed } from "spinners-react";
 
 export default function CandidateDetail() {
   let location = useLocation();
   let navigate = useNavigate();
-  const candidatesState = useSelector((state) => state.candidatesState)
-  console.log(location)
-  const candidate = candidatesState.candidates.filter((el) => el._id === location.state)[0]
-  console.log(candidate)
+  let dispatch = useDispatch();
+  const [isLoading, setIsLoading] = React.useState(false);
+  const candidatesState = useSelector((state) => state.candidatesState);
+  console.log(location);
+  const candidate = candidatesState.candidates.filter(
+    (el) => el._id === location.state
+  )[0];
+  console.log(candidate);
 
   const deptTypes = [
     "Biomedical Engineering",
@@ -21,6 +27,24 @@ export default function CandidateDetail() {
 
   const onCancel = () => {
     navigate(-1);
+  };
+
+  const handleBlacklisting = async () => {
+    setIsLoading(true);
+    console.log(candidate._id);
+    dispatch(disqualifyCandidate(candidate._id))
+      .unwrap()
+
+      .then(() => {
+        // console.log("candidate added");
+        setIsLoading(false);
+
+        navigate("/candidates");
+        // setFormValues(initialValues)
+      })
+      .catch((err) => {
+        setIsLoading(false);
+      });
   };
 
   // const getProfileUrl = () => {
@@ -84,11 +108,7 @@ export default function CandidateDetail() {
                   id="grid-name"
                   name="name"
                   type="text"
-                  value={
-                    candidate.fullName.split(
-                      " "
-                    )[0]
-                  }
+                  value={candidate.fullName.split(" ")[0]}
                 />
               </div>
               <div class="flex flex-row justify-between items-center mb-6 md:mb-1">
@@ -104,11 +124,7 @@ export default function CandidateDetail() {
                   id="grid-fname"
                   name="fname"
                   type="text"
-                  value={
-                    candidate.fullName.split(
-                      " "
-                    )[1]
-                  }
+                  value={candidate.fullName.split(" ")[1]}
                 />
               </div>
               <div class="flex flex-row justify-between items-center mb-6 md:mb-1">
@@ -124,11 +140,7 @@ export default function CandidateDetail() {
                   id="grid-gname"
                   name="gname"
                   type="text"
-                  value={
-                    candidate.fullName.split(
-                      " "
-                    )[2]
-                  }
+                  value={candidate.fullName.split(" ")[2]}
                 />
               </div>
               <div class="flex flex-row justify-between items-center">
@@ -224,21 +236,28 @@ export default function CandidateDetail() {
                   id="grid-sect"
                   name="sect"
                   type="text"
-                  value={
-                    candidate.section
-                  }
+                  value={candidate.section}
                 />
               </div>
             </div>
           </div>
         )}
         <div class="flex flex-row justify-end">
-          <div class="bg-white float-right text-[#C70039] border border-[#C70039] text-center py-3 mr-2 px-4 rounded-xl font-body font-light text-sm">
-            <button>Add to Blacklist</button>
+          {isLoading && (
+            <SpinnerCircularFixed
+              size={25}
+              thickness={100}
+              speed={100}
+              color="#36ad47"
+              secondaryColor="rgba(0, 0, 0, 0.44)"
+            />
+          )}
+          <div class="bg-white float-right text-[#C70039] border border-[#C70039] ml-5 text-center py-3 mr-2 px-4 rounded-xl font-body font-light text-sm">
+            <button onClick={handleBlacklisting}>Add to Blacklist</button>
           </div>
-          <div class="bg-[#C70039] float-right text-white border border-white text-center py-3 mr-2 px-4 rounded-xl font-body font-light text-sm">
+          {/* <div class="bg-[#C70039] float-right text-white border border-white text-center py-3 mr-2 px-4 rounded-xl font-body font-light text-sm">
             <button>Remove Candidate</button>
-          </div>
+          </div> */}
           <div class="bg-white float-right text-[#00D05A] border border-[#00D05A] text-center py-3 px-4 mr-10 rounded-xl font-body font-light text-sm">
             <button onClick={onCancel}>Cancel</button>
           </div>
