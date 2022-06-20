@@ -39,7 +39,7 @@ const IdeasScreen = (props) => {
                 {ideasState.getIdeasStatus === "failed" && (
                     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                         <Text style={styles.text}>Ooops something went wrong</Text>
-                        <Button title="Refresh">Refresh</Button>
+                        <Button onPress={()=>dispatch(getIdeas())} title="Refresh">Refresh</Button>
                     </View>
                 )}
                 {ideasState.getIdeasStatus === "success" && (

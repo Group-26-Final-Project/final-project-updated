@@ -9,7 +9,7 @@ import { useNavigation } from '@react-navigation/native';
 const OTPScreen = (props) => {
     const [otp, setOtp] = useState('')
     const [otpReady, setOtpReady] = useState(false)
-    const { email } = props.route.params;
+    const { email } = props.route.params.params;
     const MAX_OTP_LENGTH = 6;
     return (
         <SafeAreaView style={styles.container}>
