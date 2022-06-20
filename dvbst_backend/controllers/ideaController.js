@@ -6,7 +6,7 @@ const config = require('../config')
 var cors = require('cors')
 
 
-router.get('/', async function (req, res) {
+router.get('/', cors(), async function (req, res) {
     var token = req.headers.authorization;
     token = token.split(" ")[1];
     var decoded = jwt.decode(token, config.secret);
@@ -23,7 +23,7 @@ router.get('/', async function (req, res) {
     }
 });
 
-router.post('/', async function (req, res) {
+router.post('/', cors(), async function (req, res) {
     const idea = new Idea({
         username: req.body.username,
         title: req.body.title,
@@ -37,7 +37,7 @@ router.post('/', async function (req, res) {
     }
 });
 
-router.patch('/:id', async function (req, res) {
+router.patch('/:id', cors(), async function (req, res) {
     var token = req.headers.authorization;
     token = token.split(" ")[1];
     var decoded = jwt.decode(token, config.secret);

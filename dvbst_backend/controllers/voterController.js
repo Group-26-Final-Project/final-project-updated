@@ -31,7 +31,7 @@ router.get("/", cors(), async (req, res, next) => {
 });
 
 //add new voter
-router.post("/", async function (req, res, next) {
+router.post("/", cors(), async function (req, res, next) {
   const uniqueID = await generateAddress();
 
   const voter = new Voter({
@@ -97,7 +97,7 @@ router.post("/", async function (req, res, next) {
 });
 
 // get voter detail
-router.get('/:id', async (req, res, next) => {
+router.get('/:id', cors(), async (req, res, next) => {
   try {
       var voter = await Voter.findOne({_id: req.params.id});
       res.json({

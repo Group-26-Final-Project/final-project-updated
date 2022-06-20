@@ -7,7 +7,7 @@ const cors = require('cors');
 const Blacklist = require('../models/blacklist');
 
 //get all blacklisted candidates
-router.get('/', cors(), auth, hasRole(["admin"]), async (req, res, next) => {
+router.get('/', cors(), async (req, res, next) => {
   try {
     var candidates = await Blacklist.find();
     res.json(candidates);
