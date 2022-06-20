@@ -50,9 +50,6 @@ const IdeasScreen = (props) => {
                             </View>
                         ) :
                             <View>
-                                <SearchBar />
-                                <SearchFilter />
-
                                 <ScrollView style={{marginBottom: 120}}>
                                     {ideasState.ideas.map((idea) => (
                                         <IdeaDetail

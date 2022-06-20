@@ -1,29 +1,50 @@
 import React from 'react'
 
-import { StyleSheet, Text, View, TextInput, Dimensions, TouchableOpacity, ScrollView, SafeAreaView } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Dimensions, TouchableOpacity, ScrollView, SafeAreaView, ActivityIndicator } from 'react-native';
 import VoteComponent from '../components/voteComponent';
 
 const VotingScreen = (props) => {
+    const dispatch = useDispatch()
+    const userState = useSelector((state) => state.userState)
+    const votingState = useSelector((state) => state.votingState)
+
+    useEffect(() => {
+        dispatch(getMyElection())
+    }, [dispatch]);
+
     return (
         <SafeAreaView style={styles.container}>
-            <ScrollView>
-                <VoteComponent name={'Candidate #1'}/>
-                <VoteComponent name={'Candidate #2'}/>
-                <VoteComponent name={'Candidate #3'}/>
-                {/* <VoteComponent />
-                <VoteComponent /> */}
-                {/* <VoteComponent />
-                <VoteComponent />
-                <VoteComponent />
-                <VoteComponent />
-                <VoteComponent />
-                <VoteComponent />
-                <VoteComponent />
-                <VoteComponent />
-                <VoteComponent />
-                <VoteComponent />
-                <VoteComponent /> */}
-            </ScrollView>
+            {(userState.getUserStatus === 'pending' || votingState.getMyElectionStatus === 'pending') && (
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                    <ActivityIndicator size="large" color='#00d05a' />
+                </View>
+            )}
+            {(userState.getUserStatus === 'failed' || votingState.getMyElectionStatus === 'failed') && (
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                    <Text style={styles.text}>Ooops something went wrong</Text>
+                </View>
+            )}
+            {!(userState.getUserStatus === 'pending' || votingState.getMyElectionStatus === 'pending') && userState.user.role === 'candidate' && (
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                    <Text style={styles.text}>You are a candidate, you cant vote!</Text>
+                </View>
+            )}
+            {!(userState.getUserStatus === 'pending' || votingState.getMyElectionStatus === 'pending') && userState.user.role === 'voter' && votingState.election && votingState.election.candidates && (
+                <ScrollView>
+                    {votingState.election.candidates.map((candidate) => (
+                        <VoteComponent
+                            key={candidate._id}
+                            id={candidate._id}
+                            name={candidate.name}
+                            fname={candidate.fname}
+                            dept={candidate.dept}
+                            year={candidate.year}
+                            section={candidate.section}
+                            electionId={votingState.election._id}
+                        />
+                    ))}
+                </ScrollView>
+            )}
         </SafeAreaView>
     );
 }

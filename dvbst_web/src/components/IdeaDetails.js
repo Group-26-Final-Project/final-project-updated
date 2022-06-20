@@ -12,13 +12,20 @@ function IdeaDetails(props) {
     const ideaState = useSelector((state) => state.ideaState)
 
     const classes = useStyles();
-    
+
     const clickHandler = () => {
-        if (!ideaState.closed){
+        if (!ideaState?.closed) {
             dispatch(voteIdea(props.id))
         }
     }
-    
+
+    var liked
+    if ((props.likes)?.includes(authState.id)) {
+        liked = true
+    } else {
+        liked = false
+    }
+
     return (
         <Grid item xs={12} data-cy="idea-card">
             <Grid container direction='column' alignContent='space-between' alignItems='center' spacing={3} >
@@ -48,9 +55,9 @@ function IdeaDetails(props) {
                             <Button
                                 aria-label="reduce"
                                 data-cy="idea-like"
-                                onClick={async ()=>await clickHandler()}
+                                onClick={async () => await clickHandler()}
                             >
-                                {props.liked ? <Favorite data-cy="idea-like-filled" className={classes.selected} /> : <FavoriteOutlined data-cy="idea-like-outlined" className={classes.icons} />}
+                                {liked ? <Favorite data-cy="idea-like-filled" className={classes.selected} /> : <FavoriteOutlined data-cy="idea-like-outlined" className={classes.icons} />}
                             </Button>
                             <Typography data-cy="idea-count" variant='subtitle1' className={classes.voteCount}>{props.likeCount}</Typography>
                         </Grid>

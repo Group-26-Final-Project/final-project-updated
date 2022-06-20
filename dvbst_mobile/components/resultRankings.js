@@ -14,15 +14,22 @@ const customFonts = {
 }
 const CONTENT = {
     tableHead: ['', 'Votes', 'Full Name'],
-    tableData: [
-        ['1', '80', 'Daniel Terefe'],
-        ['2', '69', 'Kaleb Mesfin'],
-        ['3', '41', 'Hanna Samuel']
-    ],
 };
+
+const extractCandidate = (data) => {
+    var candidateData = [];
+    if (data && data.length > 0) {
+        for (var i = 0; i < data.length; i++) {
+            var element = [i+1, data[i].voteCount, data[i].fullName]
+            candidateData.push(element);
+        }
+    }
+    return candidateData;
+};
+
+
 const ResultRankings = (props) => {
     const [isLoaded] = useFonts(customFonts);
-
     if (!isLoaded) {
         return <AppLoading />;
     } else {
@@ -37,7 +44,7 @@ const ResultRankings = (props) => {
                     />
                     <TableWrapper style={styles.wrapper}>
                         <Rows
-                            data={CONTENT.tableData}
+                            data={extractCandidate(props.election.candidates)}
                             flexArr={[1, 2, 4]}
                             style={styles.row}
                             textStyle={styles.text}
@@ -54,7 +61,7 @@ const styles = StyleSheet.create({
     head: { height: 50, backgroundColor: '#D3E8E6B3' },
     wrapper: { flexDirection: 'row' },
     title: { flex: 1, alignSelf: 'flex-start', backgroundColor: '#2ecc71' },
-    row: { height: 40, paddingTop: 10 },
+    row: { height: 70, paddingTop: 10 },
     text: { textAlign: 'left', paddingLeft: 30, fontFamily: 'poppinsLight' },
     textHead: {
         textAlign: 'left', paddingLeft: 30, fontFamily: 'poppinsRegular', fontSize: 16
