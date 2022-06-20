@@ -18,6 +18,9 @@ import VotingScreen from '../screens/VotingScreen';
 import ResultScreen from '../screens/ResultScreen';
 import CandidatesScreen from '../screens/CandidateScreen';
 import EditProfileScreen from '../screens/EditProfileScreen';
+import VotingUnderwayScreen from '../screens/VotingUnderwayScreen';
+import OTPScreen from '../screens/OTPScreen'
+
 import AppBar from '../components/appBar';
 import StackHeader from '../components/StackHeader';
 
@@ -29,11 +32,13 @@ const votingName = "Voting";
 const resultName = "Results";
 const candidateName = "Candidates";
 const profileName = "EditProfile"
+const underwayName = "VotingUnderway"
+const otpName = "OTP"
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
-function HomeStack(){
+function HomeStack() {
   return (
     <Stack.Navigator
       initialRouteName={homeName}
@@ -57,12 +62,20 @@ function HomeStack(){
 function VotingStack() {
   return (
     <Stack.Navigator
-      initialRouteName={votingName}
+      initialRouteName={underwayName}
       screenOptions={{
         headerTitle: "",
         headerTransparent: true
       }}
     >
+      <Stack.Screen
+        name={underwayName}
+        component={VotingUnderwayScreen}
+      />
+      <Stack.Screen
+        name={otpName}
+        component={OTPScreen}
+      />
       <Stack.Screen
         name={votingName}
         component={VotingScreen}
@@ -105,7 +118,7 @@ function IdeaStack() {
 }
 
 
-function ResultStack(){
+function ResultStack() {
   return (
     <Stack.Navigator
       initialRouteName={resultName}

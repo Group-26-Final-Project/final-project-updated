@@ -3,8 +3,9 @@ import { useFonts } from 'expo-font';
 import AppLoading from 'expo-app-loading';
 import { StyleSheet, Text, View, TouchableOpacity, Pressable } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
-import { verify } from '../features/authSlice';
 import { useDispatch } from 'react-redux';
+import { verifyOTP } from '../features/votingSlice';
+import { useNavigation } from '@react-navigation/native';
 
 const customFonts = {
     poppinsRegular: require('../assets/fonts/Poppins-Regular.ttf'),
@@ -14,10 +15,12 @@ const customFonts = {
 
 export default OTPBody = ({ email, setOtpReady, otp, setOtp, maxLength }) => {
     const dispatch = useDispatch()
+    const navigation = useNavigation()
     const codeDigitsArray = new Array(maxLength).fill(0)
     const textInputRef = useRef(null)
     const [isLoaded] = useFonts(customFonts);
     const [isFocused, setIsFocused] = useState(false)
+    const [otpError, setOtpError] = useState(null)
 
     const toCodeDigitInput = (_value, index) => {
         const emptyInputChar = " "
@@ -49,7 +52,19 @@ export default OTPBody = ({ email, setOtpReady, otp, setOtp, maxLength }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (otp.length === maxLength) {
-            dispatch(verify({email,otp}))
+            dispatch(verifyOTP({email,otp}))
+            .unwrap()
+            .then((response) => {
+                if (response.data.status === 'approved'){
+                    navigation.replace("Voting")
+                    setOtpError(null)
+                } else {
+                    setOtpError("Wrong OTP Found")
+                }
+            })
+            .catch((e) => {
+                console.log("Verify Error:", e)
+            })
         } else {
             setFormErrors(errors);
         }
@@ -83,6 +98,7 @@ export default OTPBody = ({ email, setOtpReady, otp, setOtp, maxLength }) => {
                         style={styles.hiddenOtpInput} />
 
                 </View>
+                <Text style={{color: '#ff0000', alignSelf: 'center'}}>{otpError}</Text>
                 <View style={styles.container}>
                     <View>
                         <Text style={styles.quest}>Didn't receive an OTP?</Text>
