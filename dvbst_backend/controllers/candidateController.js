@@ -85,9 +85,10 @@ router.patch("/complete/:id", cors(), auth, hasRole, async function (req, res, n
 //blacklist
 router.delete("/:id", cors(), auth, hasRole, async function (req, res, next) {
   try {
+    console.log("am here");
     const deletedCandidate = await Candidate.findByIdAndDelete(req.params.id);
     await blacklistCandidate(deletedCandidate.uniqueID);
-    await User.remove({userId: req.params.id});
+    await User.deleteOne({userId: req.params.id});
     const blacklist = new Blacklist({
       userId: deletedCandidate._id,
       fullName: deletedCandidate.fullName,

@@ -25,7 +25,6 @@ async function blacklistCandidate(candidateAddress) {
   if (transactionReceipt.status !== 1) {
     console.log("Error", transactionReceipt);
   } else {
-    await markAllVotersAsNotVoted(addresses);
     console.log(`blacklisted successfull`);
   }
 }
