@@ -126,7 +126,7 @@ async function generateElections(phaseName) {
       for (let j = 1; j < 3; j++) {
         for (let k = 1; k < 3; k++) {
           const name = `${constants.DEPT_TYPES[i]} Year ${j} - Section ${k}`;
-          await createElection(name, j, k, i, 500, phaseName, contract);
+          await createElection(name, j, k, i, 345600, phaseName, contract);
         }
       }
     }
@@ -135,7 +135,7 @@ async function generateElections(phaseName) {
     for (let i = 0; i < 3; i++) {
       for (let j = 1; j < 3; j++) {
         const name = `${constants.DEPT_TYPES[i]} Year ${j}`;
-        await createElection(name, j, 0, i, 500, phaseName, contract);
+        await createElection(name, j, 0, i, 345600, phaseName, contract);
       }
     }
   } else if (phaseName === 5) {
@@ -143,7 +143,7 @@ async function generateElections(phaseName) {
     console.log("generating elections");
     for (let i = 0; i < 3; i++) {
       const name = `${constants.DEPT_TYPES[i]}`;
-      await createElection(name, 0, 0, i, 500, phaseName, contract);
+      await createElection(name, 0, 0, i, 345600, phaseName, contract);
     }
   }
   const result = await contract.getAllCurrentElections();

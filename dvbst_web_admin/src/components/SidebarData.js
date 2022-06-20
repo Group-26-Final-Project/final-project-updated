@@ -12,11 +12,11 @@ export const SidebarData = [
         icon: <IoHomeSharp/>,
         link: "/" 
     },
-    {
-        title: 'Elections',
-        icon: <MdHowToVote/>,
-        link: "/elections" 
-    },
+    // {
+    //     title: 'Elections',
+    //     icon: <MdHowToVote/>,
+    //     link: "/elections" 
+    // },
     {
         title: 'Phase',
         icon: <BsAlarmFill/>,
@@ -38,7 +38,7 @@ export const SidebarData = [
         link: "/approval" 
     },
     {
-        title: 'Result',
+        title: 'Elections',
         icon: <IoRibbon/>,
         link: "/results" 
     },

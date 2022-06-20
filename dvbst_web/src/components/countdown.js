@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-function Countdown() {
+function Countdown(props) {
     const [timerDays, setTimerDays] = useState('00')
     const [timerHours, setTimerHours] = useState('00')
     const [timerMinutes, setTimerMinutes] = useState('00')
@@ -32,12 +32,12 @@ function Countdown() {
     let interval = useRef()
 
     const startTimer = () => {
-        const countdownDate = new Date('Apr 24 , 2022 00:00:00').getTime()
-
+        // const countdownDate = new Date('Apr 24 , 2022 00:00:00').getTime()
+        console.log(props.countdownDate);
         interval = setInterval(() => {
             const now = new Date().getTime()
-            const distance = countdownDate - now
-
+            const distance = props.countdownDate - now
+            console.log(distance);  
             const days = Math.floor(distance / (1000 * 60 * 60 * 24))
             const hours = Math.floor((distance % (1000 * 60 * 60 * 24) / (1000 * 60 * 60)))
             const minutes = Math.floor((distance % (1000 * 60 * 60) / (1000 * 60)))

@@ -136,7 +136,10 @@ function Result() {
         {electionsState.getElectionsStatus !== "pending" &&
           electionsState.getElectionResultStatus !== "pending" &&
           electionsState.elections &&
-          electionsState.election && (
+          electionsState.election &&
+          electionsState.election.length >= 3 &&
+
+           (
             <>
               <Grid item xs={12} sm={12} md={10}>
                 <Grid
@@ -258,7 +261,35 @@ function Result() {
                 </Grid>
               </Grid>
             </>
-          )}
+          )}{(electionsState.election) &&
+
+          
+            <Grid item xs={12} sm={12} md={6} justifyContent="center">
+            <Grid item className={classes.grid}>
+              <TableContainer component={Paper}>
+                <Table className={classes.table} aria-label="simple table">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Ranks </TableCell>
+                      <TableCell align="left">Full Name</TableCell>
+                      <TableCell align="left">Vote Count</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {electionsState.election.map((row,index) => (
+                      <TableRow key={index}>
+                                                <TableCell align="left">{index+1}</TableCell>
+                                                <TableCell align="left">{row.name}</TableCell>
+
+                        <TableCell align="left">{row.voteCount}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Grid>
+          </Grid>
+          }
       </Grid>
     </Grid>
   );
@@ -283,7 +314,7 @@ const useStyles = makeStyles((theme) => ({
     height: "60vh",
   },
   grid: {
-    marginTop: "-60px",
+    marginTop: "-10px",
   },
   small: {
     width: theme.spacing(7),
