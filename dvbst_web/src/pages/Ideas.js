@@ -41,17 +41,6 @@ export default function Ideas() {
                 alignItems="center"
                 spacing={3}
               >
-                <Grid container justifyContent="space-between">
-                  <Grid item xs={6} sm={6}>
-                    {" "}
-                    <FilterComponent />
-                  </Grid>
-                  <Grid item xs={6} sm={6}>
-                    {" "}
-                    <SearchBar />
-                  </Grid>
-                </Grid>
-
                 {ideasState.getIdeasStatus === "success" && (
                   <>
                     {ideasState.ideas.length === 0 && (
@@ -64,7 +53,7 @@ export default function Ideas() {
                         title={idea.title}
                         description={idea.description}
                         likeCount={idea.likeCount}
-                        liked={idea.likedUser}
+                        likes={idea.likes}
                       />
                     ))}
                   </>

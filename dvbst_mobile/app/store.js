@@ -3,12 +3,14 @@ import ideasReducer from '../features/ideasSlice';
 import authReducer from '../features/authSlice';
 import userReducer from '../features/userSlice';
 import resetPasswordReducer from '../features/resetPassSlice';
+import electionsReducer from '../features/electionsSlice'
 
 export const store = configureStore({
   reducer: {
     authState: authReducer,
     ideasState: ideasReducer,
     resetPasswordState: resetPasswordReducer,
-    userState: userReducer
+    userState: userReducer,
+    electionsState: electionsReducer
   },
 });

@@ -26,7 +26,7 @@ router.get('/', cors(), async (req, res, next) => {
       ]
     }
     var candidates = await Candidate.find(query);
-    res.json(candidates);
+    res.status(200).json(candidates);
   } catch (e) {
     res.json({
       status: 'err',

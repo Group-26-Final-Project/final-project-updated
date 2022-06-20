@@ -3,7 +3,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export const getData = async () => {
     try {
         const value = await AsyncStorage.getItem('token')
-        console.log("Value", value)
         return value
     } catch (e) {
         return e

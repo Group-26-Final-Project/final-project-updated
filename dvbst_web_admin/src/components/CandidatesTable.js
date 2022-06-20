@@ -169,7 +169,7 @@ export function Detail({ value }) {
     const result = (
         <div className='flex flex-row'>
             <Link to="/candidateDetail" state={value} className="mr-2"><AiOutlineInfoCircle /></Link>
-            <Link to="/editCandidate" state={value} className="mr-2"><MdOutlineModeEdit color='green' /></Link>
+            {/* <Link to="/editCandidate" state={value} className="mr-2"><MdOutlineModeEdit color='green' /></Link> */}
             <FaUserLock cursor="pointer" onClick={disqualify} color='red'/>
         </div>
     )

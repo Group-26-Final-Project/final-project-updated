@@ -22,9 +22,10 @@ export const getCandidates = createAsyncThunk("candidates/getCandidates", async 
     try {
         // await timeout(1000)
         console.log("ezih gebahu",query)
-        const response = await CustomAxios.get("/candidates?query=" + query === "" ? null : query);
+        const response = await CustomAxios.get("/candidates?query=" + query);
         return response.data
     } catch (err) {
+        console.log("Candidate", err)
         return rejectWithValue(err.response.data)
     }
 })

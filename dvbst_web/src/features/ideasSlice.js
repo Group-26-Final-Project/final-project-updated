@@ -38,7 +38,7 @@ export const getIdeas = createAsyncThunk("ideas/getIdeas", async (id=null, {
         }
 })
 
-export const voteIdea = createAsyncThunk("ideas/voteIdea", async ({idea_id}, {
+export const voteIdea = createAsyncThunk("ideas/voteIdea", async (idea_id, {
     rejectWithValue})=>{
         try{
             const response = await CustomAxios.patch("/ideas/"+idea_id)

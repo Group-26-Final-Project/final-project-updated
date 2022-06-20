@@ -45,7 +45,6 @@ export const getIdeas = createAsyncThunk("ideas/getIdeas", async (id=null, {
             })
             return response.data
         } catch(err){
-            console.log("Response", err)
             return rejectWithValue(error.response.data)
         }
 })
