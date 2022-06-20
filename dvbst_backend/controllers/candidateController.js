@@ -16,7 +16,7 @@ const blacklistCandidate = require('../helpers/blacklistCandidate');
 
 
 //get all candidates
-router.get('/', cors(), auth, hasRole, async (req, res, next) => {
+router.get('/', cors(), async (req, res, next) => {
   try {
     let query = {}
     if (req.query.query) {
@@ -36,7 +36,7 @@ router.get('/', cors(), auth, hasRole, async (req, res, next) => {
 });
 
 // get candidate detail
-router.get("/:id", cors(), auth, hasRole, async (req, res, next) => {
+router.get("/:id", cors(), async (req, res, next) => {
   try {
     var candidate = await Candidate.findById(req.params.id);
     res.json({
@@ -54,7 +54,7 @@ router.get("/:id", cors(), auth, hasRole, async (req, res, next) => {
 });
 
 //disqualify
-router.patch("/", cors(), auth, hasRole, async function (req, res, next) {
+router.patch("/", cors(), async function (req, res, next) {
   const candidate = await Candidate.findOne({ email: req.body.email });
   try {
     const updatedCandidate = await Candidate.findByIdAndUpdate(candidate._id, {
@@ -67,7 +67,7 @@ router.patch("/", cors(), auth, hasRole, async function (req, res, next) {
 });
 
 //complete profile
-router.patch("/complete/:id", cors(), auth, hasRole, async function (req, res, next) {
+router.patch("/complete/:id", cors(), async function (req, res, next) {
   console.log("Got here", req.body)
   try {
     const updatedCandidate = await Candidate.findByIdAndUpdate(req.params.id, {
@@ -83,7 +83,7 @@ router.patch("/complete/:id", cors(), auth, hasRole, async function (req, res, n
 });
 
 //blacklist
-router.delete("/:id", cors(), auth, hasRole, async function (req, res, next) {
+router.delete("/:id", cors(), async function (req, res, next) {
   try {
     const deletedCandidate = await Candidate.findByIdAndDelete(req.params.id);
     await blacklistCandidate(deletedCandidate.uniqueID);
@@ -104,8 +104,6 @@ router.delete("/:id", cors(), auth, hasRole, async function (req, res, next) {
 router.post(
   "/",
   cors(),
-  auth, 
-  hasRole,
   upload.single("profile"),
   async function (req, res, next) {
     const uniqueID = await generateAddress();

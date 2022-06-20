@@ -2,6 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, SafeAreaView } from 'react-native';
 import MainContainer from './navigation/MainContainer';
 import AuthContainer from './navigation/AuthContainer';
+import PendingContainer from './navigation/PendingContainer';
 import { Provider, useDispatch, useSelector } from 'react-redux';
 import { store } from './app/store';
 // const token = await AsyncStorage.getItem("token")
@@ -34,11 +35,9 @@ const App = () => {
   return (
     <SafeAreaView style={styles.container}>
       {/* <MainContainer/> */}
-      {authState.token ?
-        <PaperProvider>
-          <MainContainer />
-        </PaperProvider> : <AuthContainer />}
-      <StatusBar style='light' />
+      {/* {authState.token ? <MainContainer/> : <AuthContainer/>} */}
+      {authState.token ? (userState?.user?.approved ? <MainContainer/> : <PendingContainer/>) : <AuthContainer/>}
+      <StatusBar style='auto' />
     </SafeAreaView>
   );
 }

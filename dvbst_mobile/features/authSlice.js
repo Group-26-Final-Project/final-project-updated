@@ -4,6 +4,7 @@ import jwtDecode from "jwt-decode";
 import { AsyncStorage } from '@react-native-async-storage/async-storage';
 import { storeData } from "../Api/StoreToken";
 import { removeData } from "../Api/RemoveToken";
+import CustomAxios from '../Api/CustomAxios'
 
 const API_URL = 'https://7add-197-156-103-216.eu.ngrok.io';
 
@@ -20,10 +21,11 @@ const initialState = {
 export const register = createAsyncThunk("auth/register", async (newUser,
     rejectWithValue) => {
     try {
-        const response = await axios.post(API_URL + "/pending", newUser);
-        return response;
+        const response = (newUser.role === 'voter') ? await CustomAxios.post("/voters", newUser) : await CustomAxios.post("/candidates", newUser); 
+        return response.data;
     } catch (error) {
-        return rejectWithValue(error.response);
+        console.log("Error", error)
+        return rejectWithValue(error.response.data);
     }
 });
 

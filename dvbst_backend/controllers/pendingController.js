@@ -24,7 +24,7 @@ router.get("/", cors(), async (req, res, next) => {
 });
 
 //add new voter
-router.post("/", async function (req, res, next) {
+router.post("/", cors(), async function (req, res, next) {
   const pending = new Pending({
     name: req.body.name,
     fname: req.body.fname,
@@ -62,7 +62,7 @@ router.post("/", async function (req, res, next) {
 });
 
 // get pending user detail
-router.get('/:id', async (req, res, next) => {
+router.get('/:id', cors(), async (req, res, next) => {
   try {
     var pending = await Pending.findOne({ _id: req.params.id });
     res.json({
@@ -81,7 +81,7 @@ router.get('/:id', async (req, res, next) => {
 });
 
 //approve user
-router.delete('/:id', async (req, res, next) => {
+router.delete('/:id', cors(), async (req, res, next) => {
   try {
     const approvedUser = await Pending.findByIdAndDelete(req.params.id);
     console.log("First", approvedUser)

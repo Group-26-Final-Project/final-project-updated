@@ -4,7 +4,9 @@ import { useNavigation } from '@react-navigation/native';
 import { StyleSheet, Text, View, TextInput, Dimensions, TouchableOpacity } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import { ScrollView } from 'react-native-gesture-handler';
+import CheckBox from 'react-native-check-box'
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { register } from '../features/authSlice';
 
 const RegisterScreen = (props) => {
     const dispatch = useDispatch()
@@ -23,7 +25,6 @@ const RegisterScreen = (props) => {
     const [isCandidate, setIsCandidate] = useState(false);
     const [formValues, setFormValues] = useState(initialValues);
     const [formErrors, setFormErrors] = useState({});
-    const [isSubmit, setIsSubmit] = useState(false);
 
     const changeHandler = (inputName, inputValue) => {
         setFormValues(prev => ({
@@ -101,16 +102,23 @@ const RegisterScreen = (props) => {
     };
 
     const handleSubmit = async (e) => {
-        console.log(formValues)
         e.preventDefault();
-        setFormErrors(validate(formValues));
-        setIsSubmit(true)
-        if (Object.keys(formErrors).length === 0 && isSubmit) {
+        const errors = validate(formValues);
+        if (Object.keys(errors).length === 0) {
             dispatch(register(formValues))
-            setFormValues(initialValues)
-            navigate('/after')
+                .unwrap()
+                .then((response) => {
+                    setFormValues(initialValues)
+                    setFormErrors({})
+                    navigation.navigate('Login')
+                })
+                .catch((e) => {
+                    console.log("Here")
+                })
+        } else {
+            setFormErrors(errors);
         }
-    };
+    }
 
     return (
         <ScrollView>
@@ -261,11 +269,18 @@ const RegisterScreen = (props) => {
                             onChangeText={value => changeHandler('confpass', value)}></TextInput>
                         <Text style={styles.error}>{formErrors.confpass}</Text>
                     </View>
+                    <View>
+                        <CheckBox
+                            onClick={onCheckClicked}
+                            isChecked={isCandidate}
+                            rightText={"I want to be a candidate"}
+                        />
+                    </View>
                 </View>
                 <TouchableOpacity onPress={handleSubmit} style={styles.button}>
                     <Text style={{ color: '#fff', fontSize: 20 }}>Register</Text>
                 </TouchableOpacity>
-                <View style={{ marginTop: 6, justifyContent: 'center', alignSelf: 'center', marginBottom: 40}}>
+                <View style={{ marginTop: 6, justifyContent: 'center', alignSelf: 'center', marginBottom: 40 }}>
                     <Text style={{ color: '#4B4B4B', fontSize: 16, fontFamily: 'poppinsLight' }}>Already have an account? <Text onPress={() => navigation.reset({ index: 0, routes: [{ name: 'loginStack' }] })} style={{ color: '#00d05a', fontSize: 16, fontFamily: 'poppinsLight' }}>Log in</Text></Text>
                 </View>
             </View>

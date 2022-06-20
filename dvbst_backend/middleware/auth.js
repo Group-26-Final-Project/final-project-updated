@@ -11,8 +11,8 @@ module.exports = function (req, res, next) {
     if (!decoded){
       return res.status(401).send("Unauthorized access");
     }
-    req.user = await User.findOne({userId: decoded.id});
-    return next();
+    req.user = decoded.id;
+    next();
   } catch (ex) {
     res.status(400).send("Invalid token.");
   }

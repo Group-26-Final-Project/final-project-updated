@@ -81,7 +81,7 @@ router.get("/myelection/:id", cors(), async (req, res, next) => {
 });
 
 //add new election
-router.post("/", async function (req, res, next) {
+router.post("/", cors(), async function (req, res, next) {
   const voters = await Voter.find({
     dept: req.body.dept - 1,
     year: req.body.batch,
@@ -139,7 +139,7 @@ router.post("/", async function (req, res, next) {
 });
 
 //Vote
-router.patch("/", async function (req, res, next) {
+router.patch("/", cors(), async function (req, res, next) {
   try {
 console.log(req.body);
   const election = await Election.findOne({
@@ -179,7 +179,7 @@ console.log(req.body);
   }
 });
 
-router.get("/myelection", async function (req, res) {
+router.get("/myelection", cors(), async function (req, res) {
   try {
     console.log(req.params.id);
     var token = req.headers.authorization;
