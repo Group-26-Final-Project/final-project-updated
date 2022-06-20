@@ -18,6 +18,7 @@ const blacklistCandidate = require('../helpers/blacklistCandidate');
 //get all candidates
 router.get('/', cors(), async (req, res, next) => {
   try {
+    console.log("abt to get candidates")
     let query = {}
     if (req.query.query) {
       query.$or = [

@@ -31,10 +31,15 @@ function VotePage() {
                 <Grid item xs={12} className={classes.body}>
                     <Grid container justifyContent='center'  >
                         <Grid item xs={9} >
-                            <Grid container direction='column' justifyContent='center'>
+                            <Grid container direction='row' justifyContent='center'>
                                 {/* <Typography variant='h4' className={classes.my_typogrphy}>Time Remaining </Typography> */}
                                 {/* <Typography variant='h4' className={classes.my_typogrphy}>{timerDays} : {timerHours} : {timerMinutes} : {timerSeconds}</Typography> */}
-                                <Countdown />
+                                <Countdown countdownDate={1655721670007}/>
+                                <Grid item xs={8} sm={8} justifyContent="center" alignContent="center">
+          <Typography className={classes.my_typogrphy} variant="h4">
+              {votingState.election ? votingState.election.name : ""}{" "}
+            </Typography>
+            </Grid>
                             </Grid>
                         </Grid>
                     </Grid>

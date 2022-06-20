@@ -56,6 +56,21 @@ export const logout = createAsyncThunk("auth/logout", async () => {
     localStorage.removeItem("token");
 });
 
+export const verify = createAsyncThunk("auth/verify", async ({ email, link }, {
+    rejectWithValue }) => {
+    try {
+        const { data: result } = await CustomAxios.post("/login/enter", { email, link })
+        if (result) {
+            localStorage.setItem("token", result)
+        }
+        console.log("result", result)
+        return result;
+    } catch (error) {
+        return rejectWithValue(error.response.data);
+    }
+});
+
+
 const authSlice = createSlice({
     name: "auth",
     initialState,
@@ -123,6 +138,29 @@ const authSlice = createSlice({
                 ...state,
                 loginStatus: "failed",
                 loginError: action.payload,
+            }
+        },
+        [verify.pending]: (state, action) => {
+            return {
+                ...state,
+                verifyStatus: "pending"
+            }
+        },
+        [verify.fulfilled]: (state, action) => {
+            const user = jwtDecode(action.payload);
+            console.log(user)
+            return {
+                ...state,
+                token: action.payload,
+                id: user.id,
+                verifyStatus: "success",
+            };
+        },
+        [verify.rejected]: (state, action) => {
+            return {
+                ...state,
+                verifyStatus: "failed",
+                verifyError: action.payload,
             }
         },
         // [register.fulfilled]: (state, action) => {

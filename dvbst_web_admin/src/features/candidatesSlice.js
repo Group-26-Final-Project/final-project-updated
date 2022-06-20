@@ -20,8 +20,9 @@ function timeout(ms) {
 export const getCandidates = createAsyncThunk("candidates/getCandidates", async (query, {
     rejectWithValue }) => {
     try {
-        await timeout(1000)
-        const response = await CustomAxios.get("/candidates?query=" + query)
+        // await timeout(1000)
+        console.log("ezih gebahu",query)
+        const response = await CustomAxios.get("/candidates?query=" + query === "" ? null : query);
         return response.data
     } catch (err) {
         return rejectWithValue(err.response.data)

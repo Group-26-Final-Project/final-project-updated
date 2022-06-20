@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const config = require('../config');
 const User = require('../models/user.js');
 
-module.exports = function (req, res, next) {
+module.exports = async function (req, res, next)  {
   try {
     const token = req.headers.authorization.split(' ')[1];
     if (!token)
