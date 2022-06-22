@@ -26,6 +26,7 @@ import {
   renderElectionResult,
 } from "../features/electionsSlice";
 import { useMoralis } from "react-moralis";
+import ReactApexChart from "react-apexcharts";
 
 // function createData(Ranks, Views, Full_name, Other_info) {
 //     return { Ranks, Views, Full_name, Other_info }
@@ -45,6 +46,75 @@ function Result() {
   const { Moralis } = useMoralis();
   const [electionname, setElectionname] = useState("");
 
+  const extractSeries = (election) => {
+    const series = [];
+    const labels = [];
+    const data = [];
+
+    
+    if(election){
+      election.forEach((candidate) => {
+        labels.push(candidate.name);
+      });
+
+      var total = 0;
+      for (let index = 0; index < election.length; index++) {
+        total = total + election[index].voteCount;
+        
+      }
+
+      election.forEach((candidate) => {
+        data.push(`${~~((candidate.voteCount/total) * 100)} %`);
+      });
+    }
+    
+    return { series, labels, data };
+  }
+  const options = {
+    chart: {
+      id: "basic-bar",
+    },
+    plotOptions: {
+      bar: {
+        barHeight: "100%",
+        distributed: true,
+        horizontal: true,
+        dataLabels: {
+          position: "bottom",
+        },
+      },
+    },
+    xaxis: {
+      categories: electionsState.election ? extractSeries(electionsState.election).labels : ["nothing"],
+    },
+    theme: {
+      monochrome: {
+        enabled: true,
+        shadeTo: "light",
+        shadeIntensity: 0.6,
+      },
+    },
+    dataLabels: {
+      enabled: true,
+      textAnchor: "start",
+      style: {
+        colors: ["#000"],
+      },
+      formatter: function (val, opt) {
+        return opt.w.globals.labels[opt.dataPointIndex] + ":  " + ~~val + " %";
+      },
+      offsetX: 0,
+      dropShadow: {
+        enabled: true,
+      },
+    },
+    series: [
+      {
+        name: "AAiT Election",
+        data: electionsState.election ? extractSeries(electionsState.election).data : [2],
+      },
+    ],
+  };
   useEffect(() => {
     dispatch(getElections());
   }, [dispatch]);
@@ -287,6 +357,17 @@ function Result() {
                   </TableBody>
                 </Table>
               </TableContainer>
+            </Grid>
+            <Grid>
+            <ReactApexChart
+        options={options}
+        series={options.series}
+        type="bar"
+        height={350}
+      />
+      {/* <button className="loginButton" onClick={handleRefreshData}>
+        Refresh Data{" "}
+      </button> */}
             </Grid>
           </Grid>
           }

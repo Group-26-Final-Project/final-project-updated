@@ -139,6 +139,8 @@ contract AAiTElection {
     // address private AAiTElectionTimerAddress;
 
     mapping(string => ElectionStruct) private electionStructsMapping;
+    mapping(address => address[]) private voterToCandidatesMapping;
+    // mapping(address => uint256) private voterRemainingVotesMapping;
     string[] private electionIndex;
     ElectionStruct[] private electionValue;
     ElectionStruct[] private completedElections;
@@ -238,9 +240,10 @@ contract AAiTElection {
     // function stopTimer() public onlyOwner {
     //     phase = ElectionPhase(PHASE_NAME.COMPLETED, 0, 0);
     // }
-function getCurrentPhase() public view returns (ElectionPhase memory) {
+    function getCurrentPhase() public view returns (ElectionPhase memory) {
         return phase;
     }
+
     function changePhase(uint256 startDate, uint256 endDate) public onlyOwner {
         // require(msg.sender == owner, "Only the owner can change the phase");
 
@@ -249,11 +252,7 @@ function getCurrentPhase() public view returns (ElectionPhase memory) {
             // changeVal("unos");
             return;
         } else if (phase.phaseName == PHASE_NAME.COMPLETED) {
-            phase = ElectionPhase(
-                PHASE_NAME.REGISTRATION,
-                startDate,
-                endDate
-            );
+            phase = ElectionPhase(PHASE_NAME.REGISTRATION, startDate, endDate);
             return;
         }
         // return uint(phase.phaseName)+1;
@@ -264,12 +263,12 @@ function getCurrentPhase() public view returns (ElectionPhase memory) {
         phase.end = endDate;
     }
 
-    function getRemainingTime() external view returns (uint256) {
-        if (phase.phaseName == PHASE_NAME.COMPLETED) {
-            return 0;
-        }
-        return phase.end - block.timestamp;
-    }
+    // function getRemainingTime() external view returns (uint256) {
+    //     if (phase.phaseName == PHASE_NAME.COMPLETED) {
+    //         return 0;
+    //     }
+    //     return phase.end - block.timestamp;
+    // }
 
     // ELECTION FUNCTIONS
 
@@ -455,19 +454,26 @@ function getCurrentPhase() public view returns (ElectionPhase memory) {
         // AAiTStudent.VoterStruct memory tempVoter = student.getVoter(
         //     voterAddress
         // );
+        // require(voterAddress != address(0), "Invalid Address");
+        // require(candidateAddress != address(0), "Invalid Address");
         require(
-            voterAddress != candidateAddress &&
-                voterAddress != owner &&
-                candidateAddress != owner,
+            voterAddress != owner && candidateAddress != owner,
             "Invalid Operation"
         );
         require(
-            !AAiTElectionLibrary.contains(voted, voterAddress),
+            voterToCandidatesMapping[voterAddress].length < 2,
             "Voter Already Voted"
         );
         require(
             !AAiTElectionLibrary.contains(blacklist, candidateAddress),
             "Candidate Disqualified"
+        );
+        require(
+            !AAiTElectionLibrary.contains(
+                voterToCandidatesMapping[voterAddress],
+                candidateAddress
+            ),
+            "Already Voted For This Candidate"
         );
         // require()
 
@@ -481,9 +487,34 @@ function getCurrentPhase() public view returns (ElectionPhase memory) {
                 )
             ) {
                 if (electionValue[i].status == ELECTION_TYPE.ONGOING) {
-                    voteToken.transferFrom(voterAddress, candidateAddress, 1);
+                    if (
+                        AAiTElectionLibrary.contains(
+                            electionValue[i].candidates,
+                            voterAddress
+                        )
+                    ) {
+                        candidateVote(voterAddress, candidateAddress);
+                        voterToCandidatesMapping[voterAddress].push(
+                            candidateAddress
+                        );
+                        voted.push(voterAddress);
+                    } else {
+                        require(
+                            voterAddress != candidateAddress,
+                            "Invalid Operation"
+                        );
+                        voteToken.transferFrom(
+                            voterAddress,
+                            candidateAddress,
+                            1
+                        );
+                        voterToCandidatesMapping[voterAddress].push(
+                            candidateAddress
+                        );
 
-                    voted.push(voterAddress);
+                        voted.push(voterAddress);
+                    }
+
                     return;
                 } else {
                     revert("Invalid Phase");
@@ -525,32 +556,46 @@ function getCurrentPhase() public view returns (ElectionPhase memory) {
         //     .voted = electionStructsMapping[tempName].voted;
     }
 
-    function extendPhase(uint256 endDate)
-        external
+    function candidateVote(address voterAddress, address candidateAddress)
+        public
         onlyOwner
     {
+        // AAiTVoteToken tempToken = AAiTVoteToken(AAiTVoteTokenAddress);
+        voteToken.mint(1);
+
+        voteToken.transfer(voterAddress, 1);
+        voteToken.transferFrom(voterAddress, candidateAddress, 1);
+    }
+
+    // function moveToVoted(address voterAddress, address candidateAddress)
+    //     internal
+    //     onlyOwner
+    // {
+    //     if (voterRemainingVotesMapping[voterAddress] == 0) {
+    //         voted.push(voterAddress);
+    //     }
+    // }
+
+    // AAiTVoteToken tempToken = AAiTVoteToken(AAiTVoteTokenAddress);
+
+    function extendPhase(uint256 endDate) external onlyOwner {
         phase.end = endDate;
         // electionStructsMapping[electionName].endDate =
         //     block.timestamp +
         //     duration;
         // electionValue[electionStructsMapping[electionName].index]
         //     .endDate = electionStructsMapping[electionName].endDate;
-
     }
 
-    function pauseElection(string memory electionName) external onlyOwner {
-        electionStructsMapping[electionName].status = ELECTION_TYPE.PENDING;
-    }
+    // function pauseElection(string memory electionName) external onlyOwner {
+    //     electionStructsMapping[electionName].status = ELECTION_TYPE.PENDING;
+    // }
 
-    function continueElection(string memory electionName) external onlyOwner {
-        electionStructsMapping[electionName].status = ELECTION_TYPE.ONGOING;
-    }
+    // function continueElection(string memory electionName) external onlyOwner {
+    //     electionStructsMapping[electionName].status = ELECTION_TYPE.ONGOING;
+    // }
 
-    function endElection(string memory electionName)
-        external
-        onlyOwner
-        returns (bool)
-    {
+    function endElection(string memory electionName) external onlyOwner {
         // electionStructsMapping[electionName].status = ELECTION_TYPE.ENDED;
         // electionValue[electionStructsMapping[electionName].index]
         //     .status = ELECTION_TYPE.ENDED;
@@ -570,7 +615,6 @@ function getCurrentPhase() public view returns (ElectionPhase memory) {
         electionIndex.pop();
         electionValue[rowToDelete] = electionValue[electionValue.length - 1];
         electionValue.pop();
-        return true;
     }
 
     function removeAllCompletedElections() external onlyOwner {
@@ -578,6 +622,10 @@ function getCurrentPhase() public view returns (ElectionPhase memory) {
         // delete electionStructsMapping;
         delete electionValue;
         delete electionIndex;
+        // delete voterRemainingVotesMapping;
+        for (uint256 i = 0; i < voted.length; i++) {
+            delete voterToCandidatesMapping[voted[i]];
+        }
         delete voted;
     }
 
@@ -615,11 +663,7 @@ function getCurrentPhase() public view returns (ElectionPhase memory) {
         // electionStructsMapping[electionName].winners.push(electionStructsMapping[electionName].candidates[winnerIndex]);
     }
 
-    function blacklistCandidate(address candidateAddress)
-        public
-        onlyOwner
-        returns (bool)
-    {
+    function blacklistCandidate(address candidateAddress) public onlyOwner {
         // AAiTStudent student = AAiTStudent(AAiTStudentAddress);
         // AAiTStudent.CandidateStruct memory tempCandidate = student.getCandidate(
         //     candidateAddress
@@ -656,7 +700,7 @@ function getCurrentPhase() public view returns (ElectionPhase memory) {
                 // );
 
                 blacklist.push(candidateAddress);
-                return true;
+                // return true;
             }
         }
         // revert("Invalid Operation");
@@ -681,9 +725,9 @@ function getCurrentPhase() public view returns (ElectionPhase memory) {
         // AAiTStudent tempStudent = AAiTStudent(AAiTStudentAddress);
         // AAiTStudent.VoterStruct[] memory tempVoters = student.getAllVoters();
         // uint256 totalTokenCount = tempVoters.length;
-        voteToken.mint(voters.length);
+        voteToken.mint((voters.length) * 2);
         for (uint256 i = 0; i < voters.length; i++) {
-            voteToken.transfer(voters[i], 1);
+            voteToken.transfer(voters[i], 2);
         }
     }
 
