@@ -6,59 +6,28 @@ import Link from "@mui/material/Link";
 import Voting_Svg from "../Voting_Svg";
 import { getCurrentPhase, verifyMagic } from "../features/votingSlice";
 import { SpinnerCircularFixed } from "spinners-react";
-
+import CustomAxios from "../Api/CustomAxios";
+import { useTimer } from 'react-timer-hook';
 // import Navbar from '../Navbar'
 
-function VotingUnderway() {
+function VotingUnderway({expiryTimestamp}) {
   const dispatch = useDispatch();
   const classes = useStyles();
-
-  const [timerDays, setTimerDays] = useState("00");
-  const [timerHours, setTimerHours] = useState("00");
-  const [timerMinutes, setTimerMinutes] = useState("00");
-  const [timerSeconds, setTimerSeconds] = useState("00");
-  const userState = useSelector((state) => state.userState);
+const userState = useSelector((state) => state.userState);
   const votingState = useSelector((state) => state.votingState);
-
-  let interval = useRef();
-  const startTimer = (countdownDate) => {
-    // const countdownDate = new Date('Jun 1 , 2022 00:00:00').getTime()
-    console.log(countdownDate);
-    interval = setInterval(() => {
-      // if(!countdownDate) dis
-      const now = new Date().getTime();
-      const distance = countdownDate - now;
-
-      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-      const hours = Math.floor(
-        (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-      );
-      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-      if (distance < 0) {
-        clearInterval(interval.current);
-      } else {
-        setTimerDays(days);
-        setTimerHours(hours);
-        setTimerMinutes(minutes);
-        setTimerSeconds(seconds);
-      }
-    }, 1000);
-  };
-
-  useEffect(() => {
-    dispatch(getCurrentPhase()).unwrap()
-      .then(() => {
-        console.log(votingState.currentPhase);
-        startTimer(Number(votingState.currentPhase[2].hex));
-      })
-      .catch(() => {});
-    return () => {
-      clearInterval(interval.current);
-    };
-  },[]);
-
+  // function MyTimer({ expiryTimestamp }) {
+    const {
+      seconds,
+      minutes,
+      hours,
+      days,
+      isRunning,
+      start,
+      pause,
+      resume,
+      restart,
+    } = useTimer({ expiryTimestamp, onExpire: () => console.warn('onExpire called') });
+  
   const verifyVote = async (email) => {
     dispatch(verifyMagic({ email }))
       .unwrap()
@@ -109,6 +78,8 @@ function VotingUnderway() {
               container
               justifyContent="center"
               alignContent="center"
+          style={{marginTop: "-35vh"}}
+
             >
               <Box display="flex">
                 <Typography
@@ -152,7 +123,7 @@ function VotingUnderway() {
                 >
                   <Box display="flex" flexDirection="column">
                     <Typography className={classes.my_typograghy} variant="h1">
-                      {formatTime(timerDays)}
+                      {formatTime(days)}
                     </Typography>
                     <Typography className={classes.my_typograghy} variant="h4">
                       Days
@@ -160,7 +131,7 @@ function VotingUnderway() {
                   </Box>
                   <Box display="flex" flexDirection="column">
                     <Typography className={classes.my_typograghy} variant="h1">
-                      {formatTime(timerHours)}
+                      {formatTime(hours)}
                     </Typography>
                     <Typography className={classes.my_typograghy} variant="h4">
                       Hours
@@ -168,7 +139,7 @@ function VotingUnderway() {
                   </Box>
                   <Box display="flex" flexDirection="column">
                     <Typography className={classes.my_typograghy} variant="h1">
-                      {formatTime(timerMinutes)}
+                      {formatTime(minutes)}
                     </Typography>
                     <Typography className={classes.my_typograghy} variant="h4">
                       Mintues
@@ -176,7 +147,7 @@ function VotingUnderway() {
                   </Box>
                   <Box display="flex" flexDirection="column">
                     <Typography className={classes.my_typograghy} variant="h1">
-                      {formatTime(timerSeconds)}
+                      {formatTime(seconds)}
                     </Typography>
                     <Typography className={classes.my_typograghy} variant="h4">
                       Seconds
@@ -235,7 +206,7 @@ function VotingUnderway() {
               >
                 <Box display="flex" flexDirection="column">
                   <Typography className={classes.my_typograghy} variant="h3">
-                    {formatTime(timerDays)}
+                    {formatTime(days)}
                   </Typography>
                   <Typography className={classes.my_typograghy} variant="h6">
                     Days
@@ -243,7 +214,7 @@ function VotingUnderway() {
                 </Box>
                 <Box display="flex" flexDirection="column">
                   <Typography className={classes.my_typograghy} variant="h3">
-                    {formatTime(timerHours)}
+                    {formatTime(hours)}
                   </Typography>
                   <Typography className={classes.my_typograghy} variant="h6">
                     Hours
@@ -251,7 +222,7 @@ function VotingUnderway() {
                 </Box>
                 <Box display="flex" flexDirection="column">
                   <Typography className={classes.my_typograghy} variant="h3">
-                    {formatTime(timerMinutes)}
+                    {formatTime(minutes)}
                   </Typography>
                   <Typography className={classes.my_typograghy} variant="h6">
                     Mintues
@@ -259,7 +230,7 @@ function VotingUnderway() {
                 </Box>
                 <Box display="flex" flexDirection="column">
                   <Typography className={classes.my_typograghy} variant="h3">
-                    {formatTime(timerSeconds)}
+                    {formatTime(seconds)}
                   </Typography>
                   <Typography className={classes.my_typograghy} variant="h6">
                     Seconds

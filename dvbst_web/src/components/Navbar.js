@@ -70,7 +70,7 @@ function Navbar() {
                                     </Link>
                                 </Grid>
                                 <Grid item xs={4}>
-                                    <Link data-cy="voting-button" to="/auth/Voting_underway">
+                                    <Link data-cy="voting-button" to="/auth/PreVoting">
                                         <Typography variant="h6" className={classes.title}>
                                             Voting
                                         </Typography>
