@@ -26,7 +26,7 @@ contract AAiTVoteToken is ERC20, BaseRelayRecipient {
         onlyOwner
         returns (bool)
     {
-        require(amount == 1, "Invalid Operation");
+        require(amount <= 2, "Invalid Operation");
 
         _transfer(msg.sender, to, amount);
         return true;

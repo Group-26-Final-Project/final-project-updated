@@ -25,6 +25,7 @@ function VotingUnderway() {
     // const countdownDate = new Date('Jun 1 , 2022 00:00:00').getTime()
     console.log(countdownDate);
     interval = setInterval(() => {
+      // if(!countdownDate) dis
       const now = new Date().getTime();
       const distance = countdownDate - now;
 
@@ -47,7 +48,7 @@ function VotingUnderway() {
   };
 
   useEffect(() => {
-    dispatch(getCurrentPhase())
+    dispatch(getCurrentPhase()).unwrap()
       .then(() => {
         console.log(votingState.currentPhase);
         startTimer(Number(votingState.currentPhase[2].hex));
