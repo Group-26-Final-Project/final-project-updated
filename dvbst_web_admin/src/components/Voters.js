@@ -17,11 +17,6 @@ export default function Voters() {
   // const allVoters = votersState.voters
   // const filteredVoters = useMemo(() => allVoters.filter(voter => voter.fullName.startsWith(searchQuery)), [allVoters, searchQuery])
 
-  const clearSearch = () => {
-    setSearchQuery("");
-  };
-
-
   const deptTypes = [
     "Biomedical Engineering",
     "Chemical Engineering",
@@ -31,6 +26,9 @@ export default function Voters() {
     "Software Engineering",
   ];
 
+  const clearSearch = () => {
+    setSearchQuery("");
+  };
   useEffect(() => {
     dispatch(getVoters(searchQuery))
   }, [dispatch, searchQuery])
@@ -82,13 +80,16 @@ export default function Voters() {
       {votersState.getVotersStatus === 'failed' && (
         <div>
           <h3>Ooops something went wrong</h3>
-          <button>Reload</button>
+          <button onClick={() => window.location.reload(false)}>Reload</button>
         </div>
       )}
       {votersState.getVotersStatus === 'success' && votersState.voters && (
         <div class="w-full py-4 px-4 lg:px-8 rounded-2xl bg-white-700">
           {votersState.voters.length === 0 ? (
             <div>
+              <div class="bg-[#00D05A] text-white mt-1 p-3 rounded-xl font-body font-light text-sm float-right">
+                <button onClick={routeChange}>Add Voter</button>
+              </div>
               <p className='text-center text-lg'>No Voters</p>
             </div>
           ) :
@@ -126,7 +127,6 @@ export default function Voters() {
                     </div>
                   </div>
                 </div>
-
                 <div class="bg-[#00D05A] text-white mt-1 p-3 rounded-xl font-body font-light text-sm">
                   <button name="add-user" onClick={routeChange}>Add Voter</button>
                 </div>

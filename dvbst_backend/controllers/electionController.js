@@ -82,50 +82,50 @@ router.get("/myelection/:id", cors(), async (req, res, next) => {
 
 //add new election
 router.post("/", cors(), async function (req, res, next) {
-  const voters = await Voter.find({
-    dept: req.body.dept - 1,
-    year: req.body.batch,
-    section: req.body.section,
-  });
-  const candidates = await Candidate.find({
-    dept: req.body.dept - 1,
-    year: req.body.batch,
-    section: req.body.section,
-  });
-
-  if (voters.length === 0 || candidates.length === 0) {
-    return res.json({
-      status: "failed",
-      code: 404,
-      message: "No voters or candidates found for this election!",
-    });
-  }
-
-  const electionName =
-    deptTypes[req.body.dept - 1] +
-    " Year-" +
-    req.body.batch +
-    " Section-" +
-    req.body.section +
-    " election";
-
-  // await Election.remove();
-
-  var check = await Election.findOne({ name: electionName });
-  if (check) {
-    return res.status(404).send("Election Already Exists!");
-  }
-
-  const election = new Election({
-    name: electionName,
-    type: req.body.type,
-    department: req.body.dept - 1,
-    batch: req.body.batch,
-    section: req.body.section,
-    voters: voters,
-    candidates: candidates,
-  });
   try {
+    const voters = await Voter.find({
+      dept: req.body.dept - 1,
+      year: req.body.batch,
+      section: req.body.section,
+    });
+    const candidates = await Candidate.find({
+      dept: req.body.dept - 1,
+      year: req.body.batch,
+      section: req.body.section,
+    });
+
+    if (voters.length === 0 || candidates.length === 0) {
+      return res.json({
+        status: "failed",
+        code: 404,
+        message: "No voters or candidates found for this election!",
+      });
+    }
+
+    const electionName =
+      deptTypes[req.body.dept - 1] +
+      " Year-" +
+      req.body.batch +
+      " Section-" +
+      req.body.section +
+      " election";
+
+    // await Election.remove();
+
+    var check = await Election.findOne({ name: electionName });
+    if (check) {
+      return res.status(404).send("Election Already Exists!");
+    }
+
+    const election = new Election({
+      name: electionName,
+      type: req.body.type,
+      department: req.body.dept - 1,
+      batch: req.body.batch,
+      section: req.body.section,
+      voters: voters,
+      candidates: candidates,
+    });
     const newElection = await election.save();
     return res.json({
       status: "success",
@@ -141,32 +141,32 @@ router.post("/", cors(), async function (req, res, next) {
 //Vote
 router.patch("/", cors(), async function (req, res, next) {
   try {
-console.log(req.body);
-  const election = await Election.findOne({
-    _id: req.body.electionId,
-  });
+    console.log(req.body);
+    const election = await Election.findOne({
+      _id: req.body.electionId,
+    });
 
-  if (!election) return res.status(400).send("Election doesn't Exist!");
-  const candidate = await Candidate.findOne({
-    _id: req.body.candidateId,
-  });
+    if (!election) return res.status(400).send("Election doesn't Exist!");
+    const candidate = await Candidate.findOne({
+      _id: req.body.candidateId,
+    });
 
-  if (!candidate) return res.status(400).send("Candidate doesn't Exist!");
-  const voter = await Voter.findOne({
-    id: req.body.voterId,
-  });
+    if (!candidate) return res.status(400).send("Candidate doesn't Exist!");
+    const voter = await Voter.findOne({
+      id: req.body.voterId,
+    });
 
-  if (!voter) return res.status(400).send("Voter doesn't Exist!");
-     
-  
-  // for (var i = 0; i < election.candidates.length; i++) {
-  //     if (election.candidates[i]._id.equals(req.body.candidateId)) {
-  //       election.candidates[i].voteCount += 1;
-  //       election.markModified("candidates");
-  //     }
-  //   }
-  
-  await vote(voter, candidate, election);
+    if (!voter) return res.status(400).send("Voter doesn't Exist!");
+
+
+    // for (var i = 0; i < election.candidates.length; i++) {
+    //     if (election.candidates[i]._id.equals(req.body.candidateId)) {
+    //       election.candidates[i].voteCount += 1;
+    //       election.markModified("candidates");
+    //     }
+    //   }
+
+    await vote(voter, candidate, election);
     // const updatedElection = await election.save();
     return res.json({
       status: "success",

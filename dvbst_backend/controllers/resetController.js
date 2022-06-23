@@ -10,8 +10,8 @@ const jwt = require("jsonwebtoken");
 const { send_password } = require("./emailController");
 
 router.post("/", cors(), async (req, res, next) => {
-    const { email } = req.body
     try {
+        const { email } = req.body
         const otpCode = Math.floor(Math.random() * (1000000 - 100000 + 1)) + 100000
 
         const user = await User.findOne({ email })
@@ -50,9 +50,9 @@ router.post("/", cors(), async (req, res, next) => {
 })
 
 router.post("/confirm", cors(), async (req, res, next) => {
-    const { email, code } = req.body
-    console.log(req.body)
     try {
+        const { email, code } = req.body
+        console.log(req.body)
         const otp = await OTP.findOne({email: email })
         if (!otp) {
             return res.status(400).json({ message: 'Invalid OTP!' })
@@ -77,8 +77,8 @@ router.post("/confirm", cors(), async (req, res, next) => {
 })
 
 router.post("/newpass", cors(), async (req, res, next) => {
-    const { resetToken, password } = req.body
     try {
+        const { resetToken, password } = req.body
         console.log(resetToken, password, "Here")
         const decoded = jwt.verify(resetToken, config.resetPassword)
         const email = decoded.email || ''

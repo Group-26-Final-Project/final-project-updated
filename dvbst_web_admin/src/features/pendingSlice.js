@@ -3,10 +3,15 @@ import CustomAxios from '../Api/CustomAxios'
 
 const initialState = {
     pendingUsers: [],
+    pendingUser: null,
     getUsersStatus: "",
     getUsersError: "",
+    getUserStatus: "",
+    getUserError: "",
     addVoterStatus: "",
     addVoterError: "",
+    declineUserStatus: "",
+    declineUserError: ""
 }
 
 function timeout(ms) {
@@ -24,11 +29,34 @@ export const getUsers = createAsyncThunk("pending/getUsers", async (query, {
     }
 })
 
-export const addVoter = createAsyncThunk("pending/addVoter", async (id, {
+export const getUser = createAsyncThunk("pending/getUser", async (id, {
+    rejectWithValue }) => {
+    try {
+        await timeout(1000)
+        const response = await CustomAxios.get("/pending/" + id)
+        console.log(response)
+        return response.data.data
+    } catch (err) {
+        return rejectWithValue(err.response.data)
+    }
+})
+
+export const addUser = createAsyncThunk("pending/addUser", async (id, {
     rejectWithValue})=>{
         try{
             await timeout(1000)
-            const response = await CustomAxios.delete("/pending/" + id)
+            const response = await CustomAxios.delete("/pending/approve/" + id)
+            return response.data
+        } catch(err){
+            return rejectWithValue(err.response.data)
+        }
+})
+
+export const declineUser = createAsyncThunk("pending/declineUser", async (id, {
+    rejectWithValue})=>{
+        try{
+            await timeout(1000)
+            const response = await CustomAxios.delete("/pending/decline/" + id)
             return response.data
         } catch(err){
             return rejectWithValue(err.response.data)
@@ -60,24 +88,66 @@ const pendingSlice = createSlice({
                 getUsersError: action.payload,
             }
         },
-        [addVoter.pending]: (state, action) => {
+        [getUser.pending]: (state, action) => {
             return {
                 ...state,
-                addVoterStatus: "pending",
+                getUserStatus: "pending",
             }
         },
-        [addVoter.fulfilled]: (state, action) => {
+        [getUser.fulfilled]: (state, action) => {
+            return {
+                ...state,
+                pendingUser: action.payload,
+                getUserStatus: "success"
+            }
+        },
+        [getUser.rejected]: (state, action) => {
+            return {
+                ...state,
+                getUserStatus: "failed",
+                getUserError: action.payload,
+            }
+        },
+        [addUser.pending]: (state, action) => {
+            return {
+                ...state,
+                addUserStatus: "pending",
+            }
+        },
+        [addUser.fulfilled]: (state, action) => {
             return {
                 ...state,
                 pendingUsers: [...state.pendingUsers, action.payload],
-                addVoterStatus: "success"
+                addUserStatus: "success"
             }
         },
-        [addVoter.rejected]: (state, action) => {
+        [addUser.rejected]: (state, action) => {
             return {
                 ...state,
-                addVoterStatus: "failed",
-                addVoterError: action.payload
+                addUserStatus: "failed",
+                addUserError: action.payload
+            }
+        },
+        [declineUser.pending]: (state, action) => {
+            return {
+                ...state,
+                declineUserStatus: "pending",
+            }
+        },
+        [declineUser.fulfilled]: (state, action) => {
+            const updatedPending = state.pendingUsers.filter((el) => el._id !== action.payload._id)
+            // const updatedPending = state.pendingUsers.map((user) => user._id === action.payload._id ? null : user)
+            return {
+                ...state,
+                pendingUsers: updatedPending,
+                declineUserStatus: "success"
+            }
+        },
+        [declineUser.rejected]: (state, action) => {
+            return {
+                ...state,
+                declineUserStatus: "failed",
+                declineUserError: action.payload
             }
         },
     }

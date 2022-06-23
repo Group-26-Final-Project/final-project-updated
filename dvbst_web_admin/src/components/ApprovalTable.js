@@ -3,6 +3,8 @@ import { useTable, useSortBy, usePagination } from "react-table";
 import { ChevronDoubleLeftIcon, ChevronLeftIcon, ChevronRightIcon, ChevronDoubleRightIcon } from '@heroicons/react/solid'
 import { Button, PageButton } from '../shared/Buttons'
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { getUser } from '../features/pendingSlice';
 
 const ApprovalTable = ({ columns, data }) => {
     const {
@@ -151,7 +153,13 @@ const ApprovalTable = ({ columns, data }) => {
 export default ApprovalTable
 
 export function Detail({ value }) {
-      const result = <Link to="/approvalDetail" state={value} className="text-blue-600 dark:text-blue-500 hover:underline">Detail</Link>
+    console.log("Value", value)
+    const dispatch = useDispatch()
+    const seeDetail = () => {
+        dispatch(getUser(value))
+    }
+
+    const result = <Link onClick={seeDetail} to="/approvalDetail" state={value} className="text-blue-600 dark:text-blue-500 hover:underline">Detail</Link>
     
     return (
         <span>

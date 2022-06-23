@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import CustomAxios from '../Api/CustomAxios'
 
 const initialState = {
+    candidate: null,
     getCandidateStatus: "",
     getCandidateError: "",
 }
@@ -10,45 +11,39 @@ function timeout(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-export const getCandidates = createAsyncThunk("candidates/getCandidates", async (id = null, {
+export const getCandidate = createAsyncThunk("candidates/getCandidate", async (id, {
     rejectWithValue }) => {
     try {
         await timeout(1000)
-        const response = await CustomAxios.get("/candidates")
+        const response = await CustomAxios.get("/candidates/" + id)
         console.log("response data ----", response)
-        return response.data
+        return response.data.data
     } catch (err) {
         return rejectWithValue(err.response.data)
     }
 })
-
-
 
 const candidatesSlice = createSlice({
     name: "candidates",
     initialState,
     reducers: {},
     extraReducers: {
-
-
-        [getCandidates.pending]: (state, action) => {
+        [getCandidate.pending]: (state, action) => {
             return {
                 ...state,
-                getCandidatesStatus: "pending",
+                getCandidateStatus: "pending",
             }
         },
-        [getCandidates.fulfilled]: (state, action) => {
+        [getCandidate.fulfilled]: (state, action) => {
             return {
-                ...state,
-                candidates: action.payload,
-                getCandidatesStatus: "success"
+                candidate: action.payload,
+                getCandidateStatus: "success"
             }
         },
-        [getCandidates.rejected]: (state, action) => {
+        [getCandidate.rejected]: (state, action) => {
             return {
-                ...state,
-                getCandidatesStatus: "failed",
-                getCandidatesError: action.payload,
+                getCandidateStatus: "failed",
+                getCandidateError: action.payload,
             }
         },
 

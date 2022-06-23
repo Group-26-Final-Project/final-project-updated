@@ -5,8 +5,8 @@ const Pending = require("../models/pending");
 const Candidate = require("../models/candidate");
 const User = require("../models/user");
 const bcrypt = require("bcryptjs");
-var generator = require('generate-password');
-const { send_password } = require("./emailController");
+const { send_notification } = require("./emailController");
+
 var cors = require("cors");
 
 //get all users waiting for approval
@@ -25,18 +25,18 @@ router.get("/", cors(), async (req, res, next) => {
 
 //add new voter
 router.post("/", cors(), async function (req, res, next) {
-  const pending = new Pending({
-    name: req.body.name,
-    fname: req.body.fname,
-    gname: req.body.gname,
-    email: req.body.email,
-    phone: req.body.phone,
-    id: req.body.id,
-    dept: req.body.dept,
-    section: req.body.section,
-    year: req.body.year
-  });
   try {
+    const pending = new Pending({
+      name: req.body.name,
+      fname: req.body.fname,
+      gname: req.body.gname,
+      email: req.body.email,
+      phone: req.body.phone,
+      id: req.body.id,
+      dept: req.body.dept,
+      section: req.body.section,
+      year: req.body.year
+    });
     var check = await User.findOne({ email: req.body.email });
     if (check) {
       return res.status(404).send("User Already Exists!");
@@ -81,20 +81,41 @@ router.get('/:id', cors(), async (req, res, next) => {
 });
 
 //approve user
-router.delete('/:id', cors(), async (req, res, next) => {
+router.delete('/approve/:id', cors(), async (req, res, next) => {
   try {
     const approvedUser = await Pending.findByIdAndDelete(req.params.id);
     console.log("First", approvedUser)
     if (!approvedUser) {
       return res.status(400).json({ message: "User doesn't exist!" });
     }
-    if (approvedUser.role === 'voter'){
-      const userApproved = await Voter.updateOne({ _id: approvedUser.userId }, { $set: { approved : true }})
+    if (approvedUser.role === 'voter') {
+      const userApproved = await Voter.updateOne({ _id: approvedUser.userId }, { $set: { approved: true } })
       console.log("Second", userApproved)
       return res.status(204);
     } else {
-      const userApproved = await Candidate.updateOne({ _id: approvedUser.userId }, { $set: { approved : true }})
+      const userApproved = await Candidate.updateOne({ _id: approvedUser.userId }, { $set: { approved: true } })
       return res.status(204);
+    }
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
+//decline user
+router.delete('/decline/:id', cors(), async (req, res, next) => {
+  try {
+    const declinedUser = await Pending.findByIdAndDelete(req.params.id);
+    if (!declinedUser) {
+      return res.status(400).json({ message: "User doesn't exist!" });
+    }
+    await send_notification(declinedUser.email);
+    await User.deleteOne({ userId: declinedUser.userId })
+    if (declinedUser.role === 'voter') {
+      await Voter.deleteOne({ _id: declinedUser.userId })
+      return res.status(200);
+    } else {
+      await Candidate.deleteOne({ _id: declinedUser.userId })
+      return res.status(200);
     }
   } catch (error) {
     res.status(400).json({ message: error.message });
