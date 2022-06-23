@@ -93,7 +93,7 @@ const userState = useSelector((state) => state.userState);
                       fontWeight: "SemiBold",
                     }}
                   >
-                    Election 
+                    Voting 
                   </span>
                    {" "}is Underway
                 </Typography>
@@ -108,7 +108,7 @@ const userState = useSelector((state) => state.userState);
                       fontWeight: "SemiBold",
                     }}
                   >
-                    Election 
+                    Voting 
                   </span>
                    {" "}is Underway
                 </Typography>
