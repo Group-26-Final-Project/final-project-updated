@@ -2579,15 +2579,7 @@
   },
   "networks": {},
   "schemaVersion": "3.4.4",
-<<<<<<< HEAD
-<<<<<<< HEAD
-  "updatedAt": "2022-06-23T17:28:32.555Z",
-=======
-  "updatedAt": "2022-06-23T04:59:48.258Z",
->>>>>>> [Web] voter remaining token balance
-=======
-  "updatedAt": "2022-06-23T17:28:32.555Z",
->>>>>>> [Web] implement double voting restriction
+  "updatedAt": "2022-06-23T23:53:51.115Z",
   "devdoc": {
     "kind": "dev",
     "methods": {},
