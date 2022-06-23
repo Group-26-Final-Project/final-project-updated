@@ -112,7 +112,7 @@ async function changePhase(duration) {
         // allow voting and disqualifying
 
 
-        await generateElections(currentPhase.phaseName);
+        await generateElections(currentPhase.phaseName,duration);
         await mintAndSendTokens();
         await setLocalPhase(duration);
         console.log("phase changed from 3 - 4");
@@ -144,7 +144,7 @@ async function changePhase(duration) {
         // mint and send tokens
         // allow voting and disqualifying
 
-        await generateElections(currentPhase.phaseName);
+        await generateElections(currentPhase.phaseName,duration);
         await mintAndSendTokens();
         await setLocalPhase(duration);
 

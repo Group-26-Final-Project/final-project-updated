@@ -5,6 +5,7 @@ import Voting_Svg from "../Voting_Svg";
 // import Navbar from "../Navbar";
 import { useTimer } from "react-timer-hook";
 import Link from "@mui/material/Link";
+import { useNavigate } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -43,11 +44,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function BeforeVoting({ expiryTimestamp, primaryText, secondaryText, currentPhase }) {
+function BeforeVoting({
+  expiryTimestamp,
+  primaryText,
+  secondaryText,
+  currentPhase,
+}) {
   const { seconds, minutes, hours, days } = useTimer({
     expiryTimestamp,
     onExpire: () => console.warn("onExpire called"),
   });
+  const navigate = useNavigate();
 
   const classes = useStyles();
   const formatTime = (time) => {
@@ -162,16 +169,17 @@ function BeforeVoting({ expiryTimestamp, primaryText, secondaryText, currentPhas
                   }}
                 >
                   <Link
-                    onClick={() => {}}
+                    onClick={() => {
+                      navigate("/auth/Result");
+                    }}
                     underline="none"
                     color="#00D05A"
                   >
-                    Enter Election
+                    Go To Results
                   </Link>
                 </Button>
               </Box>
             </Grid>
-            
           )}
         </Grid>
         <Grid
