@@ -19,6 +19,7 @@ const userRouter = require('./controllers/userController');
 const voterRouter = require('./controllers/voterController');
 const phaseRoute = require('./controllers/phaseController');
 const verifyRouter = require('./controllers/verificationController');
+const balanceRouter = require('./controllers/balanceController');
 
 // app.use('/auth', authRouter)
 app.use('/login', authRouter)
@@ -33,5 +34,6 @@ app.use('/user', userRouter)
 app.use('/voters', voterRouter)
 app.use('/phase', phaseRoute);
 app.use('/verify', verifyRouter)
+app.use('/balance', balanceRouter)
 
 module.exports = app;

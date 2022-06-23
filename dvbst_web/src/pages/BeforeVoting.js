@@ -65,7 +65,6 @@ function BeforeVoting({ expiryTimestamp, primaryText, secondaryText, currentPhas
           container
           justifyContent="center"
           alignContent="center"
-          style={{marginTop: "-35vh"}}
         >
           <Typography
             className={classes.my_typography}

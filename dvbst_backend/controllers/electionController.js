@@ -5,6 +5,8 @@ const Election = require("../models/election");
 const Voter = require("../models/voter");
 const Candidate = require("../models/candidate");
 const User = require("../models/user");
+const CompletedElections = require("../models/completed");
+const ArchivedElections = require("../models/archive");
 var cors = require("cors");
 const getPersonalizedElection = require("../helpers/getPersonalizedElection");
 const jwt = require('jsonwebtoken')
@@ -23,6 +25,11 @@ const deptTypes = [
 router.get("/", cors(), async (req, res, next) => {
   try {
     var elections = await Election.find();
+    if(elections.length === 0) elections = await CompletedElections.find();
+    if(elections.length === 0) {
+      const temp = await ArchivedElections.find({year:2022});
+      elections = temp.elections;
+  }
     return res.json(elections).status(200);
   } catch (e) {
     return res.json(e).status(400);
@@ -141,32 +148,32 @@ router.post("/", cors(), async function (req, res, next) {
 //Vote
 router.patch("/", cors(), async function (req, res, next) {
   try {
-    console.log(req.body);
-    const election = await Election.findOne({
-      _id: req.body.electionId,
-    });
+console.log(req.body);
+  const election = await Election.findOne({
+    _id: req.body.electionId,
+  });
 
-    if (!election) return res.status(400).send("Election doesn't Exist!");
-    const candidate = await Candidate.findOne({
-      _id: req.body.candidateId,
-    });
+  if (!election) return res.status(400).send("Election doesn't Exist!");
+  const candidate = await Candidate.findOne({
+    _id: req.body.candidateId,
+  });
 
-    if (!candidate) return res.status(400).send("Candidate doesn't Exist!");
-    const voter = await Voter.findOne({
-      id: req.body.voterId,
-    });
+  if (!candidate) return res.status(400).send("Candidate doesn't Exist!");
+  const voter = await Voter.findOne({
+    _id: req.body.voterId,
+  });
 
-    if (!voter) return res.status(400).send("Voter doesn't Exist!");
-
-
-    // for (var i = 0; i < election.candidates.length; i++) {
-    //     if (election.candidates[i]._id.equals(req.body.candidateId)) {
-    //       election.candidates[i].voteCount += 1;
-    //       election.markModified("candidates");
-    //     }
-    //   }
-
-    await vote(voter, candidate, election);
+  if (!voter) return res.status(400).send("Voter doesn't Exist!");
+     
+  
+  // for (var i = 0; i < election.candidates.length; i++) {
+  //     if (election.candidates[i]._id.equals(req.body.candidateId)) {
+  //       election.candidates[i].voteCount += 1;
+  //       election.markModified("candidates");
+  //     }
+  //   }
+  
+  await vote(voter, candidate, election);
     // const updatedElection = await election.save();
     return res.json({
       status: "success",

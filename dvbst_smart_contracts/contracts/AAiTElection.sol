@@ -855,6 +855,10 @@ contract AAiTElection {
 
     // GET FUNCTIONS
 
+    function getVotesRemaining(address voterAddress)external view returns (uint256) {
+        return voterToCandidatesMapping[voterAddress].length;
+    }
+
     function getAllCurrentElections()
         public
         view

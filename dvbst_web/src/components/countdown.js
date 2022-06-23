@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-function Countdown({expiryTimestamp}) {
+function Countdown({expiryTimestamp, votesRemaining}) {
     // const [timerDays, setTimerDays] = useState('00')
     // const [timerHours, setTimerHours] = useState('00')
     // const [timerMinutes, setTimerMinutes] = useState('00')
@@ -77,6 +77,8 @@ function Countdown({expiryTimestamp}) {
         <Grid container direction='column' justifyContent='center' className={classes.body}>
             <Typography variant='h4' className={classes.my_typogrphy}>Time Remaining </Typography>
             <Typography variant='h4' className={classes.my_typogrphy}>{formatTime(days)} : {formatTime(hours)} : {formatTime(minutes)} : {formatTime(seconds)}</Typography>
+            <Typography variant='h5' className={classes.my_typogrphy}>Votes Remaining: {votesRemaining}</Typography>
+       
         </Grid>
     )
 }

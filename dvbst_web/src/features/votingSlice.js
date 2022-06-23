@@ -8,6 +8,7 @@ const baseURL = "http://localhost:8080";
 const initialState = {
   election: null,
   currentPhase: null,
+  voterBalance: null,
   verifyMagicStatus: "",
   verifyMagicError: "",
   getMyElectionStatus: "",
@@ -16,6 +17,8 @@ const initialState = {
   voteCandidateError: "",
   getCurrentPhaseStatus: "",
   getCurrentPhaseError: "",
+  getVoterBalanceStatus: "",
+  getVoterBalanceError: "",
 };
 
 export const verifyMagic = createAsyncThunk(
@@ -40,6 +43,21 @@ export const getMyElection = createAsyncThunk(
   async (id = null, { rejectWithValue }) => {
     try {
       const response = await CustomAxios.get("/elections/myelection");
+      console.log(response);
+      return response.data;
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
+export const getBalance = createAsyncThunk(
+  "voting/getBalance",
+  async (id, { rejectWithValue }) => {
+    try {
+      console.log(id);
+
+      const response = await CustomAxios.get("/balance/" + id);
       console.log(response);
       return response.data;
     } catch (err) {
@@ -140,6 +158,26 @@ const votingSlice = createSlice({
         ...state,
         getCurrentPhaseStatus: "failed",
         getCurrentPhaseError: action.payload,
+      };
+    },
+    [getBalance.pending]: (state, action) => {
+      return {
+        ...state,
+        getVoterBalanceStatus: "pending",
+      };
+    },
+    [getBalance.fulfilled]: (state, action) => {
+      return {
+        ...state,
+        voterBalance: action.payload,
+        getVoterBalanceStatus: "success",
+      };
+    },
+    [getBalance.rejected]: (state, action) => {
+      return {
+        ...state,
+        getVoterBalanceStatus: "failed",
+        getVoterBalanceError: action.payload,
       };
     },
     [voteCandidate.pending]: (state, action) => {

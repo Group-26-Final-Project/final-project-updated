@@ -4,7 +4,11 @@ import { makeStyles } from "@material-ui/core";
 import CandidatesList from "../components/CandidatesList";
 import Countdown from "../components/countdown";
 import { useSelector, useDispatch } from "react-redux";
-import { getCurrentPhase, getMyElection } from "../features/votingSlice";
+import {
+  getBalance,
+  getCurrentPhase,
+  getMyElection,
+} from "../features/votingSlice";
 import { SpinnerCircularFixed } from "spinners-react";
 
 const isEqual = (...objects) =>
@@ -15,6 +19,7 @@ function VotePage() {
   const dispatch = useDispatch();
   const userState = useSelector((state) => state.userState);
   const votingState = useSelector((state) => state.votingState);
+  const [remainingVote, setRemainingVote] = React.useState(0);
 
   useEffect(() => {
     dispatch(getMyElection());
@@ -28,22 +33,22 @@ function VotePage() {
         // startTimer(Number(votingState.currentPhase[2].hex));
       })
       .catch(() => {});
-    // const extractCurrentPhase = async () => {
-    //   try {
-    //     const response = await CustomAxios.get("/phase");
-    //     // console.log(response.data.data);
-    //     // return response.data.data;
-    //     setzCountdownDate(Number(response.data.data.currentPhase[2].hex))
-
-    //     // startTimer();
-    //   } catch (err) {
-    //     setphaseError(err.message)
-    //   }
-    // }
-    // extractCurrentPhase();
-    // return () => {
-    //   clearInterval(interval.current);
-    // };
+  }, [dispatch]);
+  useEffect(() => {
+    dispatch(getBalance(userState.user._id))
+      .unwrap()
+      .then(() => {
+        if (votingState.voterBalance) {
+          if (Number(votingState.voterBalance.hex) >= 2) {
+            setRemainingVote(2);
+          } else {
+            setRemainingVote(Number(votingState.voterBalance.hex));
+          }
+        }
+        // console.log(votingState.currentPhase);
+        // startTimer(Number(votingState.currentPhase[2].hex));
+      })
+      .catch(() => {});
   }, [dispatch]);
   return (
     <div>
@@ -60,10 +65,22 @@ function VotePage() {
               <Grid container direction="row" justifyContent="center">
                 {/* <Typography variant='h4' className={classes.my_typogrphy}>Time Remaining </Typography> */}
                 {/* <Typography variant='h4' className={classes.my_typogrphy}>{timerDays} : {timerHours} : {timerMinutes} : {timerSeconds}</Typography> */}
-                {votingState.getCurrentPhaseStatus === "success" && votingState.currentPhase && (
-                <Countdown expiryTimestamp={Number(votingState.currentPhase[2].hex)} />
-
-                )}
+                {votingState.getCurrentPhaseStatus === "success" &&
+                  votingState.currentPhase &&
+                  votingState.voterBalance && (
+                    <Grid container direction="row" justifyContent="center">
+                      <Countdown
+                        expiryTimestamp={Number(
+                          votingState.currentPhase[2].hex
+                        )}
+                        votesRemaining={Number(votingState.voterBalance.hex) === 0
+                          ? 2
+                          : Number(votingState.voterBalance.hex) >= 2
+                          ? 0
+                          : 1}
+                      />
+                    </Grid>
+                  )}
                 <Grid
                   item
                   xs={8}
@@ -120,7 +137,8 @@ function VotePage() {
               ) &&
                 userState.user.role === "voter" &&
                 votingState.election &&
-                votingState.election.candidates && (
+                votingState.election.candidates && 
+                votingState.voterBalance && (
                   <>
                     {votingState.election.candidates.map((candidate) => (
                       <CandidatesList
@@ -132,6 +150,13 @@ function VotePage() {
                         year={candidate.year}
                         section={candidate.section}
                         electionId={votingState.election._id}
+                        votesRemaining={
+                           Number(votingState.voterBalance.hex) === 0
+                            ? 2
+                            : Number(votingState.voterBalance.hex) >= 2
+                            ? 0
+                            : 1
+                        }
                       />
                     ))}
                   </>

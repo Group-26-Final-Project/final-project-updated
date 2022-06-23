@@ -166,7 +166,20 @@ function Result() {
             <button onClick={() => window.location.reload()}>Refresh</button>
           </>
         )}
-        <Grid container >
+        {
+          (electionsState.getElectionsStatus === "success" ||
+          electionsState.getElectionResultStatus === "success") && (electionsState.elections.length === 0) && (
+          <>
+            <Typography className={classes.my_typogrphy} variant="h5">
+              No Election Results
+            </Typography>
+          </>
+        )
+        }
+        {
+          (electionsState.getElectionsStatus === "success" ||
+          electionsState.getElectionResultStatus === "success") && (electionsState.elections.length !== 0) && (
+            <Grid container >
           <Grid alignContent="flex-start" item xs={4} sm={3}>
             <Typography className={classes.my_typogrphy} variant="h5">
               Election Results
@@ -203,6 +216,9 @@ function Result() {
             </Typography>
             </Grid>
         </Grid>
+          )
+        }
+        
         {electionsState.getElectionsStatus !== "pending" &&
           electionsState.getElectionResultStatus !== "pending" &&
           electionsState.elections &&

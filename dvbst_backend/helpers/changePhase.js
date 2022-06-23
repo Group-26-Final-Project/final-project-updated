@@ -81,7 +81,7 @@ async function changePhase(duration) {
         // allow voting and disqualifying
 
 
-        await generateElections(currentPhase.phaseName);
+        await generateElections(currentPhase.phaseName,duration);
         await mintAndSendTokens();
         await setLocalPhase(duration);
         console.log("phase changed from 1 - 2");
@@ -215,8 +215,8 @@ async function extendPhase(duration){
     console.log("waiting to mine phase extension");
     await tx.wait().then(async (txReceipt) => {
       console.log(`phase extension successful`);
-      const phase = await getLocalPhase();
-      console.log(phase.phaseName);
+      // const phase = await getLocalPhase();
+      // console.log(phase.phaseName);
     });
   });
 }

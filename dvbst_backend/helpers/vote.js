@@ -33,10 +33,10 @@ async function vote(voter, candidate, election) {
     //   console.log("Uknown voter");
     //   return "Unknown voter";
     // }
-    if (voter.voted) {
-      console.log("Voter already voted");
-      return "Voter already voted";
-    }
+    // if (voter.voted) {
+    //   console.log("Voter already voted");
+    //   return "Voter already voted";
+    // }
     // const election = await Election.findOne({
     //   year: check.year,
     //   section: check.section,
@@ -96,7 +96,7 @@ async function vote(voter, candidate, election) {
                 { 'candidates.$.voteCount': count }
               }
             );
-            await Voter.findOneAndUpdate({ uniqueID: voter.uniqueID }, { voted: true });
+            // await Voter.findOneAndUpdate({ uniqueID: voter.uniqueID }, { voted: true });
 
             console.log(`${voter.uniqueID} voted for ${candidate.uniqueID}`);
             return "Success";
