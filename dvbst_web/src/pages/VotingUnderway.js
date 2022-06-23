@@ -60,14 +60,14 @@ const userState = useSelector((state) => state.userState);
           <h3>Ooops something went wrong</h3>
         </Grid>
       )}
-      {userState.getUserStatus !== "pending" &&
+      {/* {userState.getUserStatus !== "pending" &&
         userState.user.role === "candidate" && (
           <Grid container justifyContent="center">
             <Typography>You are a candidate, you cant vote!</Typography>
           </Grid>
-        )}
+        )} */}
       {userState.getUserStatus !== "pending" &&
-        userState.user.role === "voter" &&
+        // userState.user.role === "voter" &&
         userState.user && (
           <Grid container direction="row">
             <Grid
@@ -78,7 +78,6 @@ const userState = useSelector((state) => state.userState);
               container
               justifyContent="center"
               alignContent="center"
-          style={{marginTop: "-35vh"}}
 
             >
               <Box display="flex">

@@ -6,11 +6,12 @@ import { Typography } from "@material-ui/core";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { voteCandidate } from "../features/votingSlice";
+import { getBalance, voteCandidate } from "../features/votingSlice";
 import Modal from "@material-ui/core/Modal";
 import Backdrop from "@material-ui/core/Backdrop";
 import Fade from "@material-ui/core/Fade";
 import { makeStyles } from "@material-ui/core/styles";
+import { SpinnerCircularFixed } from "spinners-react";
 
 const deptTypes = [
   "Biomedical Engineering",
@@ -38,6 +39,7 @@ function CandidatesList(props) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const userState = useSelector((state) => state.userState);
+  const [isLoading, setIsLoading] = React.useState(false);
   const [open, setOpen] = React.useState(false);
   const classes = useStyles();
 
@@ -53,16 +55,30 @@ function CandidatesList(props) {
   };
 
   const vote = async () => {
+    setIsLoading(true);
+
     dispatch(
       voteCandidate({
         electionId: props.electionId,
         candidateId: props.id,
-        voterId: userState.user.id,
+        voterId: userState.user._id,
       })
     )
       .unwrap()
       .then((response) => {
-        navigate("/auth/Result");
+        dispatch(getBalance(userState.user._id))
+          .unwrap()
+          .then((response) => {
+            if (props.voterBalance <= 0) {
+              setIsLoading(false);
+              setOpen(false);
+              navigate("/auth/Result");
+            }
+          });
+        setIsLoading(false);
+        setOpen(false);
+
+        // if()
       })
       .catch((error) => {
         alert(error);
@@ -145,36 +161,58 @@ function CandidatesList(props) {
         >
           <Fade in={open}>
             <div class="p-2 rounded-xl " className={classes.paper}>
-              <Typography style={{ fontSize: 18,  marginTop: "10px" }} variant="h3">
+              <Typography
+                style={{ fontSize: 18, marginTop: "10px" }}
+                variant="h3"
+              >
                 You are about to vote for:
               </Typography>
-              <Typography style={{ fontSize: 20, marginTop: "10px", marginBottom: "10px" }} variant="h6">
+              <Typography
+                style={{
+                  fontSize: 20,
+                  marginTop: "10px",
+                  marginBottom: "10px",
+                }}
+                variant="h6"
+              >
                 {props.name} {props.fname}
               </Typography>
-              
+
               <Typography style={{ fontSize: 18 }} variant="h3">
                 Are you sure you want to vote for this candidate?
               </Typography>
-              <Typography
-                style={{ fontSize: 12, fontStyle: "italic", color: "#C70039",  marginTop: "5px" }}
-                variant="h6"
-              >
-                Disclaimer: This is your only vote. You can vote only once. You
-                can not vote after this!!
-              </Typography>
+              {props.voterBalance === 1 ? (
+                <Typography
+                  style={{
+                    fontSize: 12,
+                    fontStyle: "italic",
+                    color: "#C70039",
+                    marginTop: "5px",
+                  }}
+                  variant="h6"
+                >
+                  Disclaimer: This is your last vote. You can not vote after
+                  this!!
+                </Typography>
+              ) : (
+                ""
+              )}
+              {isLoading && (
+                <SpinnerCircularFixed
+                  size={25}
+                  thickness={100}
+                  speed={100}
+                  color="#36ad47"
+                  secondaryColor="rgba(0, 0, 0, 0.44)"
+                />
+              )}
+
               <div class="bg-[#C70039] float-right text-white border border-white text- mt-7 py-3 ml-2 mr-2 px-4 rounded-xl font-body font-light text-sm">
                 <button onClick={handleClose}>Cancel</button>
               </div>
-              <div
-                class="bg-[#00D05A] float-right text-white py-3 mt-7 ml-2 mr-2 px-4 rounded-xl font-body font-light center text-sm text-center"
-                >
-              <button
-                onClick={vote}
-              >
-                Confirm
-              </button>
+              <div class="bg-[#00D05A] float-right text-white py-3 mt-7 ml-2 mr-2 px-4 rounded-xl font-body font-light center text-sm text-center">
+                <button onClick={vote}>Confirm</button>
               </div>
-              
             </div>
           </Fade>
         </Modal>

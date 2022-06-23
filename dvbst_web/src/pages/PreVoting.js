@@ -1,15 +1,42 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { getCurrentPhase } from "../features/votingSlice";
+import { getBalance, getCurrentPhase } from "../features/votingSlice";
 import { Box, Button, Grid, makeStyles, Typography } from "@material-ui/core";
 import { SpinnerCircularFixed } from "spinners-react";
 import VotingUnderway from "./VotingUnderway";
 import BeforeVoting from "./BeforeVoting";
+import Link from "@mui/material/Link";
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+  },
+  body: {
+    padding: theme.spacing(4),
+    backgroundColor: "#2F313D",
+    minHeight: "25vh",
+  },
+  my_typogrphy: {
+    color: "white",
+  },
+}));
 
 function PreVoting() {
   const dispatch = useDispatch();
-
+  const userState = useSelector((state) => state.userState);
   const votingState = useSelector((state) => state.votingState);
+  const classes = useStyles();
+
+  useEffect(() => {
+    dispatch(getBalance(userState.user._id))
+      .unwrap()
+      .then(() => {
+        // console.log(votingState.currentPhase);
+        // startTimer(Number(votingState.currentPhase[2].hex));
+      })
+      .catch(() => {});
+  }, []);
+
   useEffect(() => {
     dispatch(getCurrentPhase())
       .unwrap()
@@ -18,22 +45,6 @@ function PreVoting() {
         // startTimer(Number(votingState.currentPhase[2].hex));
       })
       .catch(() => {});
-    // const extractCurrentPhase = async () => {
-    //   try {
-    //     const response = await CustomAxios.get("/phase");
-    //     // console.log(response.data.data);
-    //     // return response.data.data;
-    //     setzCountdownDate(Number(response.data.data.currentPhase[2].hex))
-
-    //     // startTimer();
-    //   } catch (err) {
-    //     setphaseError(err.message)
-    //   }
-    // }
-    // extractCurrentPhase();
-    // return () => {
-    //   clearInterval(interval.current);
-    // };
   }, []);
 
   return (
@@ -53,39 +64,79 @@ function PreVoting() {
       {votingState.getCurrentPhaseStatus === "failed" && (
         <Typography>failed</Typography>
       )}
-      {votingState.getCurrentPhaseStatus === "success" && (
-        <Grid>
-          {votingState.currentPhase[0] === 0 && (
-            <BeforeVoting
-              expiryTimestamp={Number(votingState.currentPhase[2].hex)}
-              primaryText={"Currently"}
-              secondaryText={"Registering"}
-            />
-          )}
-          {(votingState.currentPhase[0] === 1 ||
-            votingState.currentPhase[0] === 3 ||
-            votingState.currentPhase[0] === 5) && (
-            // <BeforeVoting />
-            <BeforeVoting
-              expiryTimestamp={Number(votingState.currentPhase[2].hex)}
-            />
-          )}
-          {(votingState.currentPhase[0] === 2 ||
-            votingState.currentPhase[0] === 4 ||
-            votingState.currentPhase[0] === 6) && (
-            <VotingUnderway
-              expiryTimestamp={Number(votingState.currentPhase[2].hex)}
-            />
-          )}
-          {votingState.currentPhase[0] === 7 && (
-            <BeforeVoting
-              expiryTimestamp={Number(votingState.currentPhase[2].hex)}
-              primaryText="All Elections"
-              secondaryText="Completed"
-            />
-          )}
-        </Grid>
-      )}
+      {votingState.getCurrentPhaseStatus === "success" &&
+        votingState.getVoterBalanceStatus === "success" && (
+          <Grid container justifyContent="center">
+            {votingState.currentPhase[0] === 0 && (
+              <BeforeVoting
+                expiryTimestamp={Number(votingState.currentPhase[2].hex)}
+                primaryText={"Currently"}
+                secondaryText={"Registering"}
+              />
+            )}
+            {(votingState.currentPhase[0] === 1 ||
+              votingState.currentPhase[0] === 3 ||
+              votingState.currentPhase[0] === 5) && (
+              // <BeforeVoting />
+              <BeforeVoting
+                expiryTimestamp={Number(votingState.currentPhase[2].hex)}
+              />
+            )}
+            {(votingState.currentPhase[0] === 2 ||
+              votingState.currentPhase[0] === 4 ||
+              votingState.currentPhase[0] === 6) && (
+              <Grid>
+                {Number(votingState.voterBalance.hex) <= 0 ? (
+                  <Grid
+                    container
+                    direction="column"
+                    justifyContent="center"
+                    alignItems="center"
+                  >
+                    <Typography variant="h3" className={classes.my_typogrphy}>
+                      No more votes
+                    </Typography>
+                    <Typography variant="h3" className={classes.my_typogrphy}>
+                      Please go to result page
+                    </Typography>{" "}
+                    <Box
+                      display="flex"
+                      ml={20}
+                      style={{ width: "100%" }}
+                      className={classes.web_layout}
+                    >
+                      <Button
+                        variant="outlined"
+                        style={{
+                          borderRadius: 5,
+                          padding: "10px 36px",
+                          fontSize: "14px",
+                          borderColor: "#00D05A",
+                          minWidth: "150px",
+                        }}
+                      >
+                        <Link href="/auth/Result" underline="none" color="#00D05A">
+                          Go To Results
+                        </Link>
+                      </Button>
+                    </Box>
+                  </Grid>
+                ) : (
+                  <VotingUnderway
+                    expiryTimestamp={Number(votingState.currentPhase[2].hex)}
+                  />
+                )}
+              </Grid>
+            )}
+            {votingState.currentPhase[0] === 7 && (
+              <BeforeVoting
+                expiryTimestamp={Number(votingState.currentPhase[2].hex)}
+                primaryText="All Elections"
+                secondaryText="Completed"
+              />
+            )}
+          </Grid>
+        )}
     </Grid>
   );
 }

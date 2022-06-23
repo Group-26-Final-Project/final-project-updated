@@ -116,7 +116,7 @@ async function createElection(
   // });
 }
 
-async function generateElections(phaseName) {
+async function generateElections(phaseName,endDate) {
   const contract = await initContract();
   await removeOnchainCompletedElections(contract);
   // const currentPhase = await getPhase();
@@ -126,7 +126,7 @@ async function generateElections(phaseName) {
       for (let j = 1; j < 3; j++) {
         for (let k = 1; k < 3; k++) {
           const name = `${constants.DEPT_TYPES[i]} Year ${j} - Section ${k}`;
-          await createElection(name, j, k, i, 345600, phaseName, contract);
+          await createElection(name, j, k, i, endDate, phaseName, contract);
         }
       }
     }
@@ -135,7 +135,7 @@ async function generateElections(phaseName) {
     for (let i = 0; i < 3; i++) {
       for (let j = 1; j < 3; j++) {
         const name = `${constants.DEPT_TYPES[i]} Year ${j}`;
-        await createElection(name, j, 0, i, 345600, phaseName, contract);
+        await createElection(name, j, 0, i, endDate, phaseName, contract);
       }
     }
   } else if (phaseName === 5) {
@@ -143,7 +143,7 @@ async function generateElections(phaseName) {
     console.log("generating elections");
     for (let i = 0; i < 3; i++) {
       const name = `${constants.DEPT_TYPES[i]}`;
-      await createElection(name, 0, 0, i, 345600, phaseName, contract);
+      await createElection(name, 0, 0, i, endDate, phaseName, contract);
     }
   }
   const result = await contract.getAllCurrentElections();
@@ -169,6 +169,16 @@ async function createElectionLocal(
     department: department,
   });
   await election.save();
+  for (let index = 0; index < tempcandidates.length; index++) {
+    // const element = tempCandidates[index];
+    await Election.findOneAndUpdate(
+      { name: name, 'candidates._id':tempcandidates[index]._id },
+      { $set:
+        { 'candidates.$.voteCount': 0 }
+      }
+    );
+    
+  }
   return;
 }
 

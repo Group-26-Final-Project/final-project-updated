@@ -28,14 +28,23 @@ export default function Phase() {
   const phaseState = useSelector((state) => state.phaseState);
   const datePickerRef = useRef();
   const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
+  const [openChangeModal, setOpenChangeModal] = React.useState(false);
+  const [openExtendModal, setOpenExtendModal] = React.useState(false);
   const [value, setValue] = React.useState(new Date());
 
-  const handleOpen = () => {
-    setOpen(true);
+  const handleOpen = (e) => {
+    // console.log(e.target.value)
+      if(e.target.value === "extend"){
+        setOpenExtendModal(true);        
+      }
+      else if (e.target.value === "change"){
+        setOpenChangeModal(true)
+      }
   };
   const handleClose = () => {
-    setOpen(false);
+    setOpenExtendModal(false);
+    setOpenChangeModal(false);
+
   };
   const PHASE_NAME = [
     "REGISTRATION",
@@ -74,12 +83,14 @@ export default function Phase() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    var date = new Date(Date.now());
-    date.setDate(date.getDate() + 4);
+    const date1 = new Date(value);
+    console.log("abt to convert date", date1);
     const timestamp =
-      Math.floor(date.getTime());
+      Math.floor(date1.getTime());
     console.log(timestamp)
     dispatch(changePhase(timestamp));
+    setOpenChangeModal(false);
+
   };
 
   const handleOnDateChange = async (e) => {
@@ -96,7 +107,7 @@ export default function Phase() {
     // console.log("date changed\n", timestamp);
     // e.preventDefault();
     dispatch(extendPhase(timestamp));
-    setOpen(false);
+    setOpenExtendModal(false);
   };
 
   const onDateChange = (e) => {
@@ -188,13 +199,16 @@ export default function Phase() {
                 <div class="flex items-baseline justify-center">
                   <button
                     class="bg-[#00D05A] text-white mt-5 p-5 rounded-xl font-body font-light center text-center"
-                    onClick={handleSubmit}
+                    onClick={handleOpen}
+                    value="change"
                   >
                     Change Phase
                   </button>
                   <button
                     class="bg-[#00D05A] text-white ml-10 mt-5 p-5 rounded-xl font-body font-light center text-center"
                     onClick={handleOpen}
+                    value="extend"
+
                   >
                     Extend Phase
                   </button>
@@ -202,7 +216,7 @@ export default function Phase() {
                     aria-labelledby="transition-modal-title"
                     aria-describedby="transition-modal-description"
                     className={classes.modal}
-                    open={open}
+                    open={openExtendModal}
                     onClose={handleClose}
                     closeAfterTransition
                     BackdropComponent={Backdrop}
@@ -210,7 +224,7 @@ export default function Phase() {
                       timeout: 500,
                     }}
                   >
-                    <Fade in={open}>
+                    <Fade in={openExtendModal}>
                       <div class="p-2 rounded-xl " className={classes.paper}>
                         <h2>Enter an Extension Date</h2>
                         <input
@@ -224,6 +238,38 @@ export default function Phase() {
                         <button
                           class="bg-[#00D05A] text-white ml-10 mt-2 p-2 rounded-xl font-body font-light center text-center"
                           onClick={handleOnDateChange}
+                        >
+                          Confirm
+                        </button>
+                      </div>
+                    </Fade>
+                  </Modal>
+                  <Modal
+                    aria-labelledby="transition-modal-title"
+                    aria-describedby="transition-modal-description"
+                    className={classes.modal}
+                    open={openChangeModal}
+                    onClose={handleClose}
+                    closeAfterTransition
+                    BackdropComponent={Backdrop}
+                    BackdropProps={{
+                      timeout: 500,
+                    }}
+                  >
+                    <Fade in={openChangeModal}>
+                      <div class="p-2 rounded-xl " className={classes.paper}>
+                        <h2>Enter Phase End Date</h2>
+                        <input
+                          //   ref={datePickerRef}
+                          type={"date"}
+                          value={value}
+                          onChange={async (e) => {
+                            await onDateChange(e);
+                          }}
+                        />
+                        <button
+                          class="bg-[#00D05A] text-white ml-10 mt-2 p-2 rounded-xl font-body font-light center text-center"
+                          onClick={handleSubmit}
                         >
                           Confirm
                         </button>
