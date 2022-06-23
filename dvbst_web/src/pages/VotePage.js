@@ -4,7 +4,11 @@ import { makeStyles } from "@material-ui/core";
 import CandidatesList from "../components/CandidatesList";
 import Countdown from "../components/countdown";
 import { useSelector, useDispatch } from "react-redux";
-import { getBalance, getCurrentPhase, getMyElection } from "../features/votingSlice";
+import {
+  getBalance,
+  getCurrentPhase,
+  getMyElection,
+} from "../features/votingSlice";
 import { SpinnerCircularFixed } from "spinners-react";
 
 const isEqual = (...objects) =>
@@ -29,19 +33,16 @@ function VotePage() {
         // startTimer(Number(votingState.currentPhase[2].hex));
       })
       .catch(() => {});
-   
   }, [dispatch]);
   useEffect(() => {
     dispatch(getBalance(userState.user._id))
       .unwrap()
       .then(() => {
-        if(votingState.voterBalance){
-          if(Number(votingState.voterBalance.hex) >= 2){
+        if (votingState.voterBalance) {
+          if (Number(votingState.voterBalance.hex) >= 2) {
             setRemainingVote(2);
-          }
-          else {
+          } else {
             setRemainingVote(Number(votingState.voterBalance.hex));
-
           }
         }
         // console.log(votingState.currentPhase);
@@ -64,13 +65,22 @@ function VotePage() {
               <Grid container direction="row" justifyContent="center">
                 {/* <Typography variant='h4' className={classes.my_typogrphy}>Time Remaining </Typography> */}
                 {/* <Typography variant='h4' className={classes.my_typogrphy}>{timerDays} : {timerHours} : {timerMinutes} : {timerSeconds}</Typography> */}
-                {votingState.getCurrentPhaseStatus === "success" && votingState.currentPhase && votingState.voterBalance && (
-                  <Grid container direction="row" justifyContent="center">
-
-                <Countdown expiryTimestamp={Number(votingState.currentPhase[2].hex)} votesRemaining={Number(votingState.voterBalance.hex)} />
-                </Grid>
-                  
-                )}
+                {votingState.getCurrentPhaseStatus === "success" &&
+                  votingState.currentPhase &&
+                  votingState.voterBalance && (
+                    <Grid container direction="row" justifyContent="center">
+                      <Countdown
+                        expiryTimestamp={Number(
+                          votingState.currentPhase[2].hex
+                        )}
+                        votesRemaining={Number(votingState.voterBalance.hex) === 0
+                          ? 2
+                          : Number(votingState.voterBalance.hex) >= 2
+                          ? 0
+                          : 1}
+                      />
+                    </Grid>
+                  )}
                 <Grid
                   item
                   xs={8}
@@ -127,7 +137,8 @@ function VotePage() {
               ) &&
                 userState.user.role === "voter" &&
                 votingState.election &&
-                votingState.election.candidates && (
+                votingState.election.candidates && 
+                votingState.voterBalance && (
                   <>
                     {votingState.election.candidates.map((candidate) => (
                       <CandidatesList
@@ -139,7 +150,13 @@ function VotePage() {
                         year={candidate.year}
                         section={candidate.section}
                         electionId={votingState.election._id}
-                        voterBalance={remainingVote}
+                        votesRemaining={
+                           Number(votingState.voterBalance.hex) === 0
+                            ? 2
+                            : Number(votingState.voterBalance.hex) >= 2
+                            ? 0
+                            : 1
+                        }
                       />
                     ))}
                   </>

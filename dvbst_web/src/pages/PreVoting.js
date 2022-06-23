@@ -86,7 +86,7 @@ function PreVoting() {
               votingState.currentPhase[0] === 4 ||
               votingState.currentPhase[0] === 6) && (
               <Grid>
-                {Number(votingState.voterBalance.hex) <= 0 ? (
+                {Number(votingState.voterBalance.hex) >= 2 ? (
                   <Grid
                     container
                     direction="column"

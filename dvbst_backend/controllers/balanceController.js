@@ -5,7 +5,7 @@ const Candidate = require('../models/candidate')
 const Voter = require('../models/voter')
 const User = require('../models/user')
 const cors = require('cors');
-const getBalance = require('../helpers/getBalance');
+const getVotesRemaining = require('../helpers/getBalance');
 
 // router.get("/", cors(), async (req, res, next) => {
 //   try {
@@ -26,7 +26,7 @@ router.get("/:id", cors(), async (req, res, next) => {
       return res.status(400).send("User doesn't exist")
     }
     var user = temp.role === "voter" ? await Voter.findById(req.params.id) : await Candidate.findById(req.params.id) 
-    const balance  = await getBalance(user.uniqueID);
+    const balance  = await getVotesRemaining(user.uniqueID);
     console.log(balance);
     res.json(balance).status(200);
   } catch (e) {

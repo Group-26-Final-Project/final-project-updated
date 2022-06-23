@@ -5,6 +5,8 @@ const Election = require("../models/election");
 const Voter = require("../models/voter");
 const Candidate = require("../models/candidate");
 const User = require("../models/user");
+const CompletedElections = require("../models/completed");
+const ArchivedElections = require("../models/archive");
 var cors = require("cors");
 const getPersonalizedElection = require("../helpers/getPersonalizedElection");
 const jwt = require('jsonwebtoken')
@@ -23,6 +25,11 @@ const deptTypes = [
 router.get("/", cors(), async (req, res, next) => {
   try {
     var elections = await Election.find();
+    if(elections.length === 0) elections = await CompletedElections.find();
+    if(elections.length === 0) {
+      const temp = await ArchivedElections.find({year:2022});
+      elections = temp.elections;
+  }
     return res.json(elections).status(200);
   } catch (e) {
     return res.json(e).status(400);

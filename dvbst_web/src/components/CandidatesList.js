@@ -1,7 +1,7 @@
 import { Button } from "@material-ui/core";
 import { Avatar } from "@material-ui/core";
 import { Card } from "@material-ui/core";
-import { Box } from "@material-ui/core";
+import { Box, Grid } from "@material-ui/core";
 import { Typography } from "@material-ui/core";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -72,6 +72,8 @@ function CandidatesList(props) {
             if (props.voterBalance <= 0) {
               setIsLoading(false);
               setOpen(false);
+              console.log("am here");
+              console.log(props.votesRemaining);
               navigate("/auth/Result");
             }
           });
@@ -161,58 +163,88 @@ function CandidatesList(props) {
         >
           <Fade in={open}>
             <div class="p-2 rounded-xl " className={classes.paper}>
-              <Typography
-                style={{ fontSize: 18, marginTop: "10px" }}
-                variant="h3"
-              >
-                You are about to vote for:
-              </Typography>
-              <Typography
-                style={{
-                  fontSize: 20,
-                  marginTop: "10px",
-                  marginBottom: "10px",
-                }}
-                variant="h6"
-              >
-                {props.name} {props.fname}
-              </Typography>
-
-              <Typography style={{ fontSize: 18 }} variant="h3">
-                Are you sure you want to vote for this candidate?
-              </Typography>
-              {props.voterBalance === 1 ? (
-                <Typography
-                  style={{
-                    fontSize: 12,
-                    fontStyle: "italic",
-                    color: "#C70039",
-                    marginTop: "5px",
-                  }}
-                  variant="h6"
-                >
-                  Disclaimer: This is your last vote. You can not vote after
-                  this!!
-                </Typography>
+              {props.votesRemaining === 0 ? (
+                <>
+                  <Typography
+                    style={{
+                      fontSize: 18,
+                      fontStyle: "semi-bold",
+                      color: "#C70039",
+                      marginTop: "5px",
+                    }}
+                    variant="h2"
+                  >
+                    You can not vote anymore!!
+                  </Typography>
+                  <div class="bg-[#00D05A] float-right text-white py-3 mt-7 ml-2 mr-2 px-4 rounded-xl font-body font-light center text-sm text-center">
+                    <button
+                      onClick={() => {
+                        navigate("/auth/Result");
+                      }}
+                    >
+                      Go To Results
+                    </button>
+                  </div>
+                </>
               ) : (
-                ""
-              )}
-              {isLoading && (
-                <SpinnerCircularFixed
-                  size={25}
-                  thickness={100}
-                  speed={100}
-                  color="#36ad47"
-                  secondaryColor="rgba(0, 0, 0, 0.44)"
-                />
-              )}
+                <>
+                  <Typography
+                    style={{ fontSize: 18, marginTop: "10px" }}
+                    variant="h3"
+                  >
+                    You are about to vote for:
+                  </Typography>
+                  <Typography
+                    style={{
+                      fontSize: 20,
+                      marginTop: "10px",
+                      marginBottom: "10px",
+                    }}
+                    variant="h6"
+                  >
+                    {props.name} {props.fname}
+                  </Typography>
 
-              <div class="bg-[#C70039] float-right text-white border border-white text- mt-7 py-3 ml-2 mr-2 px-4 rounded-xl font-body font-light text-sm">
-                <button onClick={handleClose}>Cancel</button>
-              </div>
-              <div class="bg-[#00D05A] float-right text-white py-3 mt-7 ml-2 mr-2 px-4 rounded-xl font-body font-light center text-sm text-center">
-                <button onClick={vote}>Confirm</button>
-              </div>
+                  <Typography style={{ fontSize: 18 }} variant="h3">
+                    Are you sure you want to vote for this candidate?
+                  </Typography>
+                  {props.votesRemaining === 1 ? (
+                    <Typography
+                      style={{
+                        fontSize: 12,
+                        fontStyle: "italic",
+                        color: "#C70039",
+                        marginTop: "5px",
+                      }}
+                      variant="h6"
+                    >
+                      Disclaimer: This is your last vote. You can not vote after
+                      this!!
+                    </Typography>
+                  ) : (
+                    ""
+                  )}
+                  <Grid>
+                    <div class="bg-[#C70039] float-right text-white border border-white text- mt-7 py-3 ml-2 mr-2 px-4 rounded-xl font-body font-light text-sm">
+                      <button onClick={handleClose}>Cancel</button>
+                    </div>
+                    <div class="bg-[#00D05A] float-right text-white py-3 mt-7 ml-2 mr-2 px-4 rounded-xl font-body font-light center text-sm text-center">
+                      <button onClick={vote}>Confirm</button>
+                    </div>
+                    <div class="float-right mt-10 ml-2 mr-2">
+                      {isLoading && (
+                        <SpinnerCircularFixed
+                          size={25}
+                          thickness={100}
+                          speed={100}
+                          color="#36ad47"
+                          secondaryColor="rgba(0, 0, 0, 0.44)"
+                        />
+                      )}{" "}
+                    </div>
+                  </Grid>
+                </>
+              )}
             </div>
           </Fade>
         </Modal>

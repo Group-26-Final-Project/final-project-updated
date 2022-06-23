@@ -17,17 +17,17 @@ const constants = require("../constant/constants");
 const Voter = require("../models/voter");
 // const Web3 = require("web3");
 
-async function getBalance(address) {
+async function getVotesRemaining(address) {
     try{
-        const contract = await initToken();
+        const contract = await initContract();
   
-        const balance = await contract.balanceOf(address);
+        const balance = await contract.getVotesRemaining(address);
 
         return balance;
     }
     catch(e){
         console.log(e);
-        throw Error("Error getting balance");
+        throw Error("Error getting remaining votes");
     }
   
 //   const transactionReceipt = await transaction.wait();
@@ -38,4 +38,4 @@ async function getBalance(address) {
 //   }
 }
 
-module.exports = getBalance;
+module.exports = getVotesRemaining;

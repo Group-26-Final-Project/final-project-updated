@@ -30,17 +30,17 @@ async function createMockCandidates() {
     try {
       var check = await User.findOne({ email: email });
       if (check) {
-        console.log("User Already Exists!");
+        console.log("1User Already Exists!");
         return;
       }
       var check = await Candidate.findOne({ id: id });
       if (check) {
-        console.log("User Already Exists!");
+        console.log("2User Already Exists!");
         return;
       }
       check = await Voter.findOne({ id: id });
       if (check) {
-        console.log("User Already Exists!");
+        console.log("3User Already Exists!");
         return;
       }
       const candidate = new Candidate({
@@ -109,17 +109,17 @@ async function createMockVoters() {
     try {
       var check = await User.findOne({ email: email });
       if (check) {
-        console.log("User Already Exists!");
+        console.log("4User Already Exists!");
         return;
       }
       var check = await Voter.findOne({ id: id });
       if (check) {
-        console.log("User Already Exists!");
+        console.log("5User Already Exists!");
         return;
       }
       check = await Candidate.findOne({ id: id });
       if (check) {
-        console.log("User Already Exists!");
+        console.log("6User Already Exists!");
         return;
       }
       const newVoter = await voter.save();
