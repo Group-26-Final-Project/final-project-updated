@@ -92,13 +92,14 @@ function Result() {
         enabled: true,
         shadeTo: "light",
         shadeIntensity: 0.6,
+        color: "#00D05A"
       },
     },
     dataLabels: {
       enabled: true,
       textAnchor: "start",
       style: {
-        colors: ["#000"],
+        colors: ["#333"],
       },
       formatter: function (val, opt) {
         return opt.w.globals.labels[opt.dataPointIndex] + ":  " + ~~val + " %";

@@ -85,25 +85,31 @@ function PreVoting() {
             {(votingState.currentPhase[0] === 2 ||
               votingState.currentPhase[0] === 4 ||
               votingState.currentPhase[0] === 6) && (
-              <Grid>
+              <Grid container
+              direction="column"
+              justifyContent="center"
+              alignItems="center">
                 {Number(votingState.voterBalance.hex) >= 2 ? (
                   <Grid
                     container
                     direction="column"
                     justifyContent="center"
                     alignItems="center"
+                    style={{ marginTop: "-10vh" }}
+
                   >
                     <Typography variant="h3" className={classes.my_typogrphy}>
-                      No more votes
+                      You have Already Voted!!
                     </Typography>
-                    <Typography variant="h3" className={classes.my_typogrphy}>
+                    {/* <Typography variant="h3" className={classes.my_typogrphy}>
                       Please go to result page
-                    </Typography>{" "}
+                    </Typography>{" "} */}
                     <Box
                       display="flex"
-                      ml={20}
-                      style={{ width: "100%" }}
-                      className={classes.web_layout}
+                      // ml={20}
+                      justifyContent="center"
+                      alignItems="center"
+                      style={{ width: "100%", marginTop: "20px" }}
                     >
                       <Button
                         variant="outlined"
