@@ -32,22 +32,22 @@ router.get("/", cors(), async (req, res, next) => {
 
 //add new voter
 router.post("/", cors(), async function (req, res, next) {
-  const uniqueID = await generateAddress();
-
-  const voter = new Voter({
-    name: req.body.name,
-    fname: req.body.fname,
-    gname: req.body.gname,
-    fullName: req.body.name + " " + req.body.fname + " " + req.body.gname,
-    email: req.body.email,
-    phone: req.body.phone,
-    id: req.body.id,
-    dept: req.body.dept,
-    section: req.body.section,
-    year: req.body.year,
-    uniqueID: uniqueID,
-  });
   try {
+    const uniqueID = await generateAddress();
+  
+    const voter = new Voter({
+      name: req.body.name,
+      fname: req.body.fname,
+      gname: req.body.gname,
+      fullName: req.body.name + " " + req.body.fname + " " + req.body.gname,
+      email: req.body.email,
+      phone: req.body.phone,
+      id: req.body.id,
+      dept: req.body.dept,
+      section: req.body.section,
+      year: req.body.year,
+      uniqueID: uniqueID,
+    });
     var check = await User.findOne({ email: req.body.email });
     if (check) {
       return res.status(404).send("User Already Exists!");

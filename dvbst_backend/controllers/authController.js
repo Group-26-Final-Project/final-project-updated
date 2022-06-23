@@ -39,18 +39,18 @@ router.post("/", cors(), async (req, res) => {
 });
 
 router.post("/admin", cors(), async (req, res) => {
-  console.log("Request", req.body)
   try {
     const { email, password } = req.body;
-    const admin = await Admin.findOne({ email: email });
+    const admin = await User.findOne({ email: email });
     if (!admin) {
       return res.status(404).send("Email/Password is Incorrect");
     }
     const validPassword = await bcrypt.compare(
-      req.body.password,
+      password,
       admin.password
     );
     if (!validPassword) {
+      console.log("There")
       return res.status(404).send("Email/Password is Incorrect");
     } else {
       const token = jwt.sign({ id: admin._id }, config.secret, {
@@ -65,11 +65,11 @@ router.post("/admin", cors(), async (req, res) => {
 
 // magic link verify
 router.post("/enter", cors(), async (req, res) => {
-  const { email, link } = req.body;
-  console.log("Enter value", email, link)
-  if (!email)
-    return res.status(404).json("Email is required field!");
   try {
+    const { email, link } = req.body;
+    console.log("Enter value", email, link)
+    if (!email)
+      return res.status(404).json("Email is required field!");
     const user = await User.findOne({ email: email });
     if (!user) return res.status(400).json("User not found");
     else if (!link) {

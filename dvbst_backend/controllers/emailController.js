@@ -14,25 +14,25 @@ const transport = nodemailer.createTransport({
 var URL = ''
 
 const send_magic_link = async (email, link, which) => {
-    var subj, body;
-    if (which === "login") {
-        URL = "https://tubular-churros-16cbaf.netlify.app/login/enter/"
-        subj = "Signin link"
-        body = '<p>Welcome to our website. This is your link to sign in to your account: ' + (URL + email + '/' + link) + '</p><p>Needless to remind you not to share this link with anyone</p>'
-    } else {
-        // URL = "https://tubular-churros-16cbaf.netlify.app/verify/"
-        URL = "http://localhost:3000/verify/"
-        subj = "Voting Verification Link"
-        body = '<p>This is your Voting Verification link: ' + (URL + email + '/' + link) + '</p><p>Click on the link and you will be redirected to the voting page</p>'
-    }
-
-    const mailOptions = {
-        to: email,
-        from: process.env.NODEMAILER_EMAIL,
-        subject: subj,
-        html: body
-    }
     try {
+        var subj, body;
+        if (which === "login") {
+            URL = "https://tubular-churros-16cbaf.netlify.app/login/enter/"
+            subj = "Signin link"
+            body = '<p>Welcome to our website. This is your link to sign in to your account: ' + (URL + email + '/' + link) + '</p><p>Needless to remind you not to share this link with anyone</p>'
+        } else {
+            // URL = "https://tubular-churros-16cbaf.netlify.app/verify/"
+            URL = "http://localhost:3000/verify/"
+            subj = "Voting Verification Link"
+            body = '<p>This is your Voting Verification link: ' + (URL + email + '/' + link) + '</p><p>Click on the link and you will be redirected to the voting page</p>'
+        }
+    
+        const mailOptions = {
+            to: email,
+            from: process.env.NODEMAILER_EMAIL,
+            subject: subj,
+            html: body
+        }
         const response = await transport.sendMail(mailOptions)
         // console.log('Link sent 📬')
         return ({ ok: true, message: 'email sent' })
@@ -44,17 +44,39 @@ const send_magic_link = async (email, link, which) => {
 }
 
 const send_password = async (email, otp) => {
-    var subj, body;
-    subj = "Password Reset"
-    body = '<p>This is your password reset Otp :' + otp + '.' + '</p>'
-
-    const mailOptions = {
-        to: email,
-        from: process.env.NODEMAILER_EMAIL,
-        subject: subj,
-        html: body
-    }
     try {
+        var subj, body;
+        subj = "Password Reset"
+        body = '<p>This is your password reset Otp :' + otp + '.' + '</p>'
+    
+        const mailOptions = {
+            to: email,
+            from: process.env.NODEMAILER_EMAIL,
+            subject: subj,
+            html: body
+        }
+        const response = await transport.sendMail(mailOptions)
+        // console.log('Link sent 📬')
+        return ({ ok: true, message: 'email sent' })
+    }
+    catch (err) {
+        console.log("Something didn't work out 😭", err)
+        return ({ ok: false, message: err })
+    }
+}
+
+const send_notification = async (email) => {
+    try {
+        var subj, body;
+        subj = "Can not register you to the system!"
+        body = '<p>The information you provided on the registration form is incorrect. Try to re-register or contact the admin at group26aait@gmail.com</p>'
+    
+        const mailOptions = {
+            to: email,
+            from: process.env.NODEMAILER_EMAIL,
+            subject: subj,
+            html: body
+        }
         const response = await transport.sendMail(mailOptions)
         // console.log('Link sent 📬')
         return ({ ok: true, message: 'email sent' })
@@ -66,4 +88,4 @@ const send_password = async (email, otp) => {
 }
 
 
-module.exports = { send_magic_link, send_password }
+module.exports = { send_magic_link, send_password, send_notification }

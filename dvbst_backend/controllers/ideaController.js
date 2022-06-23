@@ -7,10 +7,10 @@ var cors = require('cors')
 
 
 router.get('/', cors(), async function (req, res) {
-    var token = req.headers.authorization;
-    token = token.split(" ")[1];
-    var decoded = jwt.decode(token, config.secret);
     try {
+        var token = req.headers.authorization;
+        token = token.split(" ")[1];
+        var decoded = jwt.decode(token, config.secret);
         const ideas = await Idea.find().lean()
         const response = ideas.map(idea => {
             idea.likedUser = idea.likes.includes(decoded.id)
@@ -24,12 +24,12 @@ router.get('/', cors(), async function (req, res) {
 });
 
 router.post('/', cors(), async function (req, res) {
-    const idea = new Idea({
-        username: req.body.username,
-        title: req.body.title,
-        description: req.body.description
-    })
     try {
+        const idea = new Idea({
+            username: req.body.username,
+            title: req.body.title,
+            description: req.body.description
+        })
         const newIdea = await idea.save()
         res.status(201).json(newIdea)
     } catch (err) {
@@ -38,24 +38,23 @@ router.post('/', cors(), async function (req, res) {
 });
 
 router.patch('/:id', cors(), async function (req, res) {
-    var token = req.headers.authorization;
-    token = token.split(" ")[1];
-    var decoded = jwt.decode(token, config.secret);
-    console.log(decoded)
-    const idea = await Idea.findOne({ _id: req.params.id })
-    if (!idea) {
-        return res.status(200).send("No ideas yet!");
-    } else {
-        if (idea.likes.includes(decoded.id)) {
-            idea.likes = (idea.likes).filter(e => e !== decoded.id)
-            idea.likeCount--
-        } else {
-            idea.likes.push(decoded.id)
-            idea.likeCount++
-        }
-    }
-
     try {
+        var token = req.headers.authorization;
+        token = token.split(" ")[1];
+        var decoded = jwt.decode(token, config.secret);
+        console.log(decoded)
+        const idea = await Idea.findOne({ _id: req.params.id })
+        if (!idea) {
+            return res.status(200).send("No ideas yet!");
+        } else {
+            if (idea.likes.includes(decoded.id)) {
+                idea.likes = (idea.likes).filter(e => e !== decoded.id)
+                idea.likeCount--
+            } else {
+                idea.likes.push(decoded.id)
+                idea.likeCount++
+            }
+        }
         const updatedIdea = await idea.save()
         res.json(updatedIdea)
     } catch (err) {

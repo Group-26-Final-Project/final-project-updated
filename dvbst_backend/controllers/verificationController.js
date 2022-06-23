@@ -8,10 +8,10 @@ const client = require("twilio")(config.accountSID, config.authToken)
 const { send_magic_link } = require('./emailController')
 
 router.post('/', cors(), async (req, res) => {
-    const { email, link } = req.body;
-    if (!email)
-        return res.status(404).json("Email is required field!");
     try {
+        const { email, link } = req.body;
+        if (!email)
+            return res.status(404).json("Email is required field!");
         const user = await User.findOne({ email: email });
         if (!user) return res.status(400).json("Unable to verify user");
         else if (!link) {
@@ -48,8 +48,8 @@ router.post('/', cors(), async (req, res) => {
 
 //otp request
 router.post("/mobile", cors(), async (req, res) => {
-    console.log("OTP Request", req.body.email)
     try {
+        console.log("OTP Request", req.body.email)
         const { email } = req.body;
         if (!email)
             return res.status(404).json("Email is required field!");
@@ -77,39 +77,39 @@ router.post("/mobile", cors(), async (req, res) => {
 
 //otp verify
 router.post("/otp", cors(), async (req, res) => {
-    console.log("VErify got here")
     try {
-      console.log(req.body)
-      const { email, otp } = req.body;
-      const user = await User.findOne({ email: email });
-      if (!user) {
-        return res.status(404).send("Email/Password is Incorrect");
-      } else {
-        client
-          .verify
-          .services(config.serviceID)
-          .verificationChecks
-          .create({
-            to: `+251${user.phone.substring(1)}`,
-            code: otp
-          })
-          .then((data) => {
-            console.log("Data", data)
-            // if (data.status == "success"){
-              res.status(200).json({"data": data})
-            // } else {
-            //   res.status(400).send("Wrong OTP found!")
-            
-          })
-          .catch((e) => {
-            res.status(500).send("Something went wrong!")
-          })
-      }
-  
+        console.log("VErify got here")
+        console.log(req.body)
+        const { email, otp } = req.body;
+        const user = await User.findOne({ email: email });
+        if (!user) {
+            return res.status(404).send("Email/Password is Incorrect");
+        } else {
+            client
+                .verify
+                .services(config.serviceID)
+                .verificationChecks
+                .create({
+                    to: `+251${user.phone.substring(1)}`,
+                    code: otp
+                })
+                .then((data) => {
+                    console.log("Data", data)
+                    // if (data.status == "success"){
+                    res.status(200).json({ "data": data })
+                    // } else {
+                    //   res.status(400).send("Wrong OTP found!")
+
+                })
+                .catch((e) => {
+                    res.status(500).send("Something went wrong!")
+                })
+        }
+
     } catch (e) {
-      res.status(500).send("Something went wrong. Couldn't verify!")
+        res.status(500).send("Something went wrong. Couldn't verify!")
     }
-  })
-  
+})
+
 
 module.exports = router

@@ -23,6 +23,7 @@ import VotingUnderway from "./pages/VotingUnderway";
 import VotePage from "./pages/VotePage";
 import VerifyVoteMagic from "./pages/VerifyVoteMagic"
 import PreVoting from "./pages/PreVoting";
+import CandidateProfilePage from "./pages/CandidateProfilePage";
 
 function App() {
   const dispatch = useDispatch()
@@ -78,6 +79,12 @@ function App() {
           <PrivateRoute>
             <Navbar />
             <VotePage />
+          </PrivateRoute>
+        } />
+        <Route path="/candidateProfile" element={
+          <PrivateRoute>
+            <Navbar />
+            <CandidateProfilePage />
           </PrivateRoute>
         } />
         <Route path="/verify/:email/:link" element={
