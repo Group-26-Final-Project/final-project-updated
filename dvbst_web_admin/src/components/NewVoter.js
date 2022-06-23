@@ -24,7 +24,7 @@ export default function NewVoter() {
     e.preventDefault();
     setIsLoading(true);
     const errors = validate(formValues);
-    if (Object.keys(formErrors).length === 0) {
+    if (Object.keys(errors).length === 0) {
       dispatch(addVoter({
         ...formValues,
         role: "voter"
@@ -118,7 +118,7 @@ export default function NewVoter() {
       {voterState.addVoterStatus === 'failed' && (
         <div className="w-[75vh] p-3 flex flex-row justify-center" style={{ backgroundColor: "#ff000033" }}>
           <CgDanger className="mr-2 flex-2" size={24} color={"#fb1032"} />
-          <h2 className="flex-1" style={{ color: "#fb1032" }}>{voterState.addVoterError}</h2>
+          <h2 className="flex-1" style={{ color: "#fb1032" }}>{voterState.addVoterError.message}</h2>
         </div>
       )}
       {voterState.addVoterStatus !== 'pending' && (
