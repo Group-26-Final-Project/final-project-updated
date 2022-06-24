@@ -5,8 +5,9 @@ import { useFonts } from 'expo-font';
 import AppLoading from 'expo-app-loading';
 import { StyleSheet, Text, View, Image, Dimensions, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-
+import { useDispatch, useSelector } from 'react-redux'
 import CandidatesScreen from '../screens/CandidateScreen';
+import { voteCandidate } from '../features/votingSlice';
 
 const customFonts = {
     poppinsRegular: require('../assets/fonts/Poppins-Regular.ttf'),
@@ -17,12 +18,39 @@ const customFonts = {
 const VoteComponent = (props) => {
     const navigation = useNavigation();
     const [isLoaded] = useFonts(customFonts);
+    const dispatch = useDispatch()
+    const userState = useSelector((state) => state.userState)
+
+    const viewProfile = () => {
+        navigation.navigate("Candidates", {
+            params: { candidateId: props.id },
+        })
+    };
+
+    const vote = async () => {
+        dispatch(
+            voteCandidate({
+                electionId: props.electionId,
+                candidateId: props.id,
+                voterId: userState.user._id,
+            })
+        )
+            .unwrap()
+            .then((response) => {
+                navigation.navigate("Results")
+            })
+            .catch((error) => {
+                console.log("Error", error)
+                alert(error);
+            });
+    };
+
 
     if (!isLoaded) {
         return <AppLoading />;
     } else {
         return (
-            <TouchableOpacity onPress={() => navigation.navigate("Candidates")}>
+            <TouchableOpacity onPress={viewProfile}>
                 <View style={styles.container}>
                     <View style={styles.imgcontainer}>
                         <Image
@@ -32,10 +60,10 @@ const VoteComponent = (props) => {
                     </View>
                     <View style={styles.description}>
                         <Text style={styles.name}>{props.name}</Text>
-                        <Text style={styles.detail}>Department: Software</Text>
-                        <Text style={styles.detail}>Year: 5</Text>
-                        <Text style={styles.detail}>Section: 2</Text>
-                        <TouchableOpacity style={styles.button}>
+                        <Text style={styles.detail}>Department: {props.dept}</Text>
+                        <Text style={styles.detail}>Year: {props.year}</Text>
+                        <Text style={styles.detail}>Section: {props.section}</Text>
+                        <TouchableOpacity onPress={vote} style={styles.button}>
                             <Text style={{ color: '#00d05a', fontSize: 16 }}>Vote</Text>
                         </TouchableOpacity>
                     </View>

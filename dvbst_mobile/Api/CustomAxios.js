@@ -2,7 +2,7 @@ import axios from 'axios'
 import { getData } from './RetrieveToken';
 
 const CustomAxios = axios.create({
-    baseURL: 'https://7add-197-156-103-216.eu.ngrok.io'
+    baseURL: 'https://b800-197-156-103-178.eu.ngrok.io'
     // baseURL: "http://localhost:8080"
 
 });

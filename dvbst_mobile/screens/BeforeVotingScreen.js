@@ -7,44 +7,29 @@ import AppLoading from 'expo-app-loading'
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 import CountdownComponent from '../components/countdown';
-import { sendOTP } from '../features/votingSlice';
 
 const customFonts = {
     poppinsLight: require('../assets/fonts/Poppins-Light.ttf'),
 }
 
-const VotingUnderwayScreen = ({ phase, time }) => {
+const BeforeVotingScreen = ({ phase, time }) => {
     const [isLoaded] = useFonts(customFonts);
-    const navigation = useNavigation();
-    const dispatch = useDispatch()
-    const userState = useSelector((state) => state.userState)
-
-    const onClick = () => {
-        dispatch(sendOTP(userState.user.email))
-            .unwrap()
-            .then((response) => {
-                navigation.navigate("OTP", {
-                    params: { email: userState.user.email },
-                })
-            })
-            .catch((e) => {
-                console.log("Error: ", e)
-            })
-    }
 
     if (!isLoaded) {
         return <AppLoading />;
     } else {
         return (
             <SafeAreaView style={styles.container}>
-                {phase === 2 && (
-                    <Text style={styles.title}>Section <Text style={{ color: '#00D05A' }}>Election</Text> is Underway</Text>
+                {phase === 0 && (
+                    <Text style={styles.title}>Currently <Text style={{ color: '#00D05A' }}>Registering</Text></Text>
                 )}
-                {phase === 4 && (
-                    <Text style={styles.title}>Batch <Text style={{ color: '#00D05A' }}>Election</Text> is Underway</Text>
-                )}
-                {phase === 6 && (
-                    <Text style={styles.title}>Department <Text style={{ color: '#00D05A' }}>Election</Text> is Underway</Text>
+                {(phase === 1 ||
+                    phase === 3 ||
+                    phase === 5) && (
+                        <Text style={styles.title}>Voting <Text style={{ color: '#00D05A' }}>Opens</Text> in</Text>
+                    )}
+                {phase === 7 && (
+                    <Text style={styles.title}>All Elections <Text style={{ color: '#00D05A' }}>Completed</Text></Text>
                 )}
                 <Voting
                     style={styles.svg}
@@ -52,22 +37,18 @@ const VotingUnderwayScreen = ({ phase, time }) => {
                     height={Dimensions.get('window').height * 0.40}
                 />
                 <CountdownComponent time={time} />
-                <TouchableOpacity onPress={onClick} style={styles.button}>
-                    <Text style={{ color: '#fff', fontSize: 20 }}>Enter Election</Text>
-                </TouchableOpacity>
             </SafeAreaView>
         );
     }
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        paddingHorizontal: 10,
-        // paddingTop: 10,
-        backgroundColor: '#fff',
-        // justifyContent: 'space-between'
-    },
+    // container: {
+    //     paddingHorizontal: 10,
+    //     paddingTop: 40,
+    //     backgroundColor: '#fff',
+    //     justifyContent: 'space-between'
+    // },
     title: {
         color: '#2F313D',
         fontFamily: 'poppinsRegular',
@@ -77,7 +58,7 @@ const styles = StyleSheet.create({
     svg: {
         alignSelf: 'center',
         marginRight: 15,
-        marginBottom: 10
+        marginBottom: 30
         // borderColor: '#000',
         // borderWidth: 0.5
     },
@@ -93,4 +74,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default VotingUnderwayScreen;
+export default BeforeVotingScreen;

@@ -78,7 +78,6 @@ const userState = useSelector((state) => state.userState);
               container
               justifyContent="center"
               alignContent="center"
-
             >
               <Box display="flex">
                 <Typography

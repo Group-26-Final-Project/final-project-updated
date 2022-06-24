@@ -6,7 +6,7 @@ import { storeData } from "../Api/StoreToken";
 import { removeData } from "../Api/RemoveToken";
 import CustomAxios from '../Api/CustomAxios'
 
-const API_URL = 'https://7add-197-156-103-216.eu.ngrok.io';
+const API_URL = 'https://b800-197-156-103-178.eu.ngrok.io';
 
 const initialState = {
     token: null,
@@ -32,7 +32,7 @@ export const register = createAsyncThunk("auth/register", async (newUser,
 export const login = createAsyncThunk("auth/login", async ({ email, password }, {
     rejectWithValue }) => {
     try {
-        const response = await axios.post(API_URL + "/login/mobile", { email, password });
+        const response = await CustomAxios.post("/login/mobile", { email, password });
         // console.log(response, "Response")
         if (response.data) {
             storeData(response.data)

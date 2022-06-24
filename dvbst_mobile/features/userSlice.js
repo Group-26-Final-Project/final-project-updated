@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios'
 
-const baseURL = "https://7add-197-156-103-216.eu.ngrok.io"
+const baseURL = "https://b800-197-156-103-178.eu.ngrok.io"
 
 // const baseURL = "https://final-project-dvbst.herokuapp.com"
 
@@ -22,7 +22,6 @@ export const getUser = createAsyncThunk("user/getUser", async (id, {
     rejectWithValue }) => {
     try {
         const response = await axios.get(baseURL + "/user/" + id)
-        console.log(response)
         return response.data
     } catch (err) {
         return rejectWithValue(err.response.data)

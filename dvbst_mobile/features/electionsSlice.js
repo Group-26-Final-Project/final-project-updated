@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import CustomAxios from '../Api/CustomAxios'
 
-const baseURL = "http://localhost:8080"
+const baseURL = "https://b800-197-156-103-178.eu.ngrok.io"
 // const baseURL = "https://final-project-dvbst.herokuapp.com"
 
 
@@ -35,7 +35,7 @@ export const getElection = createAsyncThunk("elections/getElection", async (elec
         try{
             await timeout(1000)
             const response = await CustomAxios.get("/elections/details/" + electionId)
-            console.log(response.data.data)
+            // console.log(response.data.data)
             // console.log(response)
             return response.data.data
         } catch(err){
