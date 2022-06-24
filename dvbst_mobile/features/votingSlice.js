@@ -28,7 +28,6 @@ export const sendOTP = createAsyncThunk(
       const { data: result } = await CustomAxios.post("/verify/mobile", {
         email
       });
-      console.log("Verify", result);
       return result;
     } catch (err) {
       return rejectWithValue(err.response.data);
@@ -45,7 +44,6 @@ export const verifyOTP = createAsyncThunk(
         email,
         otp,
       });
-      console.log("Verify", result);
       return result;
     } catch (err) {
       return rejectWithValue(err.response.data);
@@ -62,7 +60,6 @@ export const getMyElection = createAsyncThunk(
           Authorization: 'Bearer ' + await getData()  //the token is a variable which holds the token
         }
       });
-      console.log(response);
       return response.data;
     } catch (err) {
       return rejectWithValue(err.response.data);

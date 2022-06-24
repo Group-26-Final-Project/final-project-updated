@@ -16,7 +16,6 @@ import IdeasScreen from '../screens/IdeasScreen';
 import SuggestionScreen from '../screens/SuggestIdeaScreen';
 import VotingScreen from '../screens/VotingScreen';
 import ResultScreen from '../screens/ResultScreen';
-import CandidatesScreen from '../screens/CandidatesScreen';
 import CandidateScreen from '../screens/CandidateScreen';
 import EditProfileScreen from '../screens/EditProfileScreen';
 import PreVotingScreen from '../screens/PreVotingScreen';
@@ -33,7 +32,6 @@ const suggestName = "Suggestion";
 const votingName = "Voting";
 const resultName = "Results";
 const candidateName = "Candidate";
-const candidatesName = "Candidates";
 const profileName = "EditProfile"
 const preVotingName = "PreVoting"
 const otpName = "OTP"
@@ -41,30 +39,30 @@ const otpName = "OTP"
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
-function CandidatesStack() {
-  return (
-    <Stack.Navigator
-      initialRouteName={candidatesName}
-      screenOptions={{
-        headerTitle: "",
-        headerTransparent: true
-      }}
-    >
-      <Stack.Screen
-        name={candidatesName}
-        component={CandidatesScreen}
-      />
-      <Stack.Screen
-        name={candidateName}
-        component={CandidateScreen}
-      />
-      <Stack.Screen
-        name={profileName}
-        component={EditProfileScreen}
-      />
-    </Stack.Navigator>
-  )
-}
+// function CandidatesStack() {
+//   return (
+//     <Stack.Navigator
+//       initialRouteName={candidatesName}
+//       screenOptions={{
+//         headerTitle: "",
+//         headerTransparent: true
+//       }}
+//     >
+//       <Stack.Screen
+//         name={candidatesName}
+//         component={CandidatesScreen}
+//       />
+//       <Stack.Screen
+//         name={candidateName}
+//         component={CandidateScreen}
+//       />
+//       <Stack.Screen
+//         name={profileName}
+//         component={EditProfileScreen}
+//       />
+//     </Stack.Navigator>
+//   )
+// }
 
 function VotingStack() {
   return (
@@ -89,7 +87,7 @@ function VotingStack() {
       />
       <Stack.Screen
         name={candidateName}
-        component={CandidatesScreen}
+        component={CandidateScreen}
       />
       <Stack.Screen
         name={profileName}
@@ -150,6 +148,7 @@ function ResultStack() {
 function MainContainer() {
   const userState = useSelector((state) => state.userState)
   const authState = useSelector((state) => state.authState)
+  const dispatch = useDispatch()
 
   const onClick = () => {
     dispatch(getUser(authState.id))
@@ -176,10 +175,11 @@ function MainContainer() {
               let iconName;
               let rn = route.name;
 
-              if (rn === candidatesName) {
-                iconName = focused ? 'home' : 'home-outline';
+              // if (rn === candidatesName) {
+              //   iconName = focused ? 'home' : 'home-outline';
 
-              } else if (rn === resultName) {
+              // } else 
+              if (rn === resultName) {
                 iconName = focused ? 'vote' : 'vote-outline';
 
               } else if (rn === votingName) {
@@ -215,7 +215,7 @@ function MainContainer() {
 
           })}>
 
-          <Tab.Screen name={candidatesName} component={CandidatesScreen} />
+          {/* <Tab.Screen name={candidatesName} component={CandidatesStack} /> */}
           <Tab.Screen name={votingName} component={VotingStack} />
           <Tab.Screen name={ideaName} component={IdeaStack} />
           <Tab.Screen name={resultName} component={ResultStack} />

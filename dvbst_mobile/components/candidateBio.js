@@ -26,11 +26,16 @@ export default CandidateBio = (props) => {
                     <Image style={styles.image} source={props.image} />
                 </View>
                 <View>
-                    <Text style={styles.name}>Kaleb Mesfin</Text>
+                    <Text style={styles.name}>{props.candidate.fullName}</Text>
                 </View>
                 <View style={styles.bio}>
                     <Text style={styles.bio}>
-                    {`Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent iaculis, mi non facilisis ullamcorper, neque risus convallis sapien, id lobortis ligula lorem imperdiet ex. Suspendisse malesuada, dolor sed sodales porta, mauris sapien placerat arcu`}
+                        {props.candidate.bio}
+                    </Text>
+                </View>
+                <View style={styles.bio}>
+                    <Text style={styles.bio}>
+                        {props.candidate.plans}
                     </Text>
                 </View>
             </View>
