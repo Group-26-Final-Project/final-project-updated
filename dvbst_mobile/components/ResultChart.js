@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, Dimensions } from 'react-native';
 import VerticalBarGraph from '@chartiful/react-native-vertical-bar-graph';
 
 const config = {
+    startAtZero: false,
     hasXAxisBackgroundLines: false,
     xAxisLabelStyle: {
         position: 'left'
@@ -42,7 +43,6 @@ const extractCandidateValue = (data) => {
             candidateData.push(element);
         }
     }
-    console.log(candidateData)
     return candidateData;
 };
 

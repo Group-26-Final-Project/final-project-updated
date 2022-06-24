@@ -22,7 +22,7 @@ const VoteComponent = (props) => {
     const userState = useSelector((state) => state.userState)
 
     const viewProfile = () => {
-        navigation.navigate("Candidates", {
+        navigation.navigate("Candidate", {
             params: { candidateId: props.id },
         })
     };

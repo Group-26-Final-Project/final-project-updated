@@ -13,6 +13,15 @@ const customFonts = {
     poppinsSemi: require('../assets/fonts/Poppins-SemiBold.ttf'),
 }
 
+const deptTypes = [
+    "Software Engineering",
+    "Biomedical Engineering",
+    "Chemical Engineering",
+    "Civil Engineering",
+    "Electrical Engineering",
+    "Mechanical Engineering",
+];
+
 const CandidateDetail = (props) => {
     const [isLoaded] = useFonts(customFonts);
 
@@ -23,27 +32,27 @@ const CandidateDetail = (props) => {
             <View style={styles.container}>
                 <View style={styles.details}>
                     <Text style={styles.detailTitle}>First Name</Text>
-                    <Text style={styles.detailText}>Kaleb</Text>
+                    <Text style={styles.detailText}>{props.candidate.name}</Text>
                 </View>
                 <View style={styles.details}>
                     <Text style={styles.detailTitle}>Father's Name</Text>
-                    <Text style={styles.detailText}>Mesfin</Text>
+                    <Text style={styles.detailText}>{props.candidate.fname}</Text>
                 </View>
                 <View style={styles.details}>
                     <Text style={styles.detailTitle}>Grandfather's Name</Text>
-                    <Text style={styles.detailText}>Kassa</Text>
+                    <Text style={styles.detailText}>{props.candidate.gname}</Text>
                 </View>
                 <View style={styles.details}>
                     <Text style={styles.detailTitle}>Section</Text>
-                    <Text style={styles.detailText}>2</Text>
+                    <Text style={styles.detailText}>{props.candidate.section}</Text>
                 </View>
                 <View style={styles.details}>
                     <Text style={styles.detailTitle}>Year</Text>
-                    <Text style={styles.detailText}>5</Text>
+                    <Text style={styles.detailText}>{props.candidate.year}</Text>
                 </View>
                 <View style={styles.details}>
                     <Text style={styles.detailTitle}>Department</Text>
-                    <Text style={styles.detailText}>Software Engineering</Text>
+                    <Text style={styles.detailText}>{deptTypes[props.candidate.dept]}</Text>
                 </View>
             </View>
         );
