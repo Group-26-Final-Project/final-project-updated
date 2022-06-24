@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { useTable, useSortBy, usePagination } from "react-table";
 import {
-  ChevronDoubleLeftIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  ChevronDoubleRightIcon,
+    ChevronDoubleLeftIcon,
+    ChevronLeftIcon,
+    ChevronRightIcon,
+    ChevronDoubleRightIcon,
 } from "@heroicons/react/solid";
 import { Button, PageButton } from "../shared/Buttons";
 import { classNames } from "../shared/Utils";
@@ -145,17 +145,31 @@ const ElectionsTable = ({ columns, data }) => {
 export default ElectionsTable;
 
 export function Detail({ value }) {
-  const result = (
-    <Link
-      data-cy="elections-details"
-      to="/resultsDetail"
-      state={value}
-      class="text-blue-600 dark:text-blue-500 hover:underline"
-    >
-      Details
-    </Link>
-  );
-  return <span>{result}</span>;
+    const result = (
+        <Link
+            data-cy="elections-details"
+            to="/resultsDetail"
+            state={value}
+            class="text-blue-600 dark:text-blue-500 hover:underline"
+        >
+            Details
+        </Link>
+    );
+    return <span>{result}</span>;
+}
+
+export function EndDate({ value }) {
+    var date = Math.floor((value - new Date().getTime() / 1000));
+    var seconds = "0" + date % 60;
+    date = Math.floor(date/60)
+    var minutes = "0" + date % 60;
+    date = Math.floor(date/60)
+    var hours = "0" + date % 24 ;
+    date = Math.floor(date/24)
+    var days = date
+
+    var formattedTime = days + ':' + hours.substr(-2) + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+    return <span>{formattedTime}</span>;
 }
 
 // export function StatusPill({ value }) {

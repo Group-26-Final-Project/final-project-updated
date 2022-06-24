@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import ElectionTable, { Detail } from './ElectionsTable'
+import ElectionTable, { Detail, EndDate } from './ElectionsTable'
 import { SpinnerCircularFixed } from "spinners-react";
 import { getElections } from '../features/electionsSlice';
 
@@ -21,7 +21,8 @@ export default function Result() {
             },
             {
                 Header: "Time Remaining",
-                accessor: "time",
+                accessor: "endDate",
+                Cell: EndDate,
             },
             {
                 Header: "",

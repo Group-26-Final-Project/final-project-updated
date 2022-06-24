@@ -1,12 +1,13 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import CustomAxios from "../Api/CustomAxios";
-
-const baseURL = "http://localhost:8080";
+import { getData } from "../Api/RetrieveToken";
+const baseURL = "https://b800-197-156-103-178.eu.ngrok.io";
 // const baseURL = "https://final-project-dvbst.herokuapp.com"
 
 const initialState = {
   election: null,
+  currentPhase: null,
   sendOTPStatus: "",
   sendOTPError: "",
   verifyOTPStatus: "",
@@ -15,11 +16,13 @@ const initialState = {
   getMyElectionError: "",
   voteCandidateStatus: "",
   voteCandidateError: "",
+  getCurrentPhaseStatus: "",
+  getCurrentPhaseError: "",
 };
 
 export const sendOTP = createAsyncThunk(
   "voting/sendOTP",
-  async ( email, { rejectWithValue }) => {
+  async (email, { rejectWithValue }) => {
     console.log("Send", email);
     try {
       const { data: result } = await CustomAxios.post("/verify/mobile", {
@@ -54,7 +57,11 @@ export const getMyElection = createAsyncThunk(
   "voting/getMyElection",
   async (id = null, { rejectWithValue }) => {
     try {
-      const response = await CustomAxios.get("/elections/myelection");
+      const response = await CustomAxios.get("/elections/myelection", {
+        headers: {
+          Authorization: 'Bearer ' + await getData()  //the token is a variable which holds the token
+        }
+      });
       console.log(response);
       return response.data;
     } catch (err) {
@@ -67,13 +74,26 @@ export const voteCandidate = createAsyncThunk(
   "voting/voteCandidate",
   async ({ electionId, candidateId, voterId }, { rejectWithValue }) => {
     try {
-        console.log("Vote", electionId, candidateId, voterId);
+      console.log("Vote", electionId, candidateId, voterId);
       const response = await axios.patch(baseURL + "/elections", {
         electionId,
         candidateId,
         voterId,
       });
       return response.data;
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
+export const getCurrentPhase = createAsyncThunk(
+  "voting/getCurrentPhase",
+  async (id = null, { rejectWithValue }) => {
+    try {
+      const response = await CustomAxios.get("/phase");
+      console.log(response.data.data);
+      return response.data.data;
     } catch (err) {
       return rejectWithValue(err.response.data);
     }
@@ -141,6 +161,26 @@ const votingSlice = createSlice({
         ...state,
         getMyElectionStatus: "failed",
         getMyElectionError: action.payload,
+      };
+    },
+    [getCurrentPhase.pending]: (state, action) => {
+      return {
+        ...state,
+        getCurrentPhaseStatus: "pending",
+      };
+    },
+    [getCurrentPhase.fulfilled]: (state, action) => {
+      return {
+        ...state,
+        currentPhase: action.payload,
+        getCurrentPhaseStatus: "success",
+      };
+    },
+    [getCurrentPhase.rejected]: (state, action) => {
+      return {
+        ...state,
+        getCurrentPhaseStatus: "failed",
+        getCurrentPhaseError: action.payload,
       };
     },
     [voteCandidate.pending]: (state, action) => {

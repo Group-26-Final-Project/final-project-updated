@@ -1,7 +1,9 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 import { StyleSheet, Text, View, TextInput, Dimensions, TouchableOpacity, ScrollView, SafeAreaView, ActivityIndicator } from 'react-native';
 import VoteComponent from '../components/voteComponent';
+import { useDispatch, useSelector } from 'react-redux'
+import { getMyElection } from '../features/votingSlice';
 
 const VotingScreen = (props) => {
     const dispatch = useDispatch()
@@ -21,7 +23,7 @@ const VotingScreen = (props) => {
             )}
             {(userState.getUserStatus === 'failed' || votingState.getMyElectionStatus === 'failed') && (
                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                    <Text style={styles.text}>Ooops something went wrong</Text>
+                    <Text style={styles.text}>Ooops something went wrong {userState.getUserError} {votingState.getMyElectionError}</Text>
                 </View>
             )}
             {!(userState.getUserStatus === 'pending' || votingState.getMyElectionStatus === 'pending') && userState.user.role === 'candidate' && (

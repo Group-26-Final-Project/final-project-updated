@@ -14,13 +14,14 @@ const customFonts = {
 }
 const CountdownComponent = (props) => {
     const [isLoaded] = useFonts(customFonts);
-
+    const time = props.time - Date.now()
+    console.log(props.time, Date.now())
     if (!isLoaded) {
         return <AppLoading />;
     } else {
         return (
             <CountDown
-                until={96435}
+                until={Math.floor(time/1000)}
                 size={30}
                 onFinish={() => alert('Finished')}
                 style={styles.countdown}

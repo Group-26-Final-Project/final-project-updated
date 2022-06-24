@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import CustomAxios from '../Api/CustomAxios'
 import { getData } from '../Api/RetrieveToken';
 
-const baseURL = "https://7add-197-156-103-216.eu.ngrok.io"
+const baseURL = "https://b800-197-156-103-178.eu.ngrok.io"
 
 const initialState = {
     ideas: [],
@@ -45,7 +45,7 @@ export const getIdeas = createAsyncThunk("ideas/getIdeas", async (id=null, {
             })
             return response.data
         } catch(err){
-            return rejectWithValue(error.response.data)
+            return rejectWithValue(err.response.data)
         }
 })
 
@@ -53,7 +53,6 @@ export const voteIdea = createAsyncThunk("ideas/voteIdea", async (idea_id, {
     rejectWithValue})=>{
         try{
             await timeout(1000)
-
             const response = await CustomAxios.patch("/ideas/"+idea_id, {}, {
                 headers: {
                     Authorization: 'Bearer ' + await getData()  //the token is a variable which holds the token

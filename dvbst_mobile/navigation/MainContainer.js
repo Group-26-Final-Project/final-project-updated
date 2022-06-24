@@ -6,7 +6,7 @@ import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Appbar, Menu, onDismissMenu, isMenuVisible } from 'react-native-paper'
 import MenuExample from '../components/menu'
 import { CustomMenu } from '../components/CustomMenu'
-import { Alert, Image, View, Text, TouchableOpacity, SafeAreaView } from 'react-native';
+import { Alert, Image, View, Text, Button, ActivityIndicator, TouchableOpacity, SafeAreaView } from 'react-native';
 import 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -16,13 +16,15 @@ import IdeasScreen from '../screens/IdeasScreen';
 import SuggestionScreen from '../screens/SuggestIdeaScreen';
 import VotingScreen from '../screens/VotingScreen';
 import ResultScreen from '../screens/ResultScreen';
-import CandidatesScreen from '../screens/CandidateScreen';
+import CandidatesScreen from '../screens/CandidatesScreen';
+import CandidateScreen from '../screens/CandidateScreen';
 import EditProfileScreen from '../screens/EditProfileScreen';
-import VotingUnderwayScreen from '../screens/VotingUnderwayScreen';
+import PreVotingScreen from '../screens/PreVotingScreen';
 import OTPScreen from '../screens/OTPScreen'
 
 import AppBar from '../components/appBar';
 import StackHeader from '../components/StackHeader';
+import { getUser } from '../features/userSlice';
 
 //Screen names
 const homeName = "Home";
@@ -30,26 +32,31 @@ const ideaName = "Ideas";
 const suggestName = "Suggestion";
 const votingName = "Voting";
 const resultName = "Results";
-const candidateName = "Candidates";
+const candidateName = "Candidate";
+const candidatesName = "Candidates";
 const profileName = "EditProfile"
-const underwayName = "VotingUnderway"
+const preVotingName = "PreVoting"
 const otpName = "OTP"
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
-function HomeStack() {
+function CandidatesStack() {
   return (
     <Stack.Navigator
-      initialRouteName={homeName}
+      initialRouteName={candidatesName}
       screenOptions={{
         headerTitle: "",
         headerTransparent: true
       }}
     >
       <Stack.Screen
-        name={homeName}
-        component={HomeScreen}
+        name={candidatesName}
+        component={CandidatesScreen}
+      />
+      <Stack.Screen
+        name={candidateName}
+        component={CandidateScreen}
       />
       <Stack.Screen
         name={profileName}
@@ -62,15 +69,15 @@ function HomeStack() {
 function VotingStack() {
   return (
     <Stack.Navigator
-      initialRouteName={underwayName}
+      initialRouteName={preVotingName}
       screenOptions={{
         headerTitle: "",
         headerTransparent: true
       }}
     >
       <Stack.Screen
-        name={underwayName}
-        component={VotingUnderwayScreen}
+        name={preVotingName}
+        component={PreVotingScreen}
       />
       <Stack.Screen
         name={otpName}
@@ -142,60 +149,79 @@ function ResultStack() {
 
 function MainContainer() {
   const userState = useSelector((state) => state.userState)
+  const authState = useSelector((state) => state.authState)
+
+  const onClick = () => {
+    dispatch(getUser(authState.id))
+  }
+
   return (
     <NavigationContainer>
-      <Tab.Navigator
-        initialRouteName={homeName}
-        screenOptions={({ route, navigation }) => ({
-          tabBarIcon: ({ focused, color, size }) => {
-            let iconName;
-            let rn = route.name;
+      {userState.getUserStatus === "pending" && (
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <ActivityIndicator size="large" color='#00d05a' />
+        </View>
+      )}
+      {userState.getUserStatus === "failed" && (
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <Text>Somethint Went Wrong!</Text>
+          <Button title='Refresh' onPress={onClick}></Button>
+        </View>
+      )}
+      {userState.getUserStatus === "success" && (
+        <Tab.Navigator
+          initialRouteName={homeName}
+          screenOptions={({ route, navigation }) => ({
+            tabBarIcon: ({ focused, color, size }) => {
+              let iconName;
+              let rn = route.name;
 
-            if (rn === homeName) {
-              iconName = focused ? 'home' : 'home-outline';
+              if (rn === candidatesName) {
+                iconName = focused ? 'home' : 'home-outline';
 
-            } else if (rn === resultName) {
-              iconName = focused ? 'vote' : 'vote-outline';
+              } else if (rn === resultName) {
+                iconName = focused ? 'vote' : 'vote-outline';
 
-            } else if (rn === votingName) {
-              iconName = focused ? 'vote' : 'vote-outline';
+              } else if (rn === votingName) {
+                iconName = focused ? 'vote' : 'vote-outline';
 
-            } else if (rn === ideaName) {
-              iconName = focused ? 'lightbulb-on' : 'lightbulb-on-outline';
-            }
-            // You can return any component that you like here!
-            return <Material name={iconName} size={size} color={color} />;
-          },
+              } else if (rn === ideaName) {
+                iconName = focused ? 'lightbulb-on' : 'lightbulb-on-outline';
+              }
+              // You can return any component that you like here!
+              return <Material name={iconName} size={size} color={color} />;
+            },
 
-          tabBarActiveBackgroundColor: '#242632',
-          tabBarInactiveBackgroundColor: '#242632',
-          tabBarActiveTintColor: '#fff',
-          tabBarInactiveTintColor: '#ffffff87',
-          tabBarLabelStyle: { paddingBottom: 10, fontSize: 10 },
-          tabBarStyle: { height: 70 },
-          headerStyle: {
-            backgroundColor: '#00d05a'
-          },
-          headerTitle: "",
-          // headerRight: () => <StackHeader navigation={navigation}/>
-          headerRight: () => <MenuExample role={userState?.user?.role} navigation={navigation} />
-          // () => 
-          //   <TouchableOpacity>
-          //     <MenuExample/>
-          //     {/* <Text>
-          //       Hello
-          //     </Text> */}
-          //     {/* <Material name='dots-vertical' size={30} color={'#fff'} /> */}
-          //   </TouchableOpacity>
+            tabBarActiveBackgroundColor: '#242632',
+            tabBarInactiveBackgroundColor: '#242632',
+            tabBarActiveTintColor: '#fff',
+            tabBarInactiveTintColor: '#ffffff87',
+            tabBarLabelStyle: { paddingBottom: 10, fontSize: 10 },
+            tabBarStyle: { height: 70 },
+            headerStyle: {
+              backgroundColor: '#00d05a'
+            },
+            headerTitle: "",
+            // headerRight: () => <StackHeader navigation={navigation}/>
+            headerRight: () => <MenuExample role={userState?.user?.role} navigation={navigation} />
+            // () => 
+            //   <TouchableOpacity>
+            //     <MenuExample/>
+            //     {/* <Text>
+            //       Hello
+            //     </Text> */}
+            //     {/* <Material name='dots-vertical' size={30} color={'#fff'} /> */}
+            //   </TouchableOpacity>
 
-        })}>
+          })}>
 
-        <Tab.Screen name={homeName} component={HomeStack} />
-        <Tab.Screen name={votingName} component={VotingStack} />
-        <Tab.Screen name={ideaName} component={IdeaStack} />
-        <Tab.Screen name={resultName} component={ResultStack} />
+          <Tab.Screen name={candidatesName} component={CandidatesScreen} />
+          <Tab.Screen name={votingName} component={VotingStack} />
+          <Tab.Screen name={ideaName} component={IdeaStack} />
+          <Tab.Screen name={resultName} component={ResultStack} />
 
-      </Tab.Navigator>
+        </Tab.Navigator>
+      )}
     </NavigationContainer>
   );
 }

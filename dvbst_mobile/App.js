@@ -30,7 +30,7 @@ const App = () => {
     dispatch(getUser(authState.id))
   }, [dispatch, authState.id])
 
-  console.log(userState.user)
+  console.log("user", userState.user)
 
   return (
     <SafeAreaView style={styles.container}>
