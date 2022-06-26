@@ -24,7 +24,6 @@ import VotePage from "./pages/VotePage";
 import VerifyVoteMagic from "./pages/VerifyVoteMagic"
 import PreVoting from "./pages/PreVoting";
 import CandidateProfilePage from "./pages/CandidateProfilePage";
-import CandidatesPage from "./pages/CandidatesPage";
 import RequestPage from "./pages/RequestPage";
 
 import { ToastContainer } from "react-toastify";
@@ -43,7 +42,7 @@ function App() {
 
   return (
     <div>
-      <ToastContainer
+       <ToastContainer
         progressClassName="w-10 h-10"
         bodyClassName="w-10 h-10"
         position="top-right"
@@ -56,103 +55,104 @@ function App() {
         draggable
         pauseOnHover
       />
-      <Router>
-        <Routes>
-          <Route path="/" element={
-            <PrivateRoute>
-              <Navbar />
-              <HomeScreen />
-            </PrivateRoute>
-          } />
-          <Route path="/pending" element={
-            <PrivateRoute>
-              <Navbar />
-              <PendingPage />
-            </PrivateRoute>
-          } />
-          <Route path="/profile" element={
-            <PrivateRoute>
-              <Profile />
-            </PrivateRoute>
-          } />
-          <Route path="/auth/Result" element={
-            <PrivateRoute>
-              <Navbar />
-              <Result />
-            </PrivateRoute>
-          } />
-          <Route path="/auth/candidates" element={
-            <PrivateRoute>
-              <Navbar />
-              <CandidatesPage />
-            </PrivateRoute>
-          } />
-          <Route path="/auth/ideas" element={
-            <PrivateRoute>
-              <Navbar />
-              <Ideas />
-            </PrivateRoute>
-          } />
-          <Route path="/auth/PreVoting" element={
+    <Router>
+      <Routes>
+        <Route path="/" element={
+          <PrivateRoute>
+            <Navbar />
+            <HomeScreen />
+          </PrivateRoute>
+        } />
+        <Route path="/pending" element={
+          <PrivateRoute>
+            <Navbar />
+            <PendingPage />
+          </PrivateRoute>
+        } />
+        <Route path="/profile" element={
+          <PrivateRoute>
+            <Profile />
+          </PrivateRoute>
+        } />
+        <Route path="/auth/Result" element={
+          <PrivateRoute>
+            <Navbar />
+            <Result />
+          </PrivateRoute>
+        } />
+        <Route path="/auth/ideas" element={
+          <PrivateRoute>
+            <Navbar />
+            <Ideas />
+          </PrivateRoute>
+        } />
+         <Route path="/auth/PreVoting" element={
             <PrivateRoute>
               <Navbar />
               <PreVoting />
             </PrivateRoute>
           } />
-          <Route path="/candidate_list" element={
-            <PrivateRoute>
-              <Navbar />
-              <VotePage />
-            </PrivateRoute>
-          } />
-          <Route path="/candidateProfile" element={
-            <PrivateRoute>
-              <Navbar />
-              <CandidateProfilePage />
-            </PrivateRoute>
-          } />
+        {/* <Route path="/auth/PreVoting" element={
+          <PrivateRoute>
+            <Navbar />
+            <PreVoting />
+          </PrivateRoute>
+        } /> */}
+
+        <Route path="/candidate_list" element={
+          <PrivateRoute>
+            <Navbar />
+            <VotePage />
+          </PrivateRoute>
+        } />
+        <Route path="/candidateProfile" element={
+          <PrivateRoute>
+            <Navbar />
+            <CandidateProfilePage />
+          </PrivateRoute>
+        } />
           <Route path="/requests/add" element={
-            <PrivateRoute>
-              <Navbar />
-              <RequestPage />
-            </PrivateRoute>
-          } />
-          <Route path="/verify/:email/:link" element={
-            <PrivateRoute>
-              <VerifyVoteMagic />
-            </PrivateRoute>
-          } />
-          <Route path="/forgot" element={
-            <ForgotPasswordPage />
-          } />
-          <Route path="/reset" element={
-            <ResetPasswordPage />
-          } />
-          <Route path="/confirm" element={
-            <ConfirmCodePage />
-          } />
-          <Route path="/reset/success" element={
-            <AfterResetPassword />
-          } />
-          <Route path="/login" element={
-            <Login />
-          } />
-          <Route path="/signup" element={
-            <RegistrationPage />
-          } />
-          <Route path="/after" element={
-            <AfterRegistration />
-          } />
-          <Route path="/verify" element={
-            <AfterLogin />
-          } />
-          {/* <Route path="/login" element={<Login />} /> */}
-          {/* <Route path="/signup" element={<RegistrationPage />} />
+          <PrivateRoute>
+            <Navbar />
+            <RequestPage />
+          </PrivateRoute>
+        } />
+        <Route path="/verify/:email/:link" element={
+          <PrivateRoute>
+            <VerifyVoteMagic />
+          </PrivateRoute>
+        } />
+        <Route path="/forgot" element={
+          <ForgotPasswordPage />
+        } />
+        <Route path="/reset" element={
+          <ResetPasswordPage />
+        } />
+        <Route path="/confirm" element={
+          <ConfirmCodePage />
+        } />
+        <Route path="/reset/success" element={
+          <AfterResetPassword />
+        } />
+        <Route path="/login" element={
+          <Login />
+        } />
+        <Route path="/signup" element={
+          <RegistrationPage />
+        } />
+        <Route path="/after" element={
+          <AfterRegistration />
+        } />
+        <Route path="/verify" element={
+          <AfterLogin />
+        } />
+        {/* <Route path="/login" element={<Login />} /> */}
+        {/* <Route path="/signup" element={<RegistrationPage />} />
         <Route path="/after" element={<AfterRegistration />} /> */}
-          <Route path="/login/enter/:email/:link" exact element={<VerifyLogin />} />
-          {/* <Route path="*" element={<Navigate to="/" replace />} /> */}
-        </Routes>
-      </Router>
+        <Route path="/login/enter/:email/:link" exact element={<VerifyLogin />} />
+        {/* <Route path="*" element={<Navigate to="/" replace />} /> */}
+      </Routes>
+    </Router>
     </div>
 
   );
