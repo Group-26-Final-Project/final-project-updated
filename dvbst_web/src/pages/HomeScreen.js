@@ -49,7 +49,7 @@ function HomeScreen() {
 
             <Grid container xs={12} direction="row" justifyContent="center" className={classes.body} >
                 <Grid xs={12} sm={12} md={10} lg={10} container >
-                    <Grid item xs={7} direction='column' justifyContent='center' alignItems='center' alignContent='center'>
+                    <Grid container item xs={7} direction='column' justifyContent='center' alignItems='center' alignContent='center'>
                         <Box>
                             <Typography style={{ fontSize: "48px", color: "white", fontWeight: "Bold" }}>
                                 <span style={{ color: "#00D05A", fontFamily: "Poppins", fontWeight: "Bold" }}>

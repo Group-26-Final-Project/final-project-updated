@@ -15,9 +15,9 @@ export const getCandidate = createAsyncThunk("candidates/getCandidate", async (i
     rejectWithValue }) => {
     try {
         await timeout(1000)
-        const response = await CustomAxios.get("/candidates/" + id)
-        console.log("response data ----", response)
-        return response.data.data
+        const {data} = await CustomAxios.get("/candidates/" + id)
+        console.log("response data ----", data.data.data)
+        return data.data
     } catch (err) {
         return rejectWithValue(err.response.data)
     }

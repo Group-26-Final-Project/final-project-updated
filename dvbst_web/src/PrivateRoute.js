@@ -9,23 +9,23 @@ import Login from "./pages/Login";
 import PendingNavbar from "./components/PendingNavbar";
 
 function PrivateRoute({ children }) {
-  const dispatch = useDispatch()
-  const authState = useSelector((state) => state.authState)
-  const userState = useSelector((state) => state.userState)
+  const dispatch = useDispatch();
+  const authState = useSelector((state) => state.authState);
+  const userState = useSelector((state) => state.userState);
 
   useEffect(() => {
-    dispatch(getUser(authState.id))
-  }, [dispatch, authState.id])
+    dispatch(getUser(authState.id));
+  }, [dispatch, authState.id]);
 
   useEffect(() => {
-    localStorage.getItem("token")
-  }, [])
+    localStorage.getItem("token");
+  }, []);
 
   return (
     <>
-      {userState.getUserStatus === 'pending' && (
-        <div class="flex flex-col items-center justify-center min-h-screen bg-white">
-          <div class="flex items-center justify-center">
+      {userState.getUserStatus === "pending" && (
+        <div className="flex flex-col items-center justify-center min-h-screen bg-white">
+          <div className="flex items-center justify-center">
             <SpinnerCircularFixed
               size={50}
               thickness={100}
@@ -36,16 +36,22 @@ function PrivateRoute({ children }) {
           </div>
         </div>
       )}
-      {userState.getUserStatus !== 'pending' && (
+      {userState.getUserStatus !== "pending" && (
         <>
           {/* {authState.token ? (userState.user.approved ? children : <Navigate to="/pending" replace/>) : <Navigate to="/login" replace/>}; */}
-          {authState.token ? children : <><Login /></>};
+          {authState.token ? (
+            children
+          ) : (
+            <>
+              <Login />
+            </>
+          )}
+          ;
           {/* {authState.token ? (userState.user?.approved ? children : <><PendingNavbar /><PendingPage /> </>) : <><Login /></>}; */}
         </>
       )}
     </>
-  )
-
+  );
 }
 
 export default PrivateRoute;
