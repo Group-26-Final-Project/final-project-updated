@@ -17,13 +17,13 @@ const initialState = {
     userLoaded: false,
 };
 
-export const register = createAsyncThunk("auth/register", async (newUser,
-    rejectWithValue) => {
+export const register = createAsyncThunk("auth/register", async (newUser, {
+    rejectWithValue }) => {
     try {
-        const response = (newUser.role === 'voter') ? await CustomAxios.post("/voters", newUser) : await CustomAxios.post("/candidates", newUser); 
+        const response = await CustomAxios.post("/eligible", newUser);
         return response.data;
     } catch (error) {
-        console.log(error)
+        console.log(error.response.data)
         return rejectWithValue(error.response.data);
     }
 });
@@ -112,6 +112,7 @@ const authSlice = createSlice({
             }
         },
         [register.rejected]: (state, action) => {
+            console.log(action, "Action")
             return {
                 ...state,
                 registerStatus: "failed",
