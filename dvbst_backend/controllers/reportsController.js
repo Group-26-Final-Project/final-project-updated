@@ -12,9 +12,7 @@ const User = require("../models/user");
 router.get("/", async (req, res, next) => {
   try {
     const totalUsers = await User.find({
-      // $nor: {
-      //   role: "admin",
-      // },
+
     }).count();
     const totalCandidates = await Candidate.find({}).count();
     const totalVoters = await Voter.find({}).count();
