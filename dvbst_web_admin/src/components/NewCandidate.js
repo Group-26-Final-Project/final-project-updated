@@ -119,7 +119,7 @@ export default function NewCandidate() {
         "Invalid Name (Only Upper/Lower Case alphabets  3-20 characters long)";
     }
     if (!values.dept) {
-      errors.dept = "Select School/Center from dropdown";
+      errors.dept = "Select Department from dropdown";
     }
     if (!values.section) {
       errors.section = "Select Section from dropdown";
@@ -262,7 +262,7 @@ export default function NewCandidate() {
                   class="block tracking-wide text-gray-700 text-xs font-bold mb-2"
                   for="grid-dept"
                 >
-                  School/Center
+                  Department
                 </label>
                 <div class="relative">
                   <select
@@ -275,18 +275,12 @@ export default function NewCandidate() {
                     <option value="" selected disabled hidden>
                       --Select--
                     </option>
-                    <option value={0}>Center of Biomedical Engineering (CBME)</option>
-                    <option value={1}>School of Chemical and Bio Engineering (SCBE)</option>
-                    <option value={2}>School of Civil and Environmental Engineering (SCEE)</option>
-                    <option value={3}>School of Electrical and Computer Engineering (SECE)</option>
-                    <option value={4}>School of Mechanical and Industrial Engineering (SMiE)</option>
-                    <option value={5}>School of Information Technology Engineering (SITE)</option>
-                    {/* <option value={0}>Biomedical Engineering</option>
+                    <option value={0}>Biomedical Engineering</option>
                     <option value={1}>Chemical Engineering</option>
                     <option value={2}>Civil Engineering</option>
                     <option value={3}>Electrical Engineering</option>
                     <option value={4}>Mechanical Engineering</option>
-                    <option value={5}>Software Engineering</option> */}
+                    <option value={5}>Software Engineering</option>
                   </select>
                   <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                     <svg

@@ -1,13 +1,24 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useMoralis } from "react-moralis";
+import CustomAxios from "../Api/CustomAxios";
+import CustomChart from "./CustomChart";
 import HomeTable, { StatusPill } from "./HomeTable";
 
 export default function Home() {
+  const [reports, setReports] = useState({
+    totalUsers: 0,
+    totalCandidates: 0,
+    totalVoters: 0,
+    totalOngoingElections: 0,
+    totalPendingRequests: 0,
+    totalFinishedElections: 0,
+    totalBlacklistedCandidates: 0,
+  });
   // const { isInitialized, isWeb3Enabled, authenticate, isAuthenticated, Moralis, logout } = useMoralis();
   // useEffect(() => {
   //   const login = async () => {
   //       if (!isAuthenticated) {
-  
+
   //         await authenticate()
   //           .then(function (user) {
   //           //   console.log(user!.get("ethAddress"));
@@ -55,33 +66,88 @@ export default function Home() {
       status: "Pending",
     },
   ];
+
+  const fetchReports = useCallback(async () => {
+    const { data } = await CustomAxios.get("/reports");
+    setReports(data.data);
+  }, []);
+
+  useEffect(() => {
+    fetchReports();
+  }, [fetchReports]);
+
   return (
-    <div class="h-screen w-full bg-white-800 flex flex-col overflow-auto justify-center items-center py-8 px-8 lg:px-16">
-      <div class="w-full bg-[#2F313D] flex py-8 px-4 lg:px-8 rounded-xl">
-        <div class="px-1">
-          <h3 class="text-md text-white font-body font-semibold">Ongoing</h3>
-          <h2 class="text-3xl text-white font-body font-bold">12</h2>
-          <p class="text-sm text-white font-body font-light">
+    <div className="h-screen w-full bg-white-800 flex flex-col overflow-auto justify-center items-center py-8 px-8 lg:px-16">
+      <div className="w-full bg-[#2F313D] grid grid-cols-3 gap-y-10 py-8 px-4 lg:px-8 rounded-xl">
+        <div className="px-1">
+          <h3 className="text-md text-white font-body font-semibold">
+            Total Voters
+          </h3>
+          <h2 className="text-3xl text-white font-body font-bold">
+            {reports && reports.totalVoters}
+          </h2>
+          <p className="text-sm text-white font-body font-light">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit.{" "}
           </p>
         </div>
-        <div class="px-1">
-          <h3 class="text-md text-white font-body font-semibold">Finished</h3>
-          <h2 class="text-3xl text-white font-body font-bold">3</h2>
-          <p class="text-sm text-white font-body font-light">
+        <div className="px-1">
+          <h3 className="text-md text-white font-body font-semibold">
+            Total Candidate
+          </h3>
+          <h2 className="text-3xl text-white font-body font-bold">
+            {reports && reports.totalCandidates}
+          </h2>
+          <p className="text-sm text-white font-body font-light">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit.{" "}
           </p>
         </div>
-        <div class="px-1">
-          <h3 class="text-md text-white font-body font-semibold">Pending</h3>
-          <h2 class="text-3xl text-white font-body font-bold">5</h2>
-          <p class="text-sm text-white font-body font-light">
+        <div className="px-1">
+          <h3 className="text-md text-white font-body font-semibold">
+            Total Blacklist Candidate
+          </h3>
+          <h2 className="text-3xl text-white font-body font-bold">
+            {reports && reports.totalBlacklistedCandidates}
+          </h2>
+          <p className="text-sm text-white font-body font-light">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit.{" "}
+          </p>
+        </div>
+        <div className="px-1">
+          <h3 className="text-md text-white font-body font-semibold">
+            Ongoing
+          </h3>
+          <h2 className="text-3xl text-white font-body font-bold">
+            {reports && reports.totalOngoingElections}
+          </h2>
+          <p className="text-sm text-white font-body font-light">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit.{" "}
+          </p>
+        </div>
+        <div className="px-1">
+          <h3 className="text-md text-white font-body font-semibold">
+            Finished
+          </h3>
+          <h2 className="text-3xl text-white font-body font-bold">
+            {reports && reports.totalFinishedElections}
+          </h2>
+          <p className="text-sm text-white font-body font-light">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit.{" "}
+          </p>
+        </div>
+        <div className="px-1">
+          <h3 className="text-md text-white font-body font-semibold">
+            Pending
+          </h3>
+          <h2 className="text-3xl text-white font-body font-bold">
+            {reports && reports.totalPendingRequests}
+          </h2>
+          <p className="text-sm text-white font-body font-light">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit.{" "}
           </p>
         </div>
       </div>
-      <div class="w-full flex py-8 px-4 mt-8 lg:px-8 rounded-2xl bg-white-700">
-        <HomeTable columns={columns} data={rowdata} />
+      <div className="h-[500px] w-full flex py-8 px-4 mt-8 lg:px-8 rounded-2xl bg-white-700">
+        <CustomChart reports={reports} />
       </div>
     </div>
   );

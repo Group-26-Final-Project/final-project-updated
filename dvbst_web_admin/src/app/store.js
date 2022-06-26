@@ -1,11 +1,12 @@
-import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
-import authReducer from '../features/authSlice';
-import candidatesReducer from '../features/candidatesSlice';
-import electionsReducer from '../features/electionsSlice';
-import votersReducer from '../features/votersSlice';
-import blacklistReducer from '../features/blacklistSlice';
-import pendingReducer from '../features/pendingSlice';
-import phaseReducer from '../features/phaseSlice';
+import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
+import authReducer from "../features/authSlice";
+import candidatesReducer from "../features/candidatesSlice";
+import electionsReducer from "../features/electionsSlice";
+import votersReducer from "../features/votersSlice";
+import blacklistReducer from "../features/blacklistSlice";
+import pendingReducer from "../features/pendingSlice";
+import phaseReducer from "../features/phaseSlice";
+import requestsReducer from "../features/requestSlice";
 
 export const store = configureStore({
   reducer: {
@@ -16,5 +17,6 @@ export const store = configureStore({
     electionsState: electionsReducer,
     votersState: votersReducer,
     phaseState: phaseReducer,
+    requestsState: requestsReducer,
   },
 });
