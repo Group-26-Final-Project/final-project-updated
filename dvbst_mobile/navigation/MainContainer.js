@@ -17,7 +17,9 @@ import SuggestionScreen from '../screens/SuggestIdeaScreen';
 import VotingScreen from '../screens/VotingScreen';
 import ResultScreen from '../screens/ResultScreen';
 import CandidateScreen from '../screens/CandidateScreen';
-import EditProfileScreen from '../screens/EditProfileScreen';
+import CandidatesScreen from '../screens/CandidatesScreen';
+import CandidateDetailScreen from '../screens/CandidateDetailScreen';
+import RequestScreen from '../screens/RequestScreen';
 import PreVotingScreen from '../screens/PreVotingScreen';
 import OTPScreen from '../screens/OTPScreen'
 
@@ -32,37 +34,39 @@ const suggestName = "Suggestion";
 const votingName = "Voting";
 const resultName = "Results";
 const candidateName = "Candidate";
-const profileName = "EditProfile"
+const requestName = "Request"
 const preVotingName = "PreVoting"
 const otpName = "OTP"
+const candidatesName = "Candidates"
+const candidateDetailName = "CandidateDetail"
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
-// function CandidatesStack() {
-//   return (
-//     <Stack.Navigator
-//       initialRouteName={candidatesName}
-//       screenOptions={{
-//         headerTitle: "",
-//         headerTransparent: true
-//       }}
-//     >
-//       <Stack.Screen
-//         name={candidatesName}
-//         component={CandidatesScreen}
-//       />
-//       <Stack.Screen
-//         name={candidateName}
-//         component={CandidateScreen}
-//       />
-//       <Stack.Screen
-//         name={profileName}
-//         component={EditProfileScreen}
-//       />
-//     </Stack.Navigator>
-//   )
-// }
+function CandidatesStack() {
+  return (
+    <Stack.Navigator
+      initialRouteName={candidatesName}
+      screenOptions={{
+        headerTitle: "",
+        headerTransparent: true,
+      }}
+    >
+      <Stack.Screen
+        name={candidatesName}
+        component={CandidatesScreen}
+      />
+      <Stack.Screen
+        name={candidateDetailName}
+        component={CandidateDetailScreen}
+      />
+      <Stack.Screen
+        name={requestName}
+        component={RequestScreen}
+      />
+    </Stack.Navigator>
+  )
+}
 
 function VotingStack() {
   return (
@@ -90,8 +94,8 @@ function VotingStack() {
         component={CandidateScreen}
       />
       <Stack.Screen
-        name={profileName}
-        component={EditProfileScreen}
+        name={requestName}
+        component={RequestScreen}
       />
     </Stack.Navigator>
   )
@@ -115,8 +119,8 @@ function IdeaStack() {
         component={SuggestionScreen}
       />
       <Stack.Screen
-        name={profileName}
-        component={EditProfileScreen}
+        name={requestName}
+        component={RequestScreen}
       />
     </Stack.Navigator>
   )
@@ -138,8 +142,8 @@ function ResultStack() {
         component={ResultScreen}
       />
       <Stack.Screen
-        name={profileName}
-        component={EditProfileScreen}
+        name={requestName}
+        component={RequestScreen}
       />
     </Stack.Navigator>
   )
@@ -154,6 +158,7 @@ function MainContainer() {
     dispatch(getUser(authState.id))
   }
 
+  console.log("User", userState.user)
   return (
     <NavigationContainer>
       {userState.getUserStatus === "pending" && (
@@ -169,17 +174,16 @@ function MainContainer() {
       )}
       {userState.getUserStatus === "success" && (
         <Tab.Navigator
-          initialRouteName={homeName}
+          initialRouteName={candidatesName}
           screenOptions={({ route, navigation }) => ({
             tabBarIcon: ({ focused, color, size }) => {
               let iconName;
               let rn = route.name;
 
-              // if (rn === candidatesName) {
-              //   iconName = focused ? 'home' : 'home-outline';
+              if (rn === candidatesName) {
+                iconName = focused ? 'home' : 'home-outline';
 
-              // } else 
-              if (rn === resultName) {
+              } else if (rn === resultName) {
                 iconName = focused ? 'vote' : 'vote-outline';
 
               } else if (rn === votingName) {
@@ -215,7 +219,7 @@ function MainContainer() {
 
           })}>
 
-          {/* <Tab.Screen name={candidatesName} component={CandidatesStack} /> */}
+          <Tab.Screen name={candidatesName} component={CandidatesStack} />
           <Tab.Screen name={votingName} component={VotingStack} />
           <Tab.Screen name={ideaName} component={IdeaStack} />
           <Tab.Screen name={resultName} component={ResultStack} />

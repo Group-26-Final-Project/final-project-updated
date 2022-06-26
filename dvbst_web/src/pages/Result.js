@@ -256,7 +256,7 @@ function Result() {
                     <Avatar
                       data-cy="candidate-avatar"
                       className={classes.large}
-                      src="https://randomuser.me/api/portraits/women/81.jpg"
+                      src="https://upo0pf2qzrb5.usemoralis.com:2053/server/files/l2iSil7CMHrhypcuog84VP1RgOkpDJ7QJC93VX5d/e45cf65395b140d256287c00e2117a85_photo_2022-06-26_14-57-53.jpg"
                     ></Avatar>
                     <Box mt={0.7}>
                       <Typography
@@ -296,7 +296,7 @@ function Result() {
                     </Box>
                     <Avatar
                       className={classes.large}
-                      src="https://randomuser.me/api/portraits/women/81.jpg"
+                      src="https://upo0pf2qzrb5.usemoralis.com:2053/server/files/l2iSil7CMHrhypcuog84VP1RgOkpDJ7QJC93VX5d/e45cf65395b140d256287c00e2117a85_photo_2022-06-26_14-57-53.jpg"
                     ></Avatar>
                     <Box mt={0.7}>
                       <Typography className={classes.my_typogrphy}>
@@ -329,7 +329,7 @@ function Result() {
                     </Box>
                     <Avatar
                       className={classes.large}
-                      src="https://randomuser.me/api/portraits/women/81.jpg"
+                      src="https://upo0pf2qzrb5.usemoralis.com:2053/server/files/l2iSil7CMHrhypcuog84VP1RgOkpDJ7QJC93VX5d/e45cf65395b140d256287c00e2117a85_photo_2022-06-26_14-57-53.jpg"
                     ></Avatar>
                     <Box mt={0.7}>
                       <Typography className={classes.my_typogrphy}>

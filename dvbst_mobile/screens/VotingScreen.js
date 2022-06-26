@@ -23,12 +23,7 @@ const VotingScreen = (props) => {
             )}
             {(userState.getUserStatus === 'failed' || votingState.getMyElectionStatus === 'failed') && (
                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                    <Text style={styles.text}>Ooops something went wrong {userState.getUserError} {votingState.getMyElectionError}</Text>
-                </View>
-            )}
-            {!(userState.getUserStatus === 'pending' || votingState.getMyElectionStatus === 'pending') && userState.user.role === 'candidate' && (
-                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                    <Text style={styles.text}>You are a candidate, you cant vote!</Text>
+                    <Text style={styles.text}>Ooops something went wrong {userState.getUserError.message} {votingState.getMyElectionError.message}</Text>
                 </View>
             )}
             {!(userState.getUserStatus === 'pending' || votingState.getMyElectionStatus === 'pending') && userState.user.role === 'voter' && votingState.election && votingState.election.candidates && (
