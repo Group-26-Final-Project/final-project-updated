@@ -4,12 +4,14 @@ import React from 'react'
 // import Navbar from '../Navbar'
 import Logs from '../logs';
 import { Link } from 'react-router-dom';
+import { MdAllOut } from "react-icons/md";
 
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
     },
     body: {
+        justifyContent: 'center',
         padding: theme.spacing(4),
         backgroundColor: "#2F313D",
     },
@@ -32,7 +34,10 @@ const useStyles = makeStyles((theme) => ({
         width: "25%",
 
     },
-
+    avatar: {
+        backgroundColor: '#00D05A33',
+        color: '#00D05A',
+    },
 }));
 
 
@@ -43,11 +48,11 @@ function HomeScreen() {
         <Grid container >
 
             <Grid container xs={12} direction="row" justifyContent="center" className={classes.body} >
-                <Grid xs={12} sm={10} md={8} container >
-                    <Grid item xs={6} direction='column' justifyContent='center'>
+                <Grid xs={12} sm={12} md={10} lg={10} container >
+                    <Grid item xs={7} direction='column' justifyContent='center' alignItems='center' alignContent='center'>
                         <Box>
-                            <Typography style={{ fontSize: "54px", color: "white" }}>
-                                <span style={{ color: "#00D05A", fontFamily: "Poppins", fontWeight: "SemiBold" }}>
+                            <Typography style={{ fontSize: "48px", color: "white", fontWeight: "Bold" }}>
+                                <span style={{ color: "#00D05A", fontFamily: "Poppins", fontWeight: "Bold" }}>
                                     Modern and Secure
                                 </span>
                                 <br /> AAiT Student <br /> Council Election
@@ -60,17 +65,17 @@ function HomeScreen() {
                                 borderRadius="20px"
                                 px={4}
                                 py={1}
+                                mt={4}
                                 // borderColor="#00D05A"
                                 bgcolor="#00D05A"
                             >
                                 <Link to="/auth/Voting_underway">
-
                                     Start Voting
                                 </Link>
                             </Box>
                         </Box>
                     </Grid>
-                    <Grid item xs={6} justifyContent='center' alignItems='center' direction='column'>
+                    <Grid item xs={5} justifyContent='center' alignItems='center' direction='column'>
                         <Logs />
                     </Grid>
                 </Grid>
@@ -78,45 +83,44 @@ function HomeScreen() {
 
             <Grid container xs={12} direction="row" justifyContent="center" className={classes.upper_part} >
 
-                <Grid container xs={12} sm={10} md={8} justifyContent="space-around" >
+                <Grid container xs={12} sm={12} md={10} lg={10} justifyContent="space-around" >
                     <Grid xs={3}
                         container
                         item
-                        direction="column"
-                        alignItems='center'
-                        justifyContent="space-around"
-                        spacing={3}
-
-
-                    >
-                        <Avatar></Avatar>
-                        <Typography variant='h6'>Lower</Typography>
-                        <Typography variant='body2' align='center'>
-                            Blockchain-based election system means your vote is anonymous
-                            and the integrity of the election is maintained.
-                        </Typography>
-                    </Grid>
-                    <Grid item xs={3} container
-
+                    // direction="column"
+                    // alignItems='center'
+                    // justifyContent="space-around"
+                    // spacing={3}
                     >
                         <Grid item container direction='column' alignItems='center'>
-                            <Avatar></Avatar>
-                            <Typography variant='h6'>Lower</Typography>
+                            <Avatar className={classes.avatar}>
+                                <MdAllOut />
+                            </Avatar>
+                            <Typography variant='h6'>Highly Secure</Typography>
                             <Typography variant='body2' align='center'>
-                                Blockchain-based election system means your vote is anonymous
-                                and the integrity of the election is maintained.
+                                Blockchain-based election system means your vote is anonymous and the integrity of the election is maintained.
                             </Typography>
                         </Grid>
                     </Grid>
-                    <Grid container xs={3}
-
-                    >
-                        <Grid item container direction='column' alignItems='center' >
-                            <Avatar></Avatar>
-                            <Typography variant='h6' >Lower</Typography>
+                    <Grid item xs={3} container>
+                        <Grid item container direction='column' alignItems='center'>
+                            <Avatar className={classes.avatar}>
+                                <MdAllOut />
+                            </Avatar>
+                            <Typography variant='h6'>Opinionated</Typography>
                             <Typography variant='body2' align='center'>
-                                Blockchain-based election system means your vote is anonymous
-                                and the integrity of the election is maintained.
+                                Your opinions are valued. You can vote for the ideas you want to see implemented in AAit. It doesn’t stop at voting. You can also suggest your own ideas.
+                            </Typography>
+                        </Grid>
+                    </Grid>
+                    <Grid container xs={3}>
+                        <Grid item container direction='column' alignItems='center' >
+                            <Avatar className={classes.avatar}>
+                                <MdAllOut />
+                            </Avatar>
+                            <Typography variant='h6' >Real-time Results</Typography>
+                            <Typography variant='body2' align='center'>
+                                You can follow the status of the election and stay up-to-date with election information
                             </Typography>
                         </Grid>
                     </Grid>

@@ -25,11 +25,12 @@ export const MenuExample = ({ role, navigation }) => {
 
                 {/* <MenuTrigger text='Select action' /> */}
                 <MenuOptions customStyles={{ optionsContainer: styles.container }} optionsContainerStyle={{ width: 200 }} >
-                    <MenuOption disabled={role === 'voter' ? true : false} onSelect={() => navigation.navigate('EditProfile')} text='Profile' />
+                    {role === 'candidate' && (
+                        <MenuOption onSelect={() => navigation.navigate('EditProfile')} text='Profile' />
+                    )}
                     <MenuOption onSelect={()=>dispatch(logout())} >
                         <Text style={{ color: 'red' }}>Logout</Text>
                     </MenuOption>
-                    <MenuOption onSelect={() => alert(`Not called`)} disabled={true} text='Disabled' />
                 </MenuOptions>
             </Menu>
         </MenuProvider >

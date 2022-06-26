@@ -6,7 +6,8 @@ import { Container, Grid, makeStyles } from '@material-ui/core';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import NavbarDropdown from './NavbarDropdown';
-
+import { useSelector } from 'react-redux'
+import { AiTwotoneNotification } from "react-icons/ai";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -28,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
         display: "flex",
         flexDirection: "row",
         justifyContent: "space-between",
-
+        marginInline: "20px"
     },
     left_bar: {
         display: "flex",
@@ -40,12 +41,19 @@ const useStyles = makeStyles((theme) => ({
     right_bar: {
         display: "flex",
         justifyContent: "end",
+        alignItems: "center",
+        // alignContent: "center",
+        // alignSelf: "center",
         padding: "15px",
+    },
+    notif: {
+        marginRight: "20px"
     }
 }));
 
 function Navbar() {
     const classes = useStyles()
+    const userState = useSelector((state) => state.userState)
 
     return (
         <div className={classes.root}>
@@ -69,6 +77,13 @@ function Navbar() {
                                         </Typography>
                                     </Link>
                                 </Grid>
+                                <Grid item xs={5}>
+                                    <Link to="/auth/candidates">
+                                        <Typography variant="h6" className={classes.title}>
+                                            Candidates
+                                        </Typography>
+                                    </Link>
+                                </Grid>
                                 <Grid item xs={4}>
                                     <Link data-cy="voting-button" to="/auth/PreVoting">
                                         <Typography variant="h6" className={classes.title}>
@@ -86,7 +101,10 @@ function Navbar() {
                             </Grid>
                             <Grid item xs={1} sm={3} md={6} lg={6} className={classes.right_bar}
                             >
-                                <NavbarDropdown/>
+                                {userState.user?.role === 'candidate' && (
+                                    <AiTwotoneNotification className={classes.notif} size={30} onClick={()=>{}} />
+                                )}
+                                <NavbarDropdown item xs={6}/>
                             </Grid>
 
                         </Grid>
