@@ -24,7 +24,10 @@ import VotePage from "./pages/VotePage";
 import VerifyVoteMagic from "./pages/VerifyVoteMagic"
 import PreVoting from "./pages/PreVoting";
 import CandidateProfilePage from "./pages/CandidateProfilePage";
+import RequestPage from "./pages/RequestPage";
 
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 function App() {
   const dispatch = useDispatch()
   const authState = useSelector((state) => state.authState)
@@ -38,6 +41,20 @@ function App() {
   // })
 
   return (
+    <div>
+       <ToastContainer
+        progressClassName="w-10 h-10"
+        bodyClassName="w-10 h-10"
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={true}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     <Router>
       <Routes>
         <Route path="/" element={
@@ -87,6 +104,12 @@ function App() {
             <CandidateProfilePage />
           </PrivateRoute>
         } />
+          <Route path="/requests/add" element={
+          <PrivateRoute>
+            <Navbar />
+            <RequestPage />
+          </PrivateRoute>
+        } />
         <Route path="/verify/:email/:link" element={
           <PrivateRoute>
             <VerifyVoteMagic />
@@ -123,6 +146,8 @@ function App() {
         {/* <Route path="*" element={<Navigate to="/" replace />} /> */}
       </Routes>
     </Router>
+    </div>
+
   );
 }
 
