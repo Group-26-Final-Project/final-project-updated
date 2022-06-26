@@ -14,12 +14,18 @@ const customFonts = {
 }
 
 const deptTypes = [
-    "Software Engineering",
-    "Biomedical Engineering",
-    "Chemical Engineering",
-    "Civil Engineering",
-    "Electrical Engineering",
-    "Mechanical Engineering",
+    "Center of Biomedical Engineering (CBME)",
+    "School of Chemical and Bio Engineering (SCBE)",
+    "School of Civil & Environmental Engineering (SCEE)",
+    "School of Electrical & Computer Engineering (SECE)",
+    "School of Mechanical and Industrial Engineering (SMiE)",
+    "School of Information Technology Engineering (SITE)"
+    // "Software Engineering",
+    // "Biomedical Engineering",
+    // "Chemical Engineering",
+    // "Civil Engineering",
+    // "Electrical Engineering",
+    // "Mechanical Engineering",
 ];
 
 const CandidateDetail = (props) => {
@@ -51,7 +57,7 @@ const CandidateDetail = (props) => {
                     <Text style={styles.detailText}>{props.candidate.year}</Text>
                 </View>
                 <View style={styles.details}>
-                    <Text style={styles.detailTitle}>Department</Text>
+                    <Text style={styles.detailTitle}>School/Center</Text>
                     <Text style={styles.detailText}>{deptTypes[props.candidate.dept]}</Text>
                 </View>
             </View>

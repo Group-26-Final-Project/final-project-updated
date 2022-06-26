@@ -60,7 +60,7 @@ const VoteComponent = (props) => {
                     </View>
                     <View style={styles.description}>
                         <Text style={styles.name}>{props.name}</Text>
-                        <Text style={styles.detail}>Department: {props.dept}</Text>
+                        <Text style={styles.detail}>School/Center: {props.dept}</Text>
                         <Text style={styles.detail}>Year: {props.year}</Text>
                         <Text style={styles.detail}>Section: {props.section}</Text>
                         <TouchableOpacity onPress={vote} style={styles.button}>

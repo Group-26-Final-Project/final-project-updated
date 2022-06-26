@@ -14,12 +14,18 @@ import { makeStyles } from "@material-ui/core/styles";
 import { SpinnerCircularFixed } from "spinners-react";
 
 const deptTypes = [
-  "Biomedical Engineering",
-  "Chemical Engineering",
-  "Civil Engineering",
-  "Electrical Engineering",
-  "Mechanical Engineering",
-  "Software Engineering",
+  "Center of Biomedical Engineering (CBME)",
+  "School of Chemical and Bio Engineering (SCBE)",
+  "School of Civil & Environmental Engineering (SCEE)",
+  "School of Electrical & Computer Engineering (SECE)",
+  "School of Mechanical and Industrial Engineering (SMiE)",
+  "School of Information Technology Engineering (SITE)"
+  // "Biomedical Engineering",
+  // "Chemical Engineering",
+  // "Civil Engineering",
+  // "Electrical Engineering",
+  // "Mechanical Engineering",
+  // "Software Engineering",
 ];
 const useStyles = makeStyles((theme) => ({
   modal: {

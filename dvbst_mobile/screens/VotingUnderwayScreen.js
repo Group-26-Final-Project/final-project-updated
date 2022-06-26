@@ -41,10 +41,10 @@ const VotingUnderwayScreen = ({ phase, time }) => {
                     <Text style={styles.title}>Section <Text style={{ color: '#00D05A' }}>Election</Text> is Underway</Text>
                 )}
                 {phase === 4 && (
-                    <Text style={styles.title}>Batch <Text style={{ color: '#00D05A' }}>Election</Text> is Underway</Text>
+                    <Text style={styles.title}>Year <Text style={{ color: '#00D05A' }}>Election</Text> is Underway</Text>
                 )}
                 {phase === 6 && (
-                    <Text style={styles.title}>Department <Text style={{ color: '#00D05A' }}>Election</Text> is Underway</Text>
+                    <Text style={styles.title}>School/Center <Text style={{ color: '#00D05A' }}>Election</Text> is Underway</Text>
                 )}
                 <Voting
                     style={styles.svg}
