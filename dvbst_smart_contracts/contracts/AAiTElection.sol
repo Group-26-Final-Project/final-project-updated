@@ -75,7 +75,7 @@ contract AAiTElection {
         MECHANICAL,
         SITE
     }
-    enum ELECTION_TYPE {
+    enum ELECTION_STATUS {
         PENDING,
         ONGOING,
         COMPLETED
@@ -102,7 +102,7 @@ contract AAiTElection {
     struct ElectionStruct {
         uint256 index;
         string name;
-        ELECTION_TYPE status;
+        ELECTION_STATUS status;
         uint256 startDate;
         uint256 endDate;
         address[] candidates;
@@ -155,7 +155,7 @@ contract AAiTElection {
     // event LogNewElection(
     //     uint256 index,
     //     string name,
-    //     ELECTION_TYPE status,
+    //     ELECTION_STATUS status,
     //     string startDate,
     //     string endDate,
     //     address[] candidates,
@@ -169,7 +169,7 @@ contract AAiTElection {
     // event LogUpdateElection(
     //     uint256 index,
     //     string name,
-    //     ELECTION_TYPE status,
+    //     ELECTION_STATUS status,
     //     string startDate,
     //     string endDate,
     //     address[] candidates,
@@ -263,6 +263,21 @@ contract AAiTElection {
         phase.end = endDate;
     }
 
+    function revertPhase(
+        uint256 phaseName,
+        uint256 startDate,
+        uint256 endDate
+    ) external onlyOwner {
+        if (phaseName == uint256(phase.phaseName)) {
+            return;
+        } else {
+            phase.phaseName = PHASE_NAME(uint256(phase.phaseName));
+            phase.start = startDate;
+            phase.end = endDate;
+            return;
+        }
+    }
+
     // function getRemainingTime() external view returns (uint256) {
     //     if (phase.phaseName == PHASE_NAME.COMPLETED) {
     //         return 0;
@@ -308,7 +323,7 @@ contract AAiTElection {
 
     // function addElection(
     //     string memory name,
-    //     ELECTION_TYPE status,
+    //     ELECTION_STATUS status,
     //     string memory startDate,
     //     string memory endDate,
     //     address[] memory candidates,
@@ -385,7 +400,7 @@ contract AAiTElection {
         ElectionStruct memory tempElection = ElectionStruct(
             electionIndex.length - 1,
             name,
-            ELECTION_TYPE.ONGOING,
+            ELECTION_STATUS.ONGOING,
             startDate,
             endDate,
             candidates,
@@ -486,7 +501,7 @@ contract AAiTElection {
                     candidateAddress
                 )
             ) {
-                if (electionValue[i].status == ELECTION_TYPE.ONGOING) {
+                if (electionValue[i].status == ELECTION_STATUS.ONGOING) {
                     if (
                         AAiTElectionLibrary.contains(
                             electionValue[i].candidates,
@@ -562,7 +577,6 @@ contract AAiTElection {
     {
         // AAiTVoteToken tempToken = AAiTVoteToken(AAiTVoteTokenAddress);
         voteToken.mint(1);
-
         voteToken.transfer(voterAddress, 1);
         voteToken.transferFrom(voterAddress, candidateAddress, 1);
     }
@@ -579,35 +593,46 @@ contract AAiTElection {
     // AAiTVoteToken tempToken = AAiTVoteToken(AAiTVoteTokenAddress);
 
     function extendPhase(uint256 endDate) external onlyOwner {
-        phase.end = endDate;
-        // electionStructsMapping[electionName].endDate =
-        //     block.timestamp +
-        //     duration;
-        // electionValue[electionStructsMapping[electionName].index]
-        //     .endDate = electionStructsMapping[electionName].endDate;
+        phase.end = endDate;        
     }
 
-    // function pauseElection(string memory electionName) external onlyOwner {
-    //     electionStructsMapping[electionName].status = ELECTION_TYPE.PENDING;
-    // }
+    function extendElection(string memory electionName, uint256 endDate) external onlyOwner {
+        electionStructsMapping[electionName].endDate = endDate;
+        electionValue[electionStructsMapping[electionName].index].endDate = endDate;
+    }
 
-    // function continueElection(string memory electionName) external onlyOwner {
-    //     electionStructsMapping[electionName].status = ELECTION_TYPE.ONGOING;
-    // }
+    function pauseElection(string memory electionName) external onlyOwner {
+        electionStructsMapping[electionName].status = ELECTION_STATUS.PENDING;
+        electionValue[electionStructsMapping[electionName].index].status = ELECTION_STATUS.PENDING;
+    }
 
-    function endElection(string memory electionName) external onlyOwner {
-        // electionStructsMapping[electionName].status = ELECTION_TYPE.ENDED;
+    function startElection(string memory electionName) external onlyOwner {
+        electionStructsMapping[electionName].status = ELECTION_STATUS.ONGOING;
+        electionValue[electionStructsMapping[electionName].index].status = ELECTION_STATUS.ONGOING;
+    }
+
+    function completeElection(string memory electionName) public onlyOwner {
+        electionStructsMapping[electionName].status = ELECTION_STATUS.COMPLETED;
+        electionValue[electionStructsMapping[electionName].index].status = ELECTION_STATUS.COMPLETED;
+    }    
+
+    function endElection(string memory electionName) public onlyOwner {
+        // electionStructsMapping[electionName].status = ELECTION_STATUS.ENDED;
         // electionValue[electionStructsMapping[electionName].index]
-        //     .status = ELECTION_TYPE.ENDED;
+        //     .status = ELECTION_STATUS.ENDED;
         require(findElectionByName(electionName), "Election Does Not Exist");
         declareWinner(electionName);
-        completedElections.push(electionStructsMapping[electionName]);
-        completedElectionResults.push(
-            ElectionResultStruct(
-                electionName,
-                getElectionByName(electionName).candidates
-            )
-        );
+        // completedElections.push(electionStructsMapping[electionName]);
+        // completedElectionResults.push(
+        //     ElectionResultStruct(
+        //         electionName,
+        //         getElectionByName(electionName).candidates
+        //     )
+        // );
+        // removeElection(electionName);
+    }
+
+    function removeElection(string memory electionName) public onlyOwner {        
         uint256 rowToDelete = electionStructsMapping[electionName].index;
         string memory keyToMove = electionIndex[electionIndex.length - 1];
         electionIndex[rowToDelete] = keyToMove;
@@ -615,6 +640,16 @@ contract AAiTElection {
         electionIndex.pop();
         electionValue[rowToDelete] = electionValue[electionValue.length - 1];
         electionValue.pop();
+    }
+
+    function removeVotesRemainingForVoters(address[] memory voters) public onlyOwner {
+        for (uint256 i = 0; i < voters.length; i++) {
+            delete voterToCandidatesMapping[voters[i]];
+            if(AAiTElectionLibrary.contains(voted, voters[i])){
+                delete voted[AAiTElectionLibrary.indexOf(voted, voters[i])];
+            }
+        }
+
     }
 
     function removeAllCompletedElections() external onlyOwner {
@@ -647,7 +682,7 @@ contract AAiTElection {
         }
 
         temp.winners = tempWinners;
-        temp.status = ELECTION_TYPE.COMPLETED;
+        temp.status = ELECTION_STATUS.COMPLETED;
 
         electionStructsMapping[electionName] = temp;
         electionValue[electionStructsMapping[electionName].index] = temp;
@@ -855,7 +890,11 @@ contract AAiTElection {
 
     // GET FUNCTIONS
 
-    function getVotesRemaining(address voterAddress)external view returns (uint256) {
+    function getVotesRemaining(address voterAddress)
+        external
+        view
+        returns (uint256)
+    {
         return voterToCandidatesMapping[voterAddress].length;
     }
 
@@ -884,64 +923,82 @@ contract AAiTElection {
         return electionStructsMapping[electionName];
     }
 
-    function getElectionByType(
-        uint256 year,
-        uint256 section,
-        DEPTARTMENT_TYPE department
-    ) public view returns (ElectionStruct memory result) {
-        require(
-            findElectionByType(year, section, department),
-            "Election not found"
-        );
-        // AAiTElectionTimer electionTimer = AAiTElectionTimer(
-        //     AAiTElectionTimerAddress
-        // );
-        // AAiTElection tempElection = AAiTElection(AAiTElectionAddress);
-        // AAiTElection.ElectionStruct[] memory allElections = tempElection
-        //     .getAllElections();
-        // ElectionPhase memory phase = getCurrentPhase();
-        if (
-            phase.phaseName == PHASE_NAME.DEPARTMENT_ELECTION
-            // ||
-            // phase.phaseName ==
-            // PHASE_NAME.DEPARTMENT_ELECTION_DONE
-        ) {
-            for (uint256 i = 0; i < electionValue.length; i++) {
-                if (electionValue[i].department == department) {
-                    return electionValue[i];
-                }
-            }
-        } else if (
-            phase.phaseName == PHASE_NAME.BATCH_ELECTION
-            // ||
-            // phase.phaseName ==
-            // PHASE_NAME.BATCH_ELECTION_DONE
-        ) {
-            for (uint256 i = 0; i < electionValue.length; i++) {
-                if (
-                    electionValue[i].department == department &&
-                    electionValue[i].year == year
-                ) {
-                    return electionValue[i];
-                }
-            }
-        } else if (
-            phase.phaseName == PHASE_NAME.SECTION_ELECTION
-            // ||
-            // phase.phaseName ==
-            // PHASE_NAME.SECTION_ELECTION_DONE
-        ) {
-            for (uint256 i = 0; i < electionValue.length; i++) {
-                if (
-                    electionValue[i].department == department &&
-                    electionValue[i].year == year &&
-                    electionValue[i].section == section
-                ) {
-                    return electionValue[i];
-                }
-            }
-        } else {
-            revert("Invalid Operation");
-        }
+    function getElectionStatus(string memory electionName)
+        public
+        view
+        returns (uint256 status)
+    {
+        require(findElectionByName(electionName), "Election not found");
+        return uint256(electionStructsMapping[electionName].status);
     }
+
+    function getElectionEndDate(string memory electionName)
+        public
+        view
+        returns (uint256)
+    {
+        require(findElectionByName(electionName), "Election not found");
+        return electionStructsMapping[electionName].endDate;
+    }
+
+    // function getElectionByType(
+    //     uint256 year,
+    //     uint256 section,
+    //     DEPTARTMENT_TYPE department
+    // ) public view returns (ElectionStruct memory result) {
+    //     require(
+    //         findElectionByType(year, section, department),
+    //         "Election not found"
+    //     );
+    //     // AAiTElectionTimer electionTimer = AAiTElectionTimer(
+    //     //     AAiTElectionTimerAddress
+    //     // );
+    //     // AAiTElection tempElection = AAiTElection(AAiTElectionAddress);
+    //     // AAiTElection.ElectionStruct[] memory allElections = tempElection
+    //     //     .getAllElections();
+    //     // ElectionPhase memory phase = getCurrentPhase();
+    //     if (
+    //         phase.phaseName == PHASE_NAME.DEPARTMENT_ELECTION
+    //         // ||
+    //         // phase.phaseName ==
+    //         // PHASE_NAME.DEPARTMENT_ELECTION_DONE
+    //     ) {
+    //         for (uint256 i = 0; i < electionValue.length; i++) {
+    //             if (electionValue[i].department == department) {
+    //                 return electionValue[i];
+    //             }
+    //         }
+    //     } else if (
+    //         phase.phaseName == PHASE_NAME.BATCH_ELECTION
+    //         // ||
+    //         // phase.phaseName ==
+    //         // PHASE_NAME.BATCH_ELECTION_DONE
+    //     ) {
+    //         for (uint256 i = 0; i < electionValue.length; i++) {
+    //             if (
+    //                 electionValue[i].department == department &&
+    //                 electionValue[i].year == year
+    //             ) {
+    //                 return electionValue[i];
+    //             }
+    //         }
+    //     } else if (
+    //         phase.phaseName == PHASE_NAME.SECTION_ELECTION
+    //         // ||
+    //         // phase.phaseName ==
+    //         // PHASE_NAME.SECTION_ELECTION_DONE
+    //     ) {
+    //         for (uint256 i = 0; i < electionValue.length; i++) {
+    //             if (
+    //                 electionValue[i].department == department &&
+    //                 electionValue[i].year == year &&
+    //                 electionValue[i].section == section
+    //             ) {
+    //                 return electionValue[i];
+    //             }
+    //         }
+    //     } else {
+    //         revert("Invalid Operation");
+    //     }
+    // }
 }

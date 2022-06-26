@@ -3,8 +3,11 @@ import CustomAxios from '../Api/CustomAxios'
 
 const initialState = {
     elections: [],
+    electionByID: null,
     getElectionsStatus: "",
     getElectionsError: "",
+    getElectionByIDStatus: "",
+    getElectionByIDError: "",
     addElectionStatus: "",
     addElectionError: "",
     editElectionStatus: "",
@@ -20,6 +23,18 @@ export const getElections = createAsyncThunk("elections/getElections", async (id
     try {
         await timeout(1000)
         const response = await CustomAxios.get("/elections")
+        return response.data
+    } catch (err) {
+        return rejectWithValue(err.response.data)
+    }
+})
+
+export const getElectionByID = createAsyncThunk("elections/getElectionByID", async (id, {
+    rejectWithValue }) => {
+    try {
+        await timeout(1000)
+        const response = await CustomAxios.get("/elections/details/" + id)
+        console.log(response.data);
         return response.data
     } catch (err) {
         return rejectWithValue(err.response.data)
@@ -71,6 +86,26 @@ const electionSlice = createSlice({
                 ...state,
                 getElectionsStatus: "failed",
                 getElectionsError: action.payload,
+            }
+        },
+        [getElectionByID.pending]: (state, action) => {
+            return {
+                ...state,
+                getElectionByIDStatus: "pending",
+            }
+        },
+        [getElectionByID.fulfilled]: (state, action) => {
+            return {
+                ...state,
+                electionByID: action.payload,
+                getElectionByIDStatus: "success"
+            }
+        },
+        [getElectionByID.rejected]: (state, action) => {
+            return {
+                ...state,
+                getElectionByIDStatus: "failed",
+                getElectionByIDError: action.payload,
             }
         },
         [addElection.pending]: (state, action) => {

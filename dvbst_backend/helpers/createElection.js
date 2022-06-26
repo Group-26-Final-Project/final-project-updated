@@ -167,6 +167,7 @@ async function createElectionLocal(
     year: year,
     section: section,
     department: department,
+    status: 1
   });
   await election.save();
   for (let index = 0; index < tempcandidates.length; index++) {

@@ -30,12 +30,15 @@ const deptTypes = [
 //get all elections
 router.get("/", cors(), async (req, res, next) => {
   try {
-    var elections = await Election.find();
+    var elections = [];
+    console.log("abt to get all elections");
+    elections = await Election.find();
     if(elections.length === 0) elections = await CompletedElections.find();
     if(elections.length === 0) {
       const temp = await ArchivedElections.find({year:2022});
       elections = temp.elections;
   }
+  if(!elections) elections = [];
     return res.json(elections).status(200);
   } catch (e) {
     return res.json(e).status(400);
@@ -46,18 +49,37 @@ router.get("/", cors(), async (req, res, next) => {
 router.get("/details/:id", cors(), async (req, res, next) => {
   try {
     var election = await Election.findById(req.params.id);
-    const voters = await Voter.find({
-      dept: 0,
-      year: 5,
-      section: 2,
+    
+    var voters = [];
+    if(election.section === 0 && election.year === 0) {
+      console.log("abt to get dept election voters");
+      voters = await Voter.find({
+        dept: election.department,
+        
+      });
+  } else if (election.section === 0) {
+    console.log("abt to get year election voters");
+    voters = await Voter.find({
+      dept: election.department,
+      year: election.year
     });
-    election.voters = voters;
-    console.log(election);
+  } else if (election.section !== 0 && election.year !== 0) {
+    console.log("abt to get section election voters");
+    voters = await Voter.find({
+      dept: election.department,
+      year: election.year,
+      section: election.section
+    });
+  }
+    
+    // election.voters = voters;
+    console.log(voters.length);
 
     return res.json({
       status: "success",
       code: 200,
       data: election,
+      voters: voters,
     });
   } catch (e) {
     return res.json({

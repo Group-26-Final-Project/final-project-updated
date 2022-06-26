@@ -13,6 +13,7 @@ const mintAndSendTokens = require("./mintAndSendTokens");
 const burnAllTokens = require("./burnTokens");
 const {endOngoingElections, saveCompletedElections, archiveElections} = require("./endOngoingElections");
 const createMockUsers = require("./createUsers");
+const Election = require("../models/election");
 // const Phase = require("../models/phase");
 
 // const PHASE_NAME = [
@@ -93,6 +94,11 @@ async function changePhase(duration) {
         // switch loosing candidate to voter
 
 
+        const incompleteElection = await Election.findOne({status: 1});
+        if(incompleteElection){
+          console.log("incomplete found, please finish every election before changing phase");
+          return "incomplete found, please finish every election before changing phase";
+        }
         contract = await initContract();
         elections = await contract.getAllCurrentElections();
         await endOngoingElections(elections);
