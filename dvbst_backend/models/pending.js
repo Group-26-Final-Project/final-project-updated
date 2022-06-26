@@ -45,6 +45,16 @@ const pendingSchema = new mongoose.Schema({
         type: String,
         require: true
     },
+    bio: {
+        type: String,
+        default: '',
+        required: true
+    },
+    plans: {
+        type: String,
+        default: '',
+        required: true
+    },
     role: {
         type: String,
         required: true,

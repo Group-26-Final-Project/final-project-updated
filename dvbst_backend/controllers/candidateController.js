@@ -121,6 +121,8 @@ router.post(
         dept: req.body.dept,
         section: req.body.section,
         year: req.body.year,
+        bio: req.body.bio,
+        plans: req.body.plans,
         uniqueID: uniqueID,
       });
       var check = await User.findOne({ email: req.body.email });
@@ -137,20 +139,20 @@ router.post(
       }
 
       const newCandidate = await candidate.save();
-      const pending = new Pending({
-        userId: newCandidate._id,
-        name: newCandidate.name,
-        fname: newCandidate.fname,
-        gname: newCandidate.gname,
-        email: newCandidate.email,
-        phone: newCandidate.phone,
-        id: newCandidate.id,
-        dept: newCandidate.dept,
-        year: newCandidate.year,
-        section: newCandidate.section,
-        fullName: newCandidate.fullName,
-        role: "candidate"
-      });
+      // const pending = new Pending({
+      //   userId: newCandidate._id,
+      //   name: newCandidate.name,
+      //   fname: newCandidate.fname,
+      //   gname: newCandidate.gname,
+      //   email: newCandidate.email,
+      //   phone: newCandidate.phone,
+      //   id: newCandidate.id,
+      //   dept: newCandidate.dept,
+      //   year: newCandidate.year,
+      //   section: newCandidate.section,
+      //   fullName: newCandidate.fullName,
+      //   role: "candidate"
+      // });
       const salt = await bcrypt.genSalt(10);
       const user = new User({
         userId: newCandidate._id,
@@ -159,7 +161,7 @@ router.post(
         role: "candidate",
       });
       user.password = await bcrypt.hash(req.body.password, salt);
-      await pending.save();
+      // await pending.save();
       await user.save();
       res.json(newCandidate).status(201)
     } catch (err) {

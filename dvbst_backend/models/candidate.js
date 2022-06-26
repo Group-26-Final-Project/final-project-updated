@@ -45,20 +45,20 @@ const candidateSchema = new mongoose.Schema({
         type: String,
         default: '',
     },
-    profile: {
-        type: String,
-        required: false,
-    },
+    // profile: {
+    //     type: String,
+    //     required: false,
+    // },
     uniqueID: {
         type: String,
         required: false,
         default: '',
     },
-    completed: {
-        type: Boolean,
-        required: true,
-        default: false,
-    },
+    // completed: {
+    //     type: Boolean,
+    //     required: true,
+    //     default: false,
+    // },
     voteCount: {
         type: Number,
         required: true,
@@ -68,16 +68,16 @@ const candidateSchema = new mongoose.Schema({
         type: String,
         require: true
     },
-    status: {
-        type: Boolean,
-        require: true,
-        default: true
-    },
-    approved: {
-		type: Boolean,
-		required: true,
-		default: false
-	},
+    // status: {
+    //     type: Boolean,
+    //     require: true,
+    //     default: true
+    // },
+    // approved: {
+	// 	type: Boolean,
+	// 	required: true,
+	// 	default: false
+	// },
     role: {
         type: String,
         required: true,

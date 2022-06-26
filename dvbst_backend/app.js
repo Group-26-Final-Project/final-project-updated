@@ -11,6 +11,7 @@ const authRouter = require('./controllers/authController');
 const blacklistRouter = require('./controllers/blacklistController');
 const candidateRouter = require('./controllers/candidateController');
 const electionRouter = require('./controllers/electionController');
+const eligibileRouter = require('./controllers/eligibileController');
 const ideaRouter = require('./controllers/ideaController');
 const pendingRouter = require('./controllers/pendingController');
 const resetRouter = require('./controllers/resetController');
@@ -26,6 +27,7 @@ app.use('/login', authRouter)
 app.use('/blacklist', blacklistRouter)
 app.use('/candidates', candidateRouter)
 app.use('/elections', electionRouter)
+app.use('/eligible', eligibileRouter)
 app.use('/ideas', ideaRouter)
 app.use('/pending', pendingRouter)
 app.use('/reset', resetRouter)

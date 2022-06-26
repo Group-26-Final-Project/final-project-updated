@@ -14,7 +14,9 @@ export default function RegistrationPage() {
         name: "", fname: "", gname: "",
         dept: "", section: "", year: "",
         email: "", id: "", phone: "",
-        password: "", confpass: "", role: "voter"
+        password: "", confpass: "", role: "voter",
+        bio: "", plans: ""
+
     };
 
     const [isCandidate, setIsCandidate] = useState(false);
@@ -28,7 +30,7 @@ export default function RegistrationPage() {
 
     const onCheckClicked = () => {
         setIsCandidate(!isCandidate)
-        setFormValues({ ...formValues, role: !isCandidate ? "candidate" : "voter"})
+        setFormValues({ ...formValues, role: !isCandidate ? "candidate" : "voter" })
     }
 
     const handleSubmit = async (e) => {
@@ -39,6 +41,7 @@ export default function RegistrationPage() {
                 .unwrap()
                 .then((response) => {
                     navigate('/after')
+                    setFormErrors({})
                 })
         } else {
             setFormErrors(errors);
@@ -105,15 +108,22 @@ export default function RegistrationPage() {
         } else if (values.confpass !== values.password) {
             errors.confpass = "Passwords should match"
         }
+        if (isCandidate && !values.bio) {
+            errors.bio = "Bio is a required field"
+        }
+        if (isCandidate && !values.plans) {
+            errors.plans = "Plans is a required field"
+        }
         return errors;
     };
 
-    useEffect(()=>{
+    useEffect(() => {
         authState.token && navigate('/')
     }, [authState.token, navigate])
 
+    console.log("Authstate", authState)
     return (
-        <div class="flex items-center justify-center min-h-screen bg-[#2F313D]">
+        <div class="flex flex-col items-center justify-center min-h-screen bg-[#2F313D]">
             {authState.registerStatus === "pending" && (
                 <div class="flex items-center justify-center">
                     <SpinnerCircularFixed
@@ -126,7 +136,7 @@ export default function RegistrationPage() {
                 </div>
             )}
             {authState.registerStatus === 'failed' && authState.registerError && (
-                <div className="w-[52vh] p-3 flex flex-row justify-center" style={{ backgroundColor: "#ff000033" }}>
+                <div className="w-[72vh] p-3 flex flex-row justify-center" style={{ backgroundColor: "#ff000033" }}>
                     <CgDanger className="mr-2 flex-2" size={24} color={"#fb1032"} />
                     <h2 className="flex-1" style={{ color: "#fb1032" }}>{authState.registerError}</h2>
                 </div>
@@ -301,6 +311,22 @@ export default function RegistrationPage() {
                                 I would like to be a candidate.
                             </label>
                         </div>
+                        {isCandidate && (
+                            <>
+                                <div>
+                                    <label class="block tracking-wide text-gray-700 text-xs font-bold mb-2" for="bio">Bio</label>
+                                    <textarea draggable='false' type="text" name="bio" onChange={changeHandler} value={formValues.bio}
+                                        class="w-full px-2 py-1 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600" />
+                                    <p class="mb-2 text-red-500 text-xs italic">{formErrors.bio}</p>
+                                </div>
+                                <div>
+                                    <label class="block tracking-wide text-gray-700 text-xs font-bold mb-2" for="gname">Plans</label>
+                                    <textarea draggable='false' type="text" name="plans" onChange={changeHandler} value={formValues.plans}
+                                        class="w-full px-2 py-1 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600" />
+                                    <p class="mb-2 text-red-500 text-xs italic">{formErrors.plans}</p>
+                                </div>
+                            </>
+                        )}
                         <div class="flex items-baseline justify-center">
                             <button class="px-6 py-2 mt-4 text-white bg-[#00D05A] rounded-lg hover:bg-blue-900">Register</button>
                         </div>

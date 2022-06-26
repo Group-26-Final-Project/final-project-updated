@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-const voterSchema = new mongoose.Schema({
+const allUsersSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
@@ -37,25 +37,7 @@ const voterSchema = new mongoose.Schema({
         type: Number,
         required: true,
     },
-    uniqueID: {
-        type: String,
-        required: false,
-        default: '',
-    }, 
-    fullName: {
-        type: String, 
-        require: true
-    },
-    // approved: {
-	// 	type: Boolean,
-	// 	required: true,
-	// 	default: false
-	// },
-    role: {
-        type: String,
-        required: true,
-        default: "voter"
-    },
+
 })
 
-module.exports = mongoose.model('Voter', voterSchema)
+module.exports = mongoose.model('AllUser', allUsersSchema)

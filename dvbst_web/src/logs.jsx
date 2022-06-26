@@ -3,8 +3,8 @@ import React from "react";
 function logs(props) {
   return (
     <svg
-      width="515"
-      height="353"
+      width="415"
+      height="300"
       viewBox="0 0 515 353"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

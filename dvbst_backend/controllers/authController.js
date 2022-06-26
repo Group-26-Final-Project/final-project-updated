@@ -17,7 +17,7 @@ router.post("/", cors(), async (req, res) => {
   try {
     console.log(req.body)
     const { email, password } = req.body;
-    const user = await User.findOne({ email: email });
+    const user = await User.findOne({ email: email.toLowerCase() });
     if (!user) {
       return res.status(404).send("Email/Password is Incorrect");
     }
@@ -28,7 +28,7 @@ router.post("/", cors(), async (req, res) => {
     if (!validPassword) {
       return res.status(404).send("Email/Password is Incorrect");
     } else {
-      const token = jwt.sign({ id: user.userId }, config.secret, {
+      const token = jwt.sign({ id: user._id }, config.secret, {
         expiresIn: '1h',
       });
       res.status(200).json(token);
@@ -41,7 +41,7 @@ router.post("/", cors(), async (req, res) => {
 router.post("/admin", cors(), async (req, res) => {
   try {
     const { email, password } = req.body;
-    const admin = await User.findOne({ email: email });
+    const admin = await User.findOne({ email: email.toLowerCase() });
     if (!admin) {
       return res.status(404).send("Email/Password is Incorrect");
     }
@@ -66,7 +66,8 @@ router.post("/admin", cors(), async (req, res) => {
 // magic link verify
 router.post("/enter", cors(), async (req, res) => {
   try {
-    const { email, link } = req.body;
+    const { link } = req.body;
+    const email = req.body.email.trim().toLowerCase()
     console.log("Enter value", email, link)
     if (!email)
       return res.status(404).json("Email is required field!");
@@ -124,7 +125,7 @@ router.post("/mobile", cors(), async (req, res) => {
     if (!validPassword) {
       return res.status(404).json("Email/Password is Incorrect");
     } else {
-      const token = jwt.sign({ id: user.userId }, config.secret, {
+      const token = jwt.sign({ id: user._id }, config.secret, {
         expiresIn: '1h',
       });
       res.status(200).json(token);

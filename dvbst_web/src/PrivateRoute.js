@@ -21,8 +21,6 @@ function PrivateRoute({ children }) {
     localStorage.getItem("token")
   }, [])
 
-  console.log(userState)
-
   return (
     <>
       {userState.getUserStatus === 'pending' && (
@@ -41,7 +39,8 @@ function PrivateRoute({ children }) {
       {userState.getUserStatus !== 'pending' && (
         <>
           {/* {authState.token ? (userState.user.approved ? children : <Navigate to="/pending" replace/>) : <Navigate to="/login" replace/>}; */}
-          {authState.token ? (userState.user?.approved ? children : <><PendingNavbar /><PendingPage /> </>) : <><Login /></>};
+          {authState.token ? children : <><Login /></>};
+          {/* {authState.token ? (userState.user?.approved ? children : <><PendingNavbar /><PendingPage /> </>) : <><Login /></>}; */}
         </>
       )}
     </>
