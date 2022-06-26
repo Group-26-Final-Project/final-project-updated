@@ -33,7 +33,7 @@ export default function Blacklist() {
         []);
 
     return (
-        <div class="min-h-screen w-full bg-white-800 flex flex-col justify-center items-center py-4 px-4 lg:px-8">
+        <div className="min-h-screen w-full bg-white-800 flex flex-col justify-center items-center py-4 px-4 lg:px-8">
             {blacklistState.getCandidatesStatus === "pending" && (
                 <div>
                     <SpinnerCircularFixed
@@ -52,7 +52,7 @@ export default function Blacklist() {
                 </div>
             )}
             {blacklistState.getCandidatesStatus !== "pending" && blacklistState.getCandidatesStatus !== "failed" && blacklistState.candidates && (
-                <div class="w-full py-4 px-4 lg:px-8 rounded-2xl bg-white-700">
+                <div className="w-full py-4 px-4 lg:px-8 rounded-2xl bg-white-700">
                     {blacklistState.candidates.length === 0 ? (
                         <div>
                             <p className='text-center text-lg'>No candidates in Blacklist</p>

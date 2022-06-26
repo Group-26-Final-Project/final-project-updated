@@ -17,18 +17,12 @@ export default function CandidateDetail() {
   console.log(candidate);
 
   const deptTypes = [
-    "Center of Biomedical Engineering (CBME)",
-    "School of Chemical and Bio Engineering (SCBE)",
-    "School of Civil & Environmental Engineering (SCEE)",
-    "School of Electrical & Computer Engineering (SECE)",
-    "School of Mechanical and Industrial Engineering (SMiE)",
-    "School of Information Technology Engineering (SITE)"
-    // "Biomedical Engineering",
-    // "Chemical Engineering",
-    // "Civil Engineering",
-    // "Electrical Engineering",
-    // "Mechanical Engineering",
-    // "Software Engineering",
+    "Biomedical Engineering",
+    "Chemical Engineering",
+    "Civil Engineering",
+    "Electrical Engineering",
+    "Mechanical Engineering",
+    "Software Engineering",
   ];
 
   const onCancel = () => {
@@ -202,7 +196,7 @@ export default function CandidateDetail() {
                   class="w-full md:w-1/3 px-3 block tracking-wide text-gray-700 text-xs font-bold my-2 mx-4"
                   for="grid-dept"
                 >
-                  School/Center
+                  Department
                 </label>
                 <input
                   class="appearance-none block w-full md:w-2/3 bg-white-200 text-sm text-gray-700 border border-gray-200 rounded py-2 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
@@ -243,38 +237,6 @@ export default function CandidateDetail() {
                   name="sect"
                   type="text"
                   value={candidate.section}
-                />
-              </div>
-              <div class="flex flex-row justify-between items-center">
-                <label
-                  class="w-full md:w-1/3 px-3  block tracking-wide text-gray-700 text-xs font-bold my-2 mx-4"
-                  for="grid-bio"
-                >
-                  Bio
-                </label>
-                <input
-                  class="appearance-none block w-full md:w-2/3  bg-white-200 text-sm text-gray-700 border border-gray-200 rounded py-2 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                  readOnly={true}
-                  id="grid-bio"
-                  name="bio"
-                  type="text"
-                  value={candidate.bio}
-                />
-              </div>
-              <div class="flex flex-row justify-between items-center">
-                <label
-                  class="w-full md:w-1/3 px-3  block tracking-wide text-gray-700 text-xs font-bold my-2 mx-4"
-                  for="grid-plans"
-                >
-                  Plans
-                </label>
-                <input
-                  class="appearance-none block w-full md:w-2/3  bg-white-200 text-sm text-gray-700 border border-gray-200 rounded py-2 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                  readOnly={true}
-                  id="grid-plans"
-                  name="plans"
-                  type="text"
-                  value={candidate.plans}
                 />
               </div>
             </div>

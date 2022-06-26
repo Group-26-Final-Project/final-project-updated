@@ -14,18 +14,12 @@ export default function Candidates() {
     const [searchQuery, setSearchQuery] = useState("")
 
     const deptTypes = [
-        "Center of Biomedical Engineering (CBME)",
-        "School of Chemical and Bio Engineering (SCBE)",
-        "School of Civil & Environmental Engineering (SCEE)",
-        "School of Electrical & Computer Engineering (SECE)",
-        "School of Mechanical and Industrial Engineering (SMiE)",
-        "School of Information Technology Engineering (SITE)"
-        // "Biomedical Engineering",
-        // "Chemical Engineering",
-        // "Civil Engineering",
-        // "Electrical Engineering",
-        // "Mechanical Engineering",
-        // "Software Engineering",
+        "Biomedical Engineering",
+        "Chemical Engineering",
+        "Civil Engineering",
+        "Electrical Engineering",
+        "Mechanical Engineering",
+        "Software Engineering",
     ];
 
     const clearSearch = () => {
@@ -60,7 +54,7 @@ export default function Candidates() {
                 accessor: "year",
             },
             {
-                Header: "School/Center",
+                Header: "Department",
                 accessor: "dept",
             },
             {
