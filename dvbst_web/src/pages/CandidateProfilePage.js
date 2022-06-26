@@ -13,12 +13,18 @@ import { getCandidate } from '../features/candidatesSlice'
 import { useDispatch, useSelector } from 'react-redux'
 
 const deptTypes = [
-    "Software Engineering",
-    "Biomedical Engineering",
-    "Chemical Engineering",
-    "Civil Engineering",
-    "Electrical Engineering",
-    "Mechanical Engineering",
+    "Center of Biomedical Engineering (CBME)",
+    "School of Chemical and Bio Engineering (SCBE)",
+    "School of Civil & Environmental Engineering (SCEE)",
+    "School of Electrical & Computer Engineering (SECE)",
+    "School of Mechanical and Industrial Engineering (SMiE)",
+    "School of Information Technology Engineering (SITE)"
+    // "Software Engineering",
+    // "Biomedical Engineering",
+    // "Chemical Engineering",
+    // "Civil Engineering",
+    // "Electrical Engineering",
+    // "Mechanical Engineering",
 ];
 
 export default function CandidateProfilePage() {
@@ -150,7 +156,7 @@ export default function CandidateProfilePage() {
                                 </Grid>
                                 <Grid item xs={3}>
                                     <Typography>
-                                        Department :
+                                        School/Center :
                                     </Typography>
                                 </Grid>
                                 <Grid item xs={9} style={{ marginBottom: "10px" }}>

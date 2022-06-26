@@ -14,12 +14,18 @@ const config = require('../config');
 const { vote } = require("../helpers/vote");
 
 const deptTypes = [
-  "Software Engineering",
-  "Biomedical Engineering",
-  "Chemical Engineering",
-  "Civil Engineering",
-  "Electrical Engineering",
-  "Mechanical Engineering",
+  "Center of Biomedical Engineering (CBME)",
+  "School of Chemical and Bio Engineering (SCBE)",
+  "School of Civil & Environmental Engineering (SCEE)",
+  "School of Electrical & Computer Engineering (SECE)",
+  "School of Mechanical and Industrial Engineering (SMiE)",
+  "School of Information Technology Engineering (SITE)"
+  // "Software Engineering",
+  // "Biomedical Engineering",
+  // "Chemical Engineering",
+  // "Civil Engineering",
+  // "Electrical Engineering",
+  // "Mechanical Engineering",
 ];
 //get all elections
 router.get("/", cors(), async (req, res, next) => {

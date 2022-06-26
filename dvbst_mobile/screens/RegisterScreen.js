@@ -65,7 +65,7 @@ const RegisterScreen = (props) => {
                 "Invalid Name (Only Upper/Lower Case alphabets  3-20 characters long)";
         }
         if (!values.dept) {
-            errors.dept = "Select Department from dropdown";
+            errors.dept = "Select School/Center from dropdown";
         }
         if (!values.section) {
             errors.section = "Select Section from dropdown";
@@ -165,20 +165,28 @@ const RegisterScreen = (props) => {
                         <Text style={styles.error}>{formErrors.phone}</Text>
                     </View>
                     <View>
-                        <Text style={styles.label}>Department</Text>
+                        <Text style={styles.label}>School/Center</Text>
                         <Dropdown
                             style={[styles.dropdown, isFocus && { borderColor: 'blue' }]}
                             placeholderStyle={styles.placeholderStyle}
                             selectedTextStyle={styles.selectedTextStyle}
                             iconStyle={styles.iconStyle}
                             data={[
-                                { label: "Biomedical Engineering", value: 0 },
-                                { label: "Chemical Engineering", value: 1 },
-                                { label: "Civil Engineering", value: 2 },
-                                { label: "Electrical Engineering", value: 3 },
-                                { label: "Mechanical Engineering", value: 4 },
-                                { label: "Software Engineering", value: 5 },
+                                {label: "Center of Biomedical Engineering (CBME)", value:0},
+                                {label: "School of Chemical and Bio Engineering (SCBE)", value:1},
+                                {label: "School of Civil & Environmental Engineering (SCEE)", value:2},
+                                {label: "School of Electrical & Computer Engineering (SECE)", value: 3},
+                                {label: "School of Mechanical and Industrial Engineering (SMiE)", value: 4},
+                                {label: "School of Information Technology Engineering (SITE)", value: 5}
                             ]}
+                            // data={[
+                            //     { label: "Biomedical Engineering", value: 0 },
+                            //     { label: "Chemical Engineering", value: 1 },
+                            //     { label: "Civil Engineering", value: 2 },
+                            //     { label: "Electrical Engineering", value: 3 },
+                            //     { label: "Mechanical Engineering", value: 4 },
+                            //     { label: "Software Engineering", value: 5 },
+                            // ]}
                             maxHeight={300}
                             name="dept"
                             labelField="label"
