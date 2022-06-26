@@ -86,6 +86,7 @@ function App() {
             <Ideas />
           </PrivateRoute>
         } />
+        
         <Route path="/auth/PreVoting" element={
           <PrivateRoute>
             <Navbar />
