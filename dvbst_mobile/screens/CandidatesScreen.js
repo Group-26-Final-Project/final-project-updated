@@ -1,89 +1,100 @@
 import React, { useEffect } from 'react'
 
-import { StyleSheet, SafeAreaView, ScrollView, View, Text, Button, ActivityIndicator } from 'react-native';
-import { FAB } from 'react-native-elements';
-import IdeaDetail from '../components/IdeaDetail';
-import SearchBar from '../components/searchbar';
-import SearchFilter from '../components/searchFilter';
-import { MaterialIcons } from "@expo/vector-icons";
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigation } from '@react-navigation/native';
-import { getIdeas } from '../features/ideasSlice';
-import { useFonts } from 'expo-font';
+import { StyleSheet, Text, View, Image, TextInput, Dimensions, TouchableOpacity, ScrollView, SafeAreaView, ActivityIndicator } from 'react-native';
+import DetailComponent from '../components/detailComponent';
+import { useDispatch, useSelector } from 'react-redux'
+import { getCandidates } from '../features/candidatesSlice';
 
-import AppLoading from 'expo-app-loading'
-
-const customFonts = {
-    poppinsLight: require('../assets/fonts/Poppins-Light.ttf'),
-}
-const IdeasScreen = (props) => {
-    const navigation = useNavigation();
+const CandidatesScreen = (props) => {
     const dispatch = useDispatch()
-    const ideasState = useSelector((state) => state.ideasState)
-    const [isLoaded] = useFonts(customFonts);
+    const userState = useSelector((state) => state.userState)
+    const candidatesState = useSelector((state) => state.candidatesState)
 
     useEffect(() => {
-        dispatch(getIdeas())
-    }, [dispatch])
-    
-    if (!isLoaded) {
-        return <AppLoading />;
-    } else {
-        return (
-            <SafeAreaView style={{ flex: 1 }}>
-                {ideasState.getIdeasStatus === "pending" && (
-                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                        <ActivityIndicator size="large" color='#00d05a' />
-                    </View>
-                )}
-                {ideasState.getIdeasStatus === "failed" && (
-                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                        <Text style={styles.text}>Ooops something went wrong</Text>
-                        <Text style={styles.text}>Ideas {ideasState.getIdeasError.message}</Text>
-                        <Button onPress={()=>dispatch(getIdeas())} title="Refresh">Refresh</Button>
-                    </View>
-                )}
-                {ideasState.getIdeasStatus === "success" && (
-                    <View style={styles.container}>
-                        {ideasState.ideas.length == 0 ? (
-                            <View style={{ flex: 3, justifyContent: 'center', alignItems: 'center' }}>
-                                <Text style={styles.text}>No Ideas Posted Yet!</Text>
-                            </View>
-                        ) :
-                            <View>
-                                <ScrollView style={{marginBottom: 120}}>
-                                    {ideasState.ideas.map((idea) => (
-                                        <IdeaDetail
-                                            key={idea._id}
-                                            id={idea._id}
-                                            userName={idea.username}
-                                            title={idea.title}
-                                            description={idea.description}
-                                            voteCount={idea.likeCount}
-                                            likes={idea.likes}
-                                        />
-                                    ))}
-                                </ScrollView>
-                            </View>
-                        }
-                        <FAB onPress={() => navigation.navigate("Suggestion")} size='large' color='#00d05a' placement='right' icon={<MaterialIcons color='white' name='add' size={20} />} />
-                    </View>
-                )}
-            </SafeAreaView>
-        );
-    }
+        dispatch(getCandidates())
+    }, [dispatch]);
+
+    return (
+        <SafeAreaView style={styles.container}>
+            {(userState.getUserStatus === 'pending' || candidatesState.getCandidatesStatus === 'pending') && (
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                    <ActivityIndicator size="large" color='#00d05a' />
+                </View>
+            )}
+            {(userState.getUserStatus === 'failed' || candidatesState.getCandidatesStatus === 'failed') && (
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                    <Text style={styles.text}>Ooops something went wrong {userState.getUserError} {votingState.getMyElectionError}</Text>
+                </View>
+            )}
+            {(userState.getUserStatus === 'success' && candidatesState.getCandidatesStatus === 'success') && (
+                < ScrollView >
+                    {
+                        candidatesState.candidates.map((candidate) => (
+                            <DetailComponent
+                                key={candidate._id}
+                                id={candidate._id}
+                                name={candidate.fullName}
+                                dept={candidate.dept}
+                                year={candidate.year}
+                                section={candidate.section} />
+                        ))
+                    }
+                </ScrollView>
+            )
+            }
+        </SafeAreaView >
+    );
 }
 
 const styles = StyleSheet.create({
     container: {
         paddingHorizontal: 10,
-        paddingVertical: 40,
+        paddingTop: 40,
         backgroundColor: '#fff',
-        flex: 1,
+        flex: 1
     },
-    text: {
-        fontSize: 16,
-        fontFamily: 'poppinsRegular'
-    }
+    candiContainer: {
+        flexDirection: 'row',
+        padding: 15,
+        backgroundColor: '#fff',
+        borderRadius: 10
+    },
+    imgcontainer: {
+        height: Dimensions.get('window').height * 0.175,
+        width: Dimensions.get('window').height * 0.125,
+        marginRight: 15
+    },
+    image: {
+        flex: 1,
+        borderRadius: 15,
+        resizeMode: 'cover',
+        height: undefined,
+        width: undefined,
+        paddingHorizontal: 10,
+    },
+    description: {
+        flex: 4
+    },
+    name: {
+        fontFamily: 'poppinsMedium',
+        fontSize: 20,
+    },
+    detail: {
+        fontFamily: 'poppinsRegular',
+        fontSize: 13,
+        color: '#5B5B5B'
+    },
+    button: {
+        alignSelf: 'flex-end',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#fff',
+        borderColor: '#00d05a',
+        borderWidth: 2,
+        width: Dimensions.get('window').width * 0.25,
+        height: Dimensions.get('window').height * 0.05,
+        borderRadius: 12
+    },
 });
-export default IdeasScreen;
+
+export default CandidatesScreen;

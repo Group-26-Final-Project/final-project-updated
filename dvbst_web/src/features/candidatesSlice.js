@@ -51,12 +51,14 @@ const candidatesSlice = createSlice({
         },
         [getCandidate.fulfilled]: (state, action) => {
             return {
+                ...state,
                 candidate: action.payload,
                 getCandidateStatus: "success"
             }
         },
         [getCandidate.rejected]: (state, action) => {
             return {
+                ...state,
                 getCandidateStatus: "failed",
                 getCandidateError: action.payload,
             }
@@ -69,12 +71,14 @@ const candidatesSlice = createSlice({
         },
         [getCandidates.fulfilled]: (state, action) => {
             return {
+                ...state,
                 candidates: action.payload,
                 getCandidatesStatus: "success"
             }
         },
         [getCandidates.rejected]: (state, action) => {
             return {
+                ...state,
                 getCandidatesStatus: "failed",
                 getCandidatesError: action.payload,
             }

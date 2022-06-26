@@ -122,7 +122,7 @@ function VotePage() {
                   <h3>Ooops something went wrong</h3>
                 </Grid>
               )}
-              {!(
+              {/* {!(
                 userState.getUserStatus === "pending" ||
                 votingState.getMyElectionStatus === "pending"
               ) &&
@@ -130,12 +130,12 @@ function VotePage() {
                   <Grid container justifyContent="center">
                     <Typography>You are a candidate, you cant vote!</Typography>
                   </Grid>
-                )}
+                )} */}
               {!(
                 userState.getUserStatus === "pending" ||
                 votingState.getMyElectionStatus === "pending"
               ) &&
-                userState.user.role === "voter" &&
+                // userState.user.role === "voter" &&
                 votingState.election &&
                 votingState.election.candidates && 
                 votingState.voterBalance && (

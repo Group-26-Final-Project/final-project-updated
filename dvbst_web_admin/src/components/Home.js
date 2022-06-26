@@ -77,7 +77,7 @@ export default function Home() {
   }, [fetchReports]);
 
   return (
-    <div className="h-screen w-full bg-white-800 flex flex-col overflow-auto justify-center items-center py-8 px-8 lg:px-16">
+    <div className="w-full bg-white-800 flex flex-col overflow-y-hidden justify-center items-center my-4 py-8 px-8 lg:px-16">
       <div className="w-full bg-[#2F313D] grid grid-cols-3 gap-y-10 py-8 px-4 lg:px-8 rounded-xl">
         <div className="px-1">
           <h3 className="text-md text-white font-body font-semibold">
@@ -146,7 +146,7 @@ export default function Home() {
           </p>
         </div>
       </div>
-      <div className="h-[500px] w-full flex py-8 px-4 mt-8 lg:px-8 rounded-2xl bg-white-700">
+      <div className="h-[400px] w-full flex px-4 lg:px-8 rounded-2xl bg-white-700">
         <CustomChart reports={reports} />
       </div>
     </div>

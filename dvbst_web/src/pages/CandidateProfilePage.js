@@ -30,7 +30,7 @@ export default function CandidateProfilePage() {
   const userState = useSelector((state) => state.userState);
   const candidateId = location.state || userState.user._id;
 
-  console.log("Candidate ID", userState.user._id);
+  // console.log("Candidate ID", userState.user._id);
   const onCancel = () => {
     navigate(-1);
   };
@@ -82,7 +82,7 @@ export default function CandidateProfilePage() {
                   <Box item mb={2}>
                     <Avatar
                       className="profilePic"
-                      src="https://randomuser.me/api/portraits/women/81.jpg"
+                      src="https://upo0pf2qzrb5.usemoralis.com:2053/server/files/l2iSil7CMHrhypcuog84VP1RgOkpDJ7QJC93VX5d/e45cf65395b140d256287c00e2117a85_photo_2022-06-26_14-57-53.jpg"
                       style={{
                         width: "120px",
                         height: "120px",

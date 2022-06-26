@@ -136,8 +136,10 @@ function App() {
           </div>
         )}
         <div className="flex flex-col w-full">
-          <Navbar />
           <div className="flex-1 h-screen md:overflow-y-auto">
+            <PrivateRoute>
+              <Navbar />
+            </PrivateRoute>
             <Routes>
               <Route
                 path="/"
@@ -152,6 +154,8 @@ function App() {
                 path="/voters"
                 element={
                   <PrivateRoute>
+                    {/* <Navbar /> */}
+
                     <Voters />
                   </PrivateRoute>
                 }

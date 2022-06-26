@@ -5,9 +5,22 @@ import { useFonts } from 'expo-font';
 import AppLoading from 'expo-app-loading';
 import { StyleSheet, Text, View, Image, Dimensions, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { useDispatch, useSelector } from 'react-redux'
-import CandidatesScreen from '../screens/CandidateScreen';
-import { voteCandidate } from '../features/votingSlice';
+
+const deptTypes = [
+    "Center of Biomedical Engineering (CBME)",
+    "School of Chemical and Bio Engineering (SCBE)",
+    "School of Civil & Environmental Engineering (SCEE)",
+    "School of Electrical & Computer Engineering (SECE)",
+    "School of Mechanical and Industrial Engineering (SMiE)",
+    "School of Information Technology Engineering (SITE)"
+    // "Biomedical Engineering",
+    // "Chemical Engineering",
+    // "Civil Engineering",
+    // "Electrical Engineering",
+    // "Mechanical Engineering",
+    // "Software Engineering",
+];
+
 
 const customFonts = {
     poppinsRegular: require('../assets/fonts/Poppins-Regular.ttf'),
@@ -15,36 +28,15 @@ const customFonts = {
     poppinsBold: require('../assets/fonts/Poppins-Bold.ttf'),
     poppinsSemi: require('../assets/fonts/Poppins-SemiBold.ttf'),
 }
-const VoteComponent = (props) => {
+const DetailComponent = (props) => {
     const navigation = useNavigation();
     const [isLoaded] = useFonts(customFonts);
-    const dispatch = useDispatch()
-    const userState = useSelector((state) => state.userState)
 
     const viewProfile = () => {
-        navigation.navigate("Candidate", {
+        navigation.navigate("CandidateDetail", {
             params: { candidateId: props.id },
         })
     };
-
-    const vote = async () => {
-        dispatch(
-            voteCandidate({
-                electionId: props.electionId,
-                candidateId: props.id,
-                voterId: userState.user._id,
-            })
-        )
-            .unwrap()
-            .then((response) => {
-                navigation.navigate("Results")
-            })
-            .catch((error) => {
-                console.log("Error", error)
-                alert(error);
-            });
-    };
-
 
     if (!isLoaded) {
         return <AppLoading />;
@@ -55,17 +47,14 @@ const VoteComponent = (props) => {
                     <View style={styles.imgcontainer}>
                         <Image
                             style={styles.image}
-                            source={{uri:'https://upo0pf2qzrb5.usemoralis.com:2053/server/files/l2iSil7CMHrhypcuog84VP1RgOkpDJ7QJC93VX5d/e45cf65395b140d256287c00e2117a85_photo_2022-06-26_14-57-53.jpg'}}
+                            source={{uri: 'https://upo0pf2qzrb5.usemoralis.com:2053/server/files/l2iSil7CMHrhypcuog84VP1RgOkpDJ7QJC93VX5d/e45cf65395b140d256287c00e2117a85_photo_2022-06-26_14-57-53.jpg'}}
                         />
                     </View>
                     <View style={styles.description}>
                         <Text style={styles.name}>{props.name}</Text>
-                        <Text style={styles.detail}>School/Center: {props.dept}</Text>
+                        <Text style={styles.detail}>{deptTypes[props.dept]}</Text>
                         <Text style={styles.detail}>Year: {props.year}</Text>
                         <Text style={styles.detail}>Section: {props.section}</Text>
-                        <TouchableOpacity onPress={vote} style={styles.button}>
-                            <Text style={{ color: '#00d05a', fontSize: 16 }}>Vote</Text>
-                        </TouchableOpacity>
                     </View>
                 </View>
             </TouchableOpacity>
@@ -118,4 +107,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default VoteComponent;
+export default DetailComponent;
