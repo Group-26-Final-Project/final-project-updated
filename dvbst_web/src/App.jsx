@@ -86,13 +86,19 @@ function App() {
             <Ideas />
           </PrivateRoute>
         } />
-        
-        <Route path="/auth/PreVoting" element={
+         <Route path="/auth/PreVoting" element={
+            <PrivateRoute>
+              <Navbar />
+              <PreVoting />
+            </PrivateRoute>
+          } />
+        {/* <Route path="/auth/PreVoting" element={
           <PrivateRoute>
             <Navbar />
             <PreVoting />
           </PrivateRoute>
-        } />
+        } /> */}
+
         <Route path="/candidate_list" element={
           <PrivateRoute>
             <Navbar />
