@@ -6,7 +6,7 @@ const initMoralis = require("../helpers/initMoralis");
 const AAiTVoteToken = require("../build/contracts/AAiTVoteToken.json");
 const AAiTVoteTokenAddress = process.env.AAiTVOTETOKEN_CONTRACT_ADDRESS;
 const Moralis = require("moralis/node");
-const { generateElections } = require("./createElection");
+const { generateElections, createElection } = require("./createElection");
 const initContract = require("./initContract");
 const initToken = require("./initToken");
 const mintAndSendTokens = require("./mintAndSendTokens");
@@ -18,6 +18,8 @@ const {
 } = require("./endOngoingElections");
 const createMockUsers = require("./createUsers");
 const Election = require("../models/election");
+const Voter = require("../models/voter");
+const Candidate = require("../models/candidate");
 
 // const Phase = require("../models/phase");
 
@@ -220,7 +222,7 @@ async function extendElection(electionName, duration) {
         { endDate: duration }
       );
       // also extend overall phase by duration plus 1 day
-      console.log(`election extension successful`);      
+      console.log(`election extension successful`);
     });
   });
 }
@@ -231,12 +233,9 @@ async function startElection(electionName) {
   await contract.startElection(electionName).then(async (tx) => {
     console.log("waiting to mine election start");
     await tx.wait().then(async (txReceipt) => {
-      await Election.findOneAndUpdate(
-        { name: electionName },
-        { status: 1 }
-      );
+      await Election.findOneAndUpdate({ name: electionName }, { status: 1 });
       console.log(`election start successful`);
-      
+
       // const phase = await getLocalPhase();
       // console.log(phase.phaseName);
     });
@@ -249,10 +248,7 @@ async function pauseElection(electionName) {
   await contract.pauseElection(electionName).then(async (tx) => {
     console.log("waiting to mine election pause");
     await tx.wait().then(async (txReceipt) => {
-      await Election.findOneAndUpdate(
-        { name: electionName },
-        { status: 0 }
-      );
+      await Election.findOneAndUpdate({ name: electionName }, { status: 0 });
       console.log(`election pause successful`);
       // const phase = await getLocalPhase();
       // console.log(phase.phaseName);
@@ -266,10 +262,7 @@ async function endElection(electionName) {
   await contract.endElection(electionName).then(async (tx) => {
     console.log("waiting to mine election end");
     await tx.wait().then(async (txReceipt) => {
-      await Election.findOneAndUpdate(
-        { name: electionName },
-        { status: 2 }
-      );
+      await Election.findOneAndUpdate({ name: electionName }, { status: 2 });
       console.log(`election end successful`);
       // const phase = await getLocalPhase();
       // console.log(phase.phaseName);
@@ -280,21 +273,117 @@ async function endElection(electionName) {
 async function restartElection(electionName, duration) {
   const contract = await initContract();
 
-  await contract.removeElection(electionName).then(async (tx) => {
-    console.log("waiting to mine election restart");
-    await tx.wait().then(async (txReceipt) => {
-      // remove votes remaining for specific voters
-      // burn token for specific voters and candidates
-      // get election from mongo and delete it
-      // create new election with same data
-      // remint tokens for specific voters
+  const tx = await contract.removeElection(electionName);
+  // .then(async (tx) => {
+  console.log("waiting to mine election restart");
+  await tx.wait();
+  // .then(async (txReceipt) => {
+  const election = await Election.findOne({ name: electionName });
+  const voterAddresses = await getVoterAddresses(election);
+  // remove votes remaining for specific voters
 
-      console.log(`election restart successful`);
-      
-    });
+  const remainingVotesRemoveTx = await contract.removeVotesRemainingForVoters(
+    voterAddresses
+  );
+  await remainingVotesRemoveTx.wait().then(async (txReceipt) => {
+    console.log(`remaining votes removed`);
   });
+  // console.log("removed votes remaining");
+  // burn token for specific voters and candidates
+  const candidateAddresses = await getCandidateAddresses(election);
+  var burnableAddresses = voterAddresses.concat(candidateAddresses);
+  const burnAllTokensTx = await contract.burnAllTokens(burnableAddresses);
+  await burnAllTokensTx.wait();
+  console.log("burn all coresponding tokens");
+
+  // get election from mongo and delete it
+
+  await Election.deleteOne({ name: electionName });
+  console.log("removed local election");
+
+  await removeRealTimeResult(electionName);
+  await createElection(
+    election.name,
+    election.year,
+    election.section,
+    election.department,
+    duration,
+    election.phase,
+    contract,
+    candidateAddresses
+  );
+
+  // create new election with same data
+
+  const transaction = await contract.mintAndSendTokens(voterAddresses);
+  const transactionReceipt = await transaction.wait();
+  if (transactionReceipt.status !== 1) {
+    console.log("Error", transactionReceipt);
+  } else {
+    console.log(`mint and successful`);
+  }
+  // remint tokens for specific voters
+
+  console.log(`election restart successful`);
+  const result = await Election.findOne({ name: electionName });
+  return result;
+  // });
+  // });
 }
 
+async function getCandidateAddresses(election) {
+  var candidateAddresses = [];
+  for (var i = 0; i < election.candidates.length; i++) {
+    candidateAddresses.push(election.candidates[i].uniqueID);
+  }
+  return candidateAddresses;
+}
+
+async function getVoterAddresses(election) {
+  var voters = [];
+  var voterAddresses = [];
+  if (election.section === 0 && election.year === 0) {
+    console.log("abt to get dept election voters");
+    voters = await Voter.find({
+      dept: election.department,
+    });
+  } else if (election.section === 0) {
+    console.log("abt to get year election voters");
+    voters = await Voter.find({
+      dept: election.department,
+      year: election.year,
+    });
+  } else if (election.section !== 0 && election.year !== 0) {
+    console.log("abt to get section election voters");
+    voters = await Voter.find({
+      dept: election.department,
+      year: election.year,
+      section: election.section,
+    });
+  }
+
+  if (voters.length > 0) {
+    for (var i = 0; i < voters.length; i++) {
+      voterAddresses.push(voters[i].uniqueID);
+    }
+  }
+  return voterAddresses;
+}
+
+async function removeRealTimeResult(electionName) {
+  try {
+    const syncTable = Moralis.Object.extend("ResultRTTrial");
+    const query = new Moralis.Query(syncTable);
+    query.equalTo("electionName", electionName);
+    var result = await query.find();
+    var electionResult = result[0];
+    await electionResult.destroy().then(() => {
+      console.log("removed real time result");
+    });
+  } catch (e) {
+    console.log(e);
+  }
+}
 // async function setLocalPhase(duration) {
 //   // await Moralis.executeFunction({
 //   //   contractAddress: AAiTElectionMukeraAddress,
@@ -339,7 +428,14 @@ async function restartElection(electionName, duration) {
 //     });
 //   });
 
-  // console.log("new local phase: ", await getLocalPhase());
-  // console.log("new onchain phase: ", await contract.getCurrentPhase());
+// console.log("new local phase: ", await getLocalPhase());
+// console.log("new onchain phase: ", await contract.getCurrentPhase());
 
-module.exports = { getElectionStatus, extendElection, startElection, pauseElection, endElection, restartElection };
+module.exports = {
+  getElectionStatus,
+  extendElection,
+  startElection,
+  pauseElection,
+  endElection,
+  restartElection,
+};

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
-import UsersTable, { Detail } from "./VotersTable";
+import UsersTable, { Department, Detail } from "./VotersTable";
 import axios from "axios";
 import { useDispatch, useSelector } from 'react-redux';
 import { AiOutlineClose } from "react-icons/ai";
@@ -54,6 +54,7 @@ export default function Voters() {
       {
         Header: "Department",
         accessor: "dept",
+        Cell: Department
       },
       {
         Header: "Year",

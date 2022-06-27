@@ -74,12 +74,13 @@ export const endElection = createAsyncThunk(
 
 export const extendElection = createAsyncThunk(
   "election/extendElection",
-  async ({ id, duration }, { rejectWithValue }) => {
+  async (req, { rejectWithValue }) => {
     try {
+      var duration = req.duration;
+
       await timeout(1000);
-      const response = await CustomAxios.post("/electionPhase/extend/" + id, {
-        duration,
-      });
+      console.log(req);
+      const response = await CustomAxios.post("/electionPhase/extend/" + req.id, {duration});
       return response.data;
     } catch (err) {
       return rejectWithValue(err.response.data);
@@ -89,12 +90,11 @@ export const extendElection = createAsyncThunk(
 
 export const restartElection = createAsyncThunk(
   "election/restartElection",
-  async ({ id, duration }, { rejectWithValue }) => {
+  async (req, { rejectWithValue }) => {
     try {
+      var duration = req.duration;
       await timeout(1000);
-      const response = await CustomAxios.post("/electionPhase/restart/" + id, {
-        duration,
-      });
+      const response = await CustomAxios.post("/electionPhase/restart/" + req.id, {duration});
       return response.data;
     } catch (err) {
       return rejectWithValue(err.response.data);

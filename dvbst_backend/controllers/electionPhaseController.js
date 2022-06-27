@@ -112,6 +112,7 @@ router.post("/end/:id", cors(), async (req, res, next) => {
 router.post("/extend/:id", cors(), async (req, res, next) => {
   try {
     console.log("am abt to extend");
+    console.log("req.body: ", req.body.duration);
     var election = await Election.findById(req.params.id);
     await extendElection(election.name, req.body.duration);
     const electionStatus = await getElectionStatus(election.name);
@@ -138,9 +139,9 @@ router.post("/restart/:id", cors(), async (req, res, next) => {
   try {
     console.log("am abt to extend");
     var election = await Election.findById(req.params.id);
-    await restartElection(election.name, req.body.duration);
+    election = await restartElection(election.name, req.body.duration);
     const electionStatus = await getElectionStatus(election.name);
-    election = await Election.findById(req.params.id);
+    // election = await Election.findById(req.params.id);
 
     res.send({
       status: "success",

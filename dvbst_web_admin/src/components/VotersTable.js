@@ -138,6 +138,28 @@ const VotersTable = ({ columns, data, childFunc }) => {
 
 export default VotersTable
 
+
+export function Department({ value }) {
+    const deptTypes = [
+        "Center of Biomedical Engineering (CBME)",
+        "School of Chemical and Bio Engineering (SCBE)",
+        "School of Civil & Environmental Engineering (SCEE)",
+        "School of Electrical & Computer Engineering (SECE)",
+        "School of Mechanical and Industrial Engineering (SMiE)",
+        "School of Information Technology Engineering (SITE)"
+    ]
+    const result = (
+        <div className='flex flex-row'>
+            {deptTypes[value]}
+        </div>
+    )
+
+    return (
+        <span>
+            {result}
+        </span>
+    )
+}
 // export function Detail({ value }) {
 //     // const result = (value === 1) ? <ImLock /> : <ImUnlocked />;
 //     const result = <a href="?" class="text-blue-600 dark:text-blue-500 hover:underline">Details</a>

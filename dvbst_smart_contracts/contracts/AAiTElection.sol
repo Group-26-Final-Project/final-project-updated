@@ -633,6 +633,8 @@ contract AAiTElection {
     }
 
     function removeElection(string memory electionName) public onlyOwner {        
+        require(findElectionByName(electionName), "Election Does Not Exist");
+
         uint256 rowToDelete = electionStructsMapping[electionName].index;
         string memory keyToMove = electionIndex[electionIndex.length - 1];
         electionIndex[rowToDelete] = keyToMove;

@@ -3,6 +3,7 @@ const router = express.Router()
 const auth = require('../middleware/auth');
 const hasRole = require('../middleware/hasRole');
 const Candidate = require('../models/candidate')
+const Election = require('../models/election')
 const Pending  = require("../models/pending");
 const Voter = require('../models/voter')
 const User = require('../models/user')
@@ -87,7 +88,9 @@ router.patch("/complete/:id", cors(), async function (req, res, next) {
 router.delete("/:id", cors(), async function (req, res, next) {
   try {
     console.log("am here");
+    console.log(req.params.id);
     const deletedCandidate = await Candidate.findByIdAndDelete(req.params.id);
+    await Election.updateMany({}, { $pull: { candidates: { _id: req.params.id } } });
     await blacklistCandidate(deletedCandidate.uniqueID);
     await User.deleteOne({userId: req.params.id});
     const blacklist = new Blacklist({
@@ -96,7 +99,7 @@ router.delete("/:id", cors(), async function (req, res, next) {
       studId: deletedCandidate.id
     })
     const newBlacklist = await blacklist.save()
-    res.send(newBlacklist);
+    res.send(newBlacklist).status(200);
   } catch (error) {
     res.status(400).json({ message: error.message });
   }

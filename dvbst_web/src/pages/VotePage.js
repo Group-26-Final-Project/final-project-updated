@@ -10,6 +10,7 @@ import {
   getMyElection,
 } from "../features/votingSlice";
 import { SpinnerCircularFixed } from "spinners-react";
+import { useNavigate } from "react-router-dom";
 
 const isEqual = (...objects) =>
   objects.every((obj) => JSON.stringify(obj) === JSON.stringify(objects[0]));
@@ -20,6 +21,7 @@ function VotePage() {
   const userState = useSelector((state) => state.userState);
   const votingState = useSelector((state) => state.votingState);
   const [remainingVote, setRemainingVote] = React.useState(0);
+  const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(getMyElection());
@@ -65,33 +67,95 @@ function VotePage() {
               <Grid container direction="row" justifyContent="center">
                 {/* <Typography variant='h4' className={classes.my_typogrphy}>Time Remaining </Typography> */}
                 {/* <Typography variant='h4' className={classes.my_typogrphy}>{timerDays} : {timerHours} : {timerMinutes} : {timerSeconds}</Typography> */}
+
+                {votingState.election && (
+                  <>
+                    {votingState.election.status === 0 && (
+                      <Grid
+                        container
+                        direction="column"
+                        justifyContent="center"
+                        aligntItems="center"
+                      >
+                        <Typography
+                          className={classes.my_typogrphy}
+                          variant="h4"
+                        >
+                          This Election has been paused. Please wait patiently
+                          until it resumes!!
+                        </Typography>
+                        <div class="bg-[#00D05A] float-right text-white py-3 mt-7 ml-2 mr-2 px-4 rounded-xl font-body font-light center text-sm text-center">
+                          <button
+                            onClick={() => {
+                              navigate("/auth/Result");
+                            }}
+                          >
+                            Go To Results
+                          </button>
+                        </div>
+                      </Grid>
+                    )}
+                    {votingState.election.status === 2 && (
+                      <Grid
+                        container
+                        direction="column"
+                        justifyContent="center"
+                        aligntItems="center"
+                      >
+                        <Typography
+                          className={classes.my_typogrphy}
+                          variant="h4"
+                        >
+                          This Election has Ended.
+                        </Typography>
+                        <div class="bg-[#00D05A] float-right text-white py-3 mt-7 ml-2 mr-2 px-4 rounded-xl font-body font-light center text-sm text-center">
+                          <button
+                            onClick={() => {
+                              navigate("/auth/Result");
+                            }}
+                          >
+                            Go To Results
+                          </button>
+                        </div>
+                      </Grid>
+                    )}
+                  </>
+                )}
+
                 {votingState.getCurrentPhaseStatus === "success" &&
                   votingState.currentPhase &&
-                  votingState.voterBalance && (
-                    <Grid container direction="row" justifyContent="center">
-                      <Countdown
-                        expiryTimestamp={Number(
-                          votingState.currentPhase[2].hex
-                        )}
-                        votesRemaining={Number(votingState.voterBalance.hex) === 0
-                          ? 2
-                          : Number(votingState.voterBalance.hex) >= 2
-                          ? 0
-                          : 1}
-                      />
-                    </Grid>
+                  votingState.voterBalance &&
+                  votingState.getMyElectionStatus === "success" && (
+                    <>
+                      {votingState.election.status === 1 && (
+                        <Grid container direction="row" justifyContent="center">
+                          <Countdown
+                            expiryTimestamp={votingState.election.endDate}
+                            votesRemaining={
+                              Number(votingState.voterBalance.hex) === 0
+                                ? 2
+                                : Number(votingState.voterBalance.hex) >= 2
+                                ? 0
+                                : 1
+                            }
+                          />
+                        </Grid>
+                      )}
+                    </>
                   )}
-                <Grid
-                  item
-                  xs={8}
-                  sm={8}
-                  justifyContent="center"
-                  alignContent="center"
-                >
-                  <Typography className={classes.my_typogrphy} variant="h4">
-                    {votingState.election ? votingState.election.name : ""}{" "}
-                  </Typography>
-                </Grid>
+                {votingState.getMyElectionStatus === "success" && votingState.election.status === 1 && (
+                  <Grid
+                    item
+                    xs={8}
+                    sm={8}
+                    justifyContent="center"
+                    alignContent="center"
+                  >
+                    <Typography className={classes.my_typogrphy} variant="h4">
+                      {votingState.election ? votingState.election.name : ""}{" "}
+                    </Typography>
+                  </Grid>
+                )}
               </Grid>
             </Grid>
           </Grid>
@@ -137,8 +201,9 @@ function VotePage() {
               ) &&
                 // userState.user.role === "voter" &&
                 votingState.election &&
-                votingState.election.candidates && 
-                votingState.voterBalance && (
+                votingState.election.candidates &&
+                votingState.voterBalance &&
+                votingState.election.status === 1 && (
                   <>
                     {votingState.election.candidates.map((candidate) => (
                       <CandidatesList
@@ -151,7 +216,7 @@ function VotePage() {
                         section={candidate.section}
                         electionId={votingState.election._id}
                         votesRemaining={
-                           Number(votingState.voterBalance.hex) === 0
+                          Number(votingState.voterBalance.hex) === 0
                             ? 2
                             : Number(votingState.voterBalance.hex) >= 2
                             ? 0

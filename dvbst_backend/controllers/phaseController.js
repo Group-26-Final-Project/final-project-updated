@@ -65,6 +65,7 @@ router.get("/", cors(), async (req, res, next) => {
    console.log("am here");
     const currentPhase = await getPhase();
     console.log("current onchain Phase: ", currentPhase.phaseName);
+    console.log("current onchain endDate: ", currentPhase.end);
     // await mockVoting(currentPhase.phaseName);
 
     // for (let index = 3; index < constants.VOTERS.length; index++) {

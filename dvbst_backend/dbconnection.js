@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const logger = require("./helpers/logger");
 // mongoose.connect('mongodb+srv://dannybo:chelsea123%23@sqat-cluster.rakex.mongodb.net/?retryWrites=true&w=majority',{
 //     useNewUrlParser:true,
 //     useUnifiedTopology:true,
@@ -15,3 +16,4 @@ mongoose
     useUnifiedTopology: true,
   })
   .then((db) => console.log("connection established successfully"));
+logger.info("Server connected to DB Successfuly");

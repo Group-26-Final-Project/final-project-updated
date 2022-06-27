@@ -88,7 +88,7 @@ async function createMockVoters() {
     const gname = `Voter${i + 1}`;
     const email = `Voter${i + 1}@gmail.com`;
     const phone = `${Math.floor(Math.random() * 666666) + 999999}`;
-    const id = `ATR/${Math.floor(Math.random() * 6666) + 9999}/10`;
+    const id = `ATR/${Math.floor(Math.random() * 6666) + 3333}/10`;
     const dept = Math.floor(Math.random() * 2);
     const year = Math.floor(Math.random() * 2) + 1;
     const section = Math.floor(Math.random() * 2) + 1;

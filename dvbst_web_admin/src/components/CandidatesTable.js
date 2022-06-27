@@ -180,3 +180,25 @@ export function Detail({ value }) {
         </span>
     )
 }
+
+export function Department({ value }) {
+    const deptTypes = [
+        "Center of Biomedical Engineering (CBME)",
+        "School of Chemical and Bio Engineering (SCBE)",
+        "School of Civil & Environmental Engineering (SCEE)",
+        "School of Electrical & Computer Engineering (SECE)",
+        "School of Mechanical and Industrial Engineering (SMiE)",
+        "School of Information Technology Engineering (SITE)"
+    ]
+    const result = (
+        <div className='flex flex-row'>
+            {deptTypes[value]}
+        </div>
+    )
+
+    return (
+        <span>
+            {result}
+        </span>
+    )
+}
