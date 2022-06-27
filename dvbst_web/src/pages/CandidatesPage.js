@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { SpinnerCircularFixed } from "spinners-react";
 import { FaChevronDown } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import AccordionLayout from '../components/AccordionLayout';
 import { getCandidates } from '../features/candidatesSlice';
 
 export default function CandidatesPage() {

@@ -30,7 +30,7 @@ router.post("/", cors(), async (req, res) => {
 
       return res.status(404).send("Email/Password is Incorrect");
         } else {
-      const token = jwt.sign({ id: user.userId }, config.secret, {
+      const token = jwt.sign({ id: user._id }, config.secret, {
         expiresIn: '1h',
       });
       res.status(200).json(token);
@@ -119,7 +119,7 @@ router.post("/enter", cors(), async (req, res) => {
           { magicLinkExpired: true }
         );
         res.status(200).json(token);
-    return logger.ifo(`200 || ${res.statusMessage} - User Login Succesful`);
+    return logger.info(`200 || ${res.statusMessage} - User Login Succesful`);
 
       } catch {
 
@@ -133,7 +133,7 @@ router.post("/enter", cors(), async (req, res) => {
 
     }
   } catch (error) {
-    return res.status(500).send('Plese try again , "Can not Login"');
+    res.status(500).send('Plese try again , "Can not Login"');
     return logger.error(`500 || ${res.statusMessage} - - ${req.originalUrl} - ${req.method} User Login Unsuccessful`);
 
   }
@@ -164,7 +164,7 @@ router.post("/mobile", cors(), async (req, res) => {
         expiresIn: '1h',
       });
       res.status(200).json(token);
-    return logger.ifo(`200 || ${res.statusMessage} - User Login Succesful`);
+    return logger.info(`200 || ${res.statusMessage} - User Login Succesful`);
 
     }
   } catch (e) {
@@ -228,7 +228,7 @@ router.post("/verify", cors(), async (req, res) => {
 
 router.post("/logout", auth, hasRole(["admin", "voter", "candidate"]), function (req, res) {
   res.status(200).send({ auth: false, token: null });
-  logger.ifo(`200 || ${res.statusMessage} - User Logout Succesful`);
+  logger.info(`200 || ${res.statusMessage} - User Logout Succesful`);
 
 });
 
