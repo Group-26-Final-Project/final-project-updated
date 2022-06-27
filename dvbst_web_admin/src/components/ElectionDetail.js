@@ -393,8 +393,8 @@ export default function ElectionDetail() {
                         <h2>Enter an Extension Date</h2>
                         <input
                           //   ref={datePickerRef}
-                          min="2022-06-25"
-                          max="2022-06-30"
+                          min="2022-06-28"
+                          max="2022-07-10"
                           type={"date"}
                           value={value}
                           onChange={async (e) => {
@@ -429,8 +429,8 @@ export default function ElectionDetail() {
                         <h4>Select End Date</h4>
                         <input
                           //   ref={datePickerRef}
-                          min="2022-06-25"
-                          max="2022-06-30"
+                          min="2022-06-28"
+                          max="2022-07-10"
                           type={"date"}
                           value={value}
                           onChange={async (e) => {

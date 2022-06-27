@@ -112,12 +112,16 @@ router.post("/", cors(), async (req, res, next) => {
       message: "phase changed",
       data: currentPhase,
     });
+    return logger.info(`200 || ${res.statusMessage} Phase change Successful `);
+
   } catch (e) {
     res.status(500).json({
       status: "err",
       code: 500,
       message: e.message,
     });
+    return logger.error(`200 || ${res.statusMessage} Phase change Failed `);
+
   }
 });
 
@@ -135,12 +139,16 @@ router.post("/extend", cors(), async (req, res, next) => {
       message: "phase extended",
       data: currentPhase,
     });
+    return logger.info(`200 || ${res.statusMessage} Phase extend Successful `);
+
   } catch (e) {
     res.status(500).json({
       status: "err",
       code: 500,
       message: e.message,
     });
+    return logger.error(`200 || ${res.statusMessage} Phase extend failed `);
+
   }
 });
 

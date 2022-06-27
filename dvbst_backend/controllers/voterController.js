@@ -7,6 +7,7 @@ const User = require("../models/user");
 const bcrypt = require("bcryptjs");
 var cors = require("cors");
 const generateAddress = require('../helpers/generateAddress')
+const logger = require("../helpers/logger");
 
 //get all voters
 router.get("/", cors(), async (req, res, next) => {

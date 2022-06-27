@@ -214,13 +214,13 @@ export default function Phase() {
                   >
                     Extend Phase
                   </button>
-                  <button
+                  {/* <button
                     class="bg-[#00D05A] text-white ml-10 mt-5 p-5 rounded-xl font-body font-light center text-center"
                     onClick={handleOpen}
                     value="change"
                   >
                     Revert Back To
-                  </button>
+                  </button> */}
                   <Modal
                     aria-labelledby="transition-modal-title"
                     aria-describedby="transition-modal-description"
@@ -238,8 +238,8 @@ export default function Phase() {
                         <h2>Enter an Extension Date</h2>
                         <input
                           //   ref={datePickerRef}
-                          min="2022-06-25"
-                          max="2022-06-30"
+                          min="2022-06-27"
+                          max="2022-07-10"
                           type={"date"}
                           value={value}
                           onChange={async (e) => {
@@ -272,8 +272,8 @@ export default function Phase() {
                         <h2>Enter Phase End Date</h2>
                         <input
                           //   ref={datePickerRef}
-                          min="2022-06-25"
-                          max="2022-06-30"
+                          min="2022-06-27"
+                          max="2022-07-10"
                           type={"date"}
                           value={value}
                           onChange={async (e) => {
