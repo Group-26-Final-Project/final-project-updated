@@ -92,8 +92,12 @@ router.post("/", cors(), async function (req, res, next) {
       message: "Voter Added",
       data: newVoter,
     });
+    return logger.info(`200 || ${res.statusMessage} Voter Add Successful `);
+
   } catch (err) {
     res.status(400).json({ message: err.message });
+    return logger.error(`400 || ${res.statusMessage} Voter Add Failed `);
+
   }
 });
 
