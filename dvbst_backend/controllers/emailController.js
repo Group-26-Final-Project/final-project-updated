@@ -87,5 +87,31 @@ const send_notification = async (email) => {
     }
 }
 
+const confirm_request = async (email, type) => {
+    try {
+        console.log("Confirm", email, type)
+        var subj, body;
+        subj = "Your request has been received!"
+        if (type === "accept"){
+            body = '<p>Your request has been processed and it has been approved. Thank you!</p>'
+        } else {
+            body = '<p>Your request has been processed and it has been rejected. Thank you!</p>'
+        }
+    
+        const mailOptions = {
+            to: email,
+            from: process.env.NODEMAILER_EMAIL,
+            subject: subj,
+            html: body
+        }
+        const response = await transport.sendMail(mailOptions)
+        console.log('Link sent 📬')
+        return ({ ok: true, message: 'email sent' })
+    }
+    catch (err) {
+        console.log("Something didn't work out 😭", err)
+        return ({ ok: false, message: err })
+    }
+}
 
-module.exports = { send_magic_link, send_password, send_notification }
+module.exports = { send_magic_link, send_password, send_notification, confirm_request }

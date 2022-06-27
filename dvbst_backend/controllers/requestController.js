@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
+const Candidate = require('../models/candidate')
 const Request = require("../models/request");
+const { confirm_request } = require("./emailController");
 
 router.get("/", async (req, res, next) => {
   try {
@@ -37,6 +39,8 @@ router.patch("/approve/:id", async function (req, res) {
     request.isApproved = true;
     request.read = true;
     const updatedRequest = await request.save();
+    const candidate = await Candidate.findById(request.candidateId)
+    await confirm_request(candidate.email, "accept")
     res.status(200).json(updatedRequest);
   } catch (err) {
     res.status(400).json({ message: err.message });
@@ -49,6 +53,8 @@ router.patch("/reject/:id", async function (req, res) {
     request.isApproved = false;
     request.read = true;
     const updatedRequest = await request.save();
+    const candidate = await Candidate.findById(request.candidateId)
+    await confirm_request(candidate.email, "decline")
     res.status(200).json(updatedRequest);
   } catch (err) {
     res.status(400).json({ message: err.message });
