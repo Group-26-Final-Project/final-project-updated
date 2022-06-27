@@ -79,10 +79,12 @@ router.post("/enter", cors(), async (req, res) => {
     const { link } = req.body;
     const email = req.body.email.trim().toLowerCase()
     console.log("Enter value", email, link)
-    if (!email)
+    if (!email){
       res.status(404).json("Email is required field!");
-    return logger.error(`404 || ${res.statusMessage} - - ${req.originalUrl} - ${req.method} Email Verification Unsuccesful`);
-
+      return logger.error(`404 || ${res.statusMessage} - - ${req.originalUrl} - ${req.method} Email Verification Unsuccesful`);
+  
+    }
+      
     const user = await User.findOne({ email: email });
     if (!user){
     res.status(400).json("User not found");
