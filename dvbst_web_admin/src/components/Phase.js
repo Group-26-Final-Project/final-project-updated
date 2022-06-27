@@ -34,17 +34,15 @@ export default function Phase() {
 
   const handleOpen = (e) => {
     // console.log(e.target.value)
-      if(e.target.value === "extend"){
-        setOpenExtendModal(true);        
-      }
-      else if (e.target.value === "change"){
-        setOpenChangeModal(true)
-      }
+    if (e.target.value === "extend") {
+      setOpenExtendModal(true);
+    } else if (e.target.value === "change") {
+      setOpenChangeModal(true);
+    }
   };
   const handleClose = () => {
     setOpenExtendModal(false);
     setOpenChangeModal(false);
-
   };
   const PHASE_NAME = [
     "REGISTRATION",
@@ -56,7 +54,15 @@ export default function Phase() {
     "DEPARTMENT ELECTION",
     "COMPLETED",
   ];
-  const weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+  const weekday = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
 
   useEffect(() => {
     console.log("dispatced get phase");
@@ -78,19 +84,19 @@ export default function Phase() {
     hours = hours ? hours : 12;
     minutes = minutes < 10 ? "0" + minutes : minutes;
     var strTime = hours + ":" + minutes + " " + ampm;
-    return weekday[dayofweek] + " " + day + "/" + month + "/" + year + " " + strTime;
+    return (
+      weekday[dayofweek] + " " + day + "/" + month + "/" + year + " " + strTime
+    );
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const date1 = new Date(value);
     console.log("abt to convert date", date1);
-    const timestamp =
-      Math.floor(date1.getTime());
-    console.log(timestamp)
+    const timestamp = Math.floor(date1.getTime());
+    console.log(timestamp);
     dispatch(changePhase(timestamp));
     setOpenChangeModal(false);
-
   };
 
   const handleOnDateChange = async (e) => {
@@ -102,8 +108,7 @@ export default function Phase() {
     // const range =  newDate - Math.floor(Date.now() / 1000);
     const date1 = new Date(value);
     console.log("abt to convert date", date1);
-    const timestamp =
-      Math.floor(date1.getTime());
+    const timestamp = Math.floor(date1.getTime());
     // console.log("date changed\n", timestamp);
     // e.preventDefault();
     dispatch(extendPhase(timestamp));
@@ -147,8 +152,7 @@ export default function Phase() {
     <div class="min-h-screen w-full bg-white-800 flex flex-col justify-center items-center py-4 px-4 lg:px-8">
       {(phaseState.getPhaseStatus === "pending" ||
         phaseState.changePhaseStatus === "pending" ||
-        phaseState.extendPhaseStatus === "pending"
-        ) && (
+        phaseState.extendPhaseStatus === "pending") && (
         <div>
           <SpinnerCircularFixed
             size={50}
@@ -160,9 +164,8 @@ export default function Phase() {
         </div>
       )}
       {(phaseState.getPhaseStatus === "failed" ||
-        phaseState.changePhaseStatus === "failed"||
-        phaseState.extendPhaseStatus === "failed"
-        ) && (
+        phaseState.changePhaseStatus === "failed" ||
+        phaseState.extendPhaseStatus === "failed") && (
         <div>
           <h3>Ooops something went wrong</h3>
           <button onClick={() => window.location.reload(false)}>Reload!</button>
@@ -182,7 +185,7 @@ export default function Phase() {
               // <ApprovalTable columns={columns} data={phaseState.pendingUsers} />
               <div>
                 <div>
-                  <p className="text-center mb-2 text-lg">{`Current Phase is Phase: ${
+                  <p className="text-center mb-2 text-lg">{`Current Phase: ${
                     PHASE_NAME[phaseState.phase[0]]
                   }`}</p>
                 </div>
@@ -208,9 +211,15 @@ export default function Phase() {
                     class="bg-[#00D05A] text-white ml-10 mt-5 p-5 rounded-xl font-body font-light center text-center"
                     onClick={handleOpen}
                     value="extend"
-
                   >
                     Extend Phase
+                  </button>
+                  <button
+                    class="bg-[#00D05A] text-white ml-10 mt-5 p-5 rounded-xl font-body font-light center text-center"
+                    onClick={handleOpen}
+                    value="change"
+                  >
+                    Revert Back To
                   </button>
                   <Modal
                     aria-labelledby="transition-modal-title"
@@ -229,6 +238,8 @@ export default function Phase() {
                         <h2>Enter an Extension Date</h2>
                         <input
                           //   ref={datePickerRef}
+                          min="2022-06-25"
+                          max="2022-06-30"
                           type={"date"}
                           value={value}
                           onChange={async (e) => {
@@ -261,6 +272,8 @@ export default function Phase() {
                         <h2>Enter Phase End Date</h2>
                         <input
                           //   ref={datePickerRef}
+                          min="2022-06-25"
+                          max="2022-06-30"
                           type={"date"}
                           value={value}
                           onChange={async (e) => {

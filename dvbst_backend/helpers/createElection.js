@@ -24,14 +24,15 @@ async function createElection(
   year,
   section,
   department,
-  duration,
+  endDate,
   phase,
-  contract
+  contract,
+  candidateAddresses
 ) {
-  var candidateAddresses = [];
-  var candidaates;
+  if(!candidateAddresses) {
+    var generatedcandidateAddresses = [];
 
-  if (phase === 1) {
+  if (phase === 1 || phase === 2) {
     var check = await Election.findOne({ name: name });
     if (check) return;
 
@@ -43,28 +44,27 @@ async function createElection(
 
     if (candidates.length === 0) return;
     for (let index = 0; index < candidates.length; index++) {
-      candidateAddresses.push(candidates[index].uniqueID);
+      generatedcandidateAddresses.push(candidates[index].uniqueID);
     }
-  } else if (phase === 3 || phase === 5) {
+  } else if (phase === 3 || phase === 5 || phase === 4 || phase === 6) {
     console.log("phase 3 or 5");
     console.log("abt to merge candidates");
     candidates = await mergeCandidates(year, section, department);
     if (candidates.length === 0) return;
     for (let index = 0; index < candidates.length; index++) {
-      candidateAddresses.push(candidates[index].uniqueID);
+      generatedcandidateAddresses.push(candidates[index].uniqueID);
     }
   } else {
     console.log("Invalid Phase");
     return "Invalid Phase";
   }
-
   const startDate = Math.floor(Date.now() / 1000);
-  const endDate = startDate + duration;
+  // const endDate = startDate + duration;
   const transaction = await contract.createElection(
     name,
     startDate,
     endDate,
-    candidateAddresses,
+    generatedcandidateAddresses,
     year,
     section,
     department
@@ -89,6 +89,53 @@ async function createElection(
 
     console.log(`${name} election created`);
   }
+  
+  }
+  else{
+    const startDate = Math.floor(Date.now() / 1000);
+  // const endDate = startDate + duration;
+  const transaction = await contract.createElection(
+    name,
+    startDate,
+    endDate,
+    candidateAddresses,
+    year,
+    section,
+    department
+  );
+  const transactionReceipt = await transaction.wait();
+  if (transactionReceipt.status !== 1) {
+    console.log("Error", transactionReceipt);
+    return;
+  } else {
+    for (let index = 0; index < candidateAddresses.length; index++) {
+      await Candidate.findOneAndUpdate(
+        { uniqueID: candidateAddresses[index] },
+        { voteCount: 0 }
+      );      
+    }
+    var candidates = [];
+    for (let index = 0; index < candidateAddresses.length; index++) {
+      candidates.push(await Candidate.findOne({ uniqueID: candidateAddresses[index] }));
+    }
+    console.log("created onchain election");
+    await createElectionLocal(
+      name,
+      startDate,
+      endDate,
+      candidates,
+      year,
+      section,
+      department
+    );
+    console.log("created local election");
+    await createResult(name, year, section, department, candidates);
+
+    console.log(`${name} election created`);
+  }
+  
+  }
+  
   // const zoption = {
   //   contractAddress: AAiTElectionMukeraAddress,
   //   abi: AAiTElectionMukera.abi,
@@ -167,6 +214,7 @@ async function createElectionLocal(
     year: year,
     section: section,
     department: department,
+    status: 1
   });
   await election.save();
   for (let index = 0; index < tempcandidates.length; index++) {

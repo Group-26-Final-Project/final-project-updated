@@ -148,7 +148,7 @@ export function Detail({ value }) {
     const result = (
         <Link
             data-cy="elections-details"
-            to="/resultsDetail"
+            to="/electionDetail"
             state={value}
             class="text-blue-600 dark:text-blue-500 hover:underline"
         >
@@ -159,18 +159,38 @@ export function Detail({ value }) {
 }
 
 export function EndDate({ value }) {
-    var date = Math.floor((value - new Date().getTime() / 1000));
-    var seconds = "0" + date % 60;
-    date = Math.floor(date/60)
-    var minutes = "0" + date % 60;
-    date = Math.floor(date/60)
-    var hours = "0" + date % 24 ;
-    date = Math.floor(date/24)
-    var days = date
+    // var date = Math.floor((value - new Date().getTime() / 1000));
+    // var seconds = "0" + date % 60;
+    // date = Math.floor(date/60)
+    // var minutes = "0" + date % 60;
+    // date = Math.floor(date/60)
+    // var hours = "0" + date % 24 ;
+    // date = Math.floor(date/24)
+    // var days = date
 
-    var formattedTime = days + ':' + hours.substr(-2) + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+    // var formattedTime = days + ':' + hours.substr(-2) + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+    const formattedTime = convertDate(value);
     return <span>{formattedTime}</span>;
 }
+function convertDate(timestamp) {
+    if (timestamp === 0) return "Not Set";
+    var date = new Date(timestamp);
+    var dayofweek = date.getDay();
+    var day = date.getDate();
+    var month = date.getMonth() + 1;
+    var year = date.getFullYear();
+    var hours = date.getHours();
+    var minutes = date.getMinutes();
+    // var seconds = date.getSeconds();
+    var ampm = hours >= 12 ? "PM" : "AM";
+    hours = hours % 12;
+    hours = hours ? hours : 12;
+    minutes = minutes < 10 ? "0" + minutes : minutes;
+    var strTime = hours + ":" + minutes + " " + ampm;
+    return (
+      day + "/" + month + "/" + year + " " + strTime
+    );
+  }
 
 // export function StatusPill({ value }) {
 //   const status = value ? value.toLowerCase() : "unknown";

@@ -7,6 +7,7 @@ import blacklistReducer from "../features/blacklistSlice";
 import pendingReducer from "../features/pendingSlice";
 import phaseReducer from "../features/phaseSlice";
 import requestsReducer from "../features/requestSlice";
+import electionPhaseReducer from '../features/electionPhaseSlice';
 
 export const store = configureStore({
   reducer: {
@@ -18,5 +19,7 @@ export const store = configureStore({
     votersState: votersReducer,
     phaseState: phaseReducer,
     requestsState: requestsReducer,
+    electionPhaseState: electionPhaseReducer,
+
   },
 });

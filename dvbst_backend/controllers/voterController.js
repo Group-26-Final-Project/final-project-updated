@@ -19,7 +19,7 @@ router.get("/", cors(), async (req, res, next) => {
       query.$or = [{ name: { $regex: req.query.query, $options: "i" } }];
     }
     var voters = await Voter.find(query);
-    console.log(voters);
+    // console.log(voters);
     res.json(voters);
   } catch (e) {
     res.json({

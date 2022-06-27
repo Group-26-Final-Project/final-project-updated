@@ -27,10 +27,10 @@ const electionSchema = new mongoose.Schema({
         required: false,
         default: 0,
     },
-    // voters: {
-    //     type: Array,
-    //     required: true,
-    // },
+    status: {
+        type: Number,
+        required: true,
+    },
     candidates: {
         type: Array,
         required: true,

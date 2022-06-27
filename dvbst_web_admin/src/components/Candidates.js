@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { SpinnerCircularFixed } from "spinners-react";
 import { AiOutlineClose } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
-import CandidatesTable, { Detail, Lock, StatusPill } from './CandidatesTable'
+import CandidatesTable, { Department, Detail, Lock, StatusPill } from './CandidatesTable'
 import { getCandidates } from '../features/candidatesSlice';
 
 export default function Candidates() {
@@ -56,6 +56,7 @@ export default function Candidates() {
             {
                 Header: "Department",
                 accessor: "dept",
+                Cell: Department
             },
             {
                 Header: "Status",

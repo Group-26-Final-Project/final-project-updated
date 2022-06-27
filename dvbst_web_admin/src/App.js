@@ -30,6 +30,7 @@ import ApprovalDetail from "./components/ApprovalDetail";
 import Phase from "./components/Phase";
 import Navbar from "./components/Navbar";
 import Notifications from "./components/Notification";
+import ElectionDetail from "./components/ElectionDetail";
 
 // <Router>
 //   <div class="md:flex bg-[#D3E8E6]/20 h-screen">
@@ -253,6 +254,14 @@ function App() {
                   </PrivateRoute>
                 }
               />
+              <Route
+              path="/electionDetail"
+              element={
+                <PrivateRoute>
+                  <ElectionDetail />
+                </PrivateRoute>
+              }
+            />
               <Route path="*" element={<Navigate to="/" replace />} />
               <Route
                 path="/login"

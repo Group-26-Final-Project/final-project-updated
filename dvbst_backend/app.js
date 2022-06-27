@@ -23,6 +23,8 @@ const verifyRouter = require("./controllers/verificationController");
 const balanceRouter = require("./controllers/balanceController");
 const requestRouter = require("./controllers/requestController");
 const reportsRouter = require("./controllers/reportsController");
+const electionPhaseRouter = require("./controllers/electionPhaseController");
+
 // app.use('/auth', authRouter)
 app.use("/login", authRouter);
 app.use("/blacklist", blacklistRouter);
@@ -40,5 +42,6 @@ app.use("/verify", verifyRouter);
 app.use("/balance", balanceRouter);
 app.use("/requests", requestRouter);
 app.use("/reports", reportsRouter);
+app.use("/electionPhase", electionPhaseRouter)
 
 module.exports = app;

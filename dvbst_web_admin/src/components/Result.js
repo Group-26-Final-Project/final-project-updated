@@ -20,7 +20,7 @@ export default function Result() {
                 accessor: "name",
             },
             {
-                Header: "Time Remaining",
+                Header: "End Date",
                 accessor: "endDate",
                 Cell: EndDate,
             },
