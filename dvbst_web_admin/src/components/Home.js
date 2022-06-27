@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useMoralis } from "react-moralis";
 import CustomAxios from "../Api/CustomAxios";
 import CustomChart from "./CustomChart";
+import CustomChartTwo from "./CustomChartTwo";
 import HomeTable, { StatusPill } from "./HomeTable";
 
 export default function Home() {
@@ -146,8 +147,23 @@ export default function Home() {
           </p>
         </div>
       </div>
+      <div>
+        {
+          reports.totalVoters/reports.totalUsers > 0.5 && (
+            <div className="flex items-end justify-end mt-10 ">
+              <h4 className="font-bold text-red">
+                {`More than 50 % voters. Suggest start election`}
+              </h4>
+              </div>
+          )
+        }
+      </div>
+      
       <div className="h-[400px] w-full flex px-4 lg:px-8 rounded-2xl bg-white-700">
         <CustomChart reports={reports} />
+      </div>
+      <div className="h-[400px] w-full flex px-4 lg:px-8 rounded-2xl bg-white-700">
+        <CustomChartTwo reports={reports} />
       </div>
     </div>
   );

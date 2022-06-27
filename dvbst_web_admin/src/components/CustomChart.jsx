@@ -30,6 +30,8 @@ const CustomChart = (props)=> {
   
   
     return (
+      <>
+      
       <div className="w-full flex items-center justify-between">
         <div className="h-full" style={{width: "60%"}} >
         <ResponsiveContainer height="100%" className="w-full " style={{border: "1px solid red",  height: "500px"}}>
@@ -65,7 +67,9 @@ const CustomChart = (props)=> {
           ))
         }
       </div>
+      
       </div>
+      </>
 
     );
 }

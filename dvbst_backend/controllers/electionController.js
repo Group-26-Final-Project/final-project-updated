@@ -12,6 +12,7 @@ const getPersonalizedElection = require("../helpers/getPersonalizedElection");
 const jwt = require('jsonwebtoken')
 const config = require('../config');
 const { vote } = require("../helpers/vote");
+const logger = require("../helpers/logger");
 
 const deptTypes = [
   "Center of Biomedical Engineering (CBME)",
@@ -130,11 +131,14 @@ router.post("/", cors(), async function (req, res, next) {
     });
 
     if (voters.length === 0 || candidates.length === 0) {
-      return res.json({
+
+      res.json({
         status: "failed",
         code: 404,
         message: "No voters or candidates found for this election!",
       });
+      return logger.error(`404 || ${res.statusMessage} - ${req.originalUrl} - ${req.method} No Candidates/Voters found`);
+
     }
 
     const electionName =
@@ -149,7 +153,9 @@ router.post("/", cors(), async function (req, res, next) {
 
     var check = await Election.findOne({ name: electionName });
     if (check) {
-      return res.status(404).send("Election Already Exists!");
+      res.status(404).send("Election Already Exists!");
+      return logger.error(`404 || ${res.statusMessage} - ${req.originalUrl} - ${req.method} Eleciton Exists`);
+
     }
 
     const election = new Election({
@@ -162,14 +168,18 @@ router.post("/", cors(), async function (req, res, next) {
       candidates: candidates,
     });
     const newElection = await election.save();
-    return res.json({
+    res.json({
       status: "success",
       code: 201,
       message: "Election Added",
       data: newElection,
     });
+    return logger.info(`201 || ${res.statusMessage} - ${electionName} Election Created `);
+
   } catch (err) {
-    return res.status(400).json({ message: err.message });
+    res.status(400).json({ message: err.message });
+    return logger.error(`404 || ${res.statusMessage} - ${req.originalUrl} - ${req.method} Error creating Election ${electionName}`);
+
   }
 });
 
@@ -203,14 +213,18 @@ router.patch("/", cors(), async function (req, res, next) {
 
     await vote(voter, candidate, election);
     // const updatedElection = await election.save();
-    return res.json({
+    res.json({
       status: "success",
       code: 204,
       message: "Voting Successful",
       // data: updatedElection,
     });
+    return logger.info(`204 || ${res.statusMessage} Vote Successful `);
+
   } catch (err) {
-    return res.status(500).json({ message: err.message });
+    res.status(500).json({ message: err.message });
+    return logger.error(`500 || ${res.statusMessage} - ${req.originalUrl} - ${req.method} Vote Unsuccessful`);
+
   }
 });
 

@@ -1,6 +1,7 @@
 const { Router } = require("express");
 const router = Router();
 var cors = require("cors");
+const logger = require("../helpers/logger");
 
 const { changePhase, extendPhase } = require("../helpers/changePhase");
 const { getPhase } = require("../helpers/changePhase");
@@ -43,6 +44,7 @@ router.post("/start/:id", cors(), async (req, res, next) => {
     await startElection(election.name);
     const electionStatus = await getElectionStatus(election.name);
     election = await Election.findById(req.params.id);
+    logger.info(`200 ${election.name} started `);
 
     res.send({
       status: "success",
@@ -51,12 +53,16 @@ router.post("/start/:id", cors(), async (req, res, next) => {
       electionStatus: electionStatus,
       election: election,
     });
+
   } catch (e) {
+    logger.error(`500 ${election.name} start failed `);
+
     res.status(500).json({
       status: "err",
       code: 500,
       message: e.message,
     });
+
   }
 });
 
@@ -68,6 +74,7 @@ router.post("/pause/:id", cors(), async (req, res, next) => {
     await pauseElection(election.name);
     const electionStatus = await getElectionStatus(election.name);
     election = await Election.findById(req.params.id);
+    logger.info(`200  ${election.name} paused `);
 
     res.send({
       status: "success",
@@ -76,12 +83,16 @@ router.post("/pause/:id", cors(), async (req, res, next) => {
       electionStatus: electionStatus,
       election: election,
     });
+
   } catch (e) {
+    logger.error(`500 ${election.name} pause failed `);
+
     res.status(500).json({
       status: "err",
       code: 500,
       message: e.message,
     });
+
   }
 });
 
@@ -100,12 +111,16 @@ router.post("/end/:id", cors(), async (req, res, next) => {
       electionStatus: electionStatus,
       election: election,
     });
+    return logger.info(`200 || ${res.statusMessage} - ${election.name} ended `);
+
   } catch (e) {
     res.status(500).json({
       status: "err",
       code: 500,
       message: e.message,
     });
+    return logger.error(`500 || ${res.statusMessage} - ${req.originalUrl} - ${req.method} ${election.name} end failed `);
+
   }
 });
 
@@ -125,12 +140,16 @@ router.post("/extend/:id", cors(), async (req, res, next) => {
       electionStatus: electionStatus,
       election: election,
     });
+    return logger.info(`200 || ${res.statusMessage} - ${election.name} extended `);
+
   } catch (e) {
     res.status(500).json({
       status: "err",
       code: 500,
       message: e.message,
     });
+    return logger.error(`500 || ${res.statusMessage} - ${req.originalUrl} - ${req.method} ${election.name} extend failed `);
+
   }
 });
 
@@ -150,12 +169,16 @@ router.post("/restart/:id", cors(), async (req, res, next) => {
       electionStatus: electionStatus,
       election: election,
     });
+    return logger.info(`200 || ${res.statusMessage} - ${election.name} restarted `);
+
   } catch (e) {
     res.status(500).json({
       status: "err",
       code: 500,
       message: e.message,
     });
+    return logger.error(`500 || ${res.statusMessage} - ${req.originalUrl} - ${req.method} ${election.name} restart failed `);
+
   }
 });
 

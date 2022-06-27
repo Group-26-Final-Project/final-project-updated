@@ -14,6 +14,7 @@ const Blacklist = require('../models/blacklist');
 const { send_password } = require("./emailController");
 const generateAddress = require('../helpers/generateAddress');
 const blacklistCandidate = require('../helpers/blacklistCandidate');
+const logger = require("../helpers/logger");
 
 
 //get all candidates
@@ -100,8 +101,12 @@ router.delete("/:id", cors(), async function (req, res, next) {
     })
     const newBlacklist = await blacklist.save()
     res.send(newBlacklist).status(200);
+    return logger.info(`200 || ${res.statusMessage} - Candidate ${deletedCandidate.fullName} Blacklist Successful `);
+
   } catch (error) {
     res.status(400).json({ message: error.message });
+    return logger.error(`404 || ${res.statusMessage} - ${req.originalUrl} - ${req.method} Blacklist ${deletedCandidate.fullName} Failed`);
+
   }
 });
 
@@ -167,8 +172,12 @@ router.post(
       // await pending.save();
       await user.save();
       res.json(newCandidate).status(201)
+      return logger.info(`200 || ${res.statusMessage} Candidate Add Successful `);
+
     } catch (err) {
       res.status(400).json({ message: err.message });
+      return logger.error(`404 || ${res.statusMessage} - ${req.originalUrl} - ${req.method} Candidate Add Failed`);
+
     }
   }
 );
