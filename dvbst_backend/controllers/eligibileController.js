@@ -50,7 +50,6 @@ router.post("/", cors(), async function (req, res, next) {
             section: req.body.section,
             year: req.body.year
         })
-        console.log("Check", check)
         if (!check) {
             return res.status(400).send("You are not an eligible user!");
         }
@@ -83,7 +82,6 @@ router.post("/", cors(), async function (req, res, next) {
                 uniqueId: newVoter.uniqueID,
                 role: "candidate"
             });
-            console.log("Pending", pending)
             await pending.save();
         }
         res.json({

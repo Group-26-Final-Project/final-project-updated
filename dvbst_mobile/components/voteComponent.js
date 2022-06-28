@@ -15,6 +15,22 @@ const customFonts = {
     poppinsBold: require('../assets/fonts/Poppins-Bold.ttf'),
     poppinsSemi: require('../assets/fonts/Poppins-SemiBold.ttf'),
 }
+
+const deptTypes = [
+    "Center of Biomedical Engineering (CBME)",
+    "School of Chemical and Bio Engineering (SCBE)",
+    "School of Civil & Environmental Engineering (SCEE)",
+    "School of Electrical & Computer Engineering (SECE)",
+    "School of Mechanical and Industrial Engineering (SMiE)",
+    "School of Information Technology Engineering (SITE)"
+    // "Biomedical Engineering",
+    // "Chemical Engineering",
+    // "Civil Engineering",
+    // "Electrical Engineering",
+    // "Mechanical Engineering",
+    // "Software Engineering",
+];
+
 const VoteComponent = (props) => {
     const navigation = useNavigation();
     const [isLoaded] = useFonts(customFonts);
@@ -60,7 +76,7 @@ const VoteComponent = (props) => {
                     </View>
                     <View style={styles.description}>
                         <Text style={styles.name}>{props.name}</Text>
-                        <Text style={styles.detail}>School/Center: {props.dept}</Text>
+                        <Text style={styles.detail}>{deptTypes[props.dept]}</Text>
                         <Text style={styles.detail}>Year: {props.year}</Text>
                         <Text style={styles.detail}>Section: {props.section}</Text>
                         <TouchableOpacity onPress={vote} style={styles.button}>

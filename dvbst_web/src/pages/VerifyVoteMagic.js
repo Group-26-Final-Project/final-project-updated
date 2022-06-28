@@ -15,24 +15,38 @@ export default function VerifyVoteMagic(props) {
   useEffect(() => {
     // debugger;
     // props.signIn(params.email, params.link)
-    const verifyMagicLink = async () => {
-      if (params.link) {
-        console.log("params.link--", params.link, params.email);
-        dispatch(verifyMagic({
-          email: params.email,
-          link: params.link
-        }))
-          .unwrap()
-          .then((response) => {
-            setTimeout(function () {
-              navigate('/candidate_list')
-            }, 5000)
-          })
-      }
-    };
-    // navigate('/')
-    verifyMagicLink();
-  }, [dispatch, navigate, params.email, params.link]);
+    // const verifyMagicLink = async () => {
+    //   if (params.link) {
+    //     console.log("params.link--", params.link, params.email);
+    //     dispatch(verifyMagic({
+    //       email: params.email,
+    //       link: params.link
+    //     }))
+    //       .unwrap()
+    //       .then((response) => {
+    //         setTimeout(function () {
+    //           navigate('/candidate_list')
+    //         }, 5000)
+    //       })
+    //   }
+    // };
+    // // navigate('/')
+    // verifyMagicLink();
+    dispatch(verifyMagic({
+      email: params.email,
+      link: params.link
+    }))
+      .unwrap()
+      .then((response) => {
+        console.log("Resp", response)
+        setTimeout(function () {
+          navigate('/candidate_list')
+        }, 5000)
+      })
+      .catch((err)=>{
+        console.log("Err", err)
+      })
+  }, []);
 
   return (
     <div class="flex items-center justify-center min-h-screen bg-[#F6FAFA]">

@@ -33,6 +33,7 @@ export const verifyMagic = createAsyncThunk(
       console.log("Verify", result);
       return result;
     } catch (err) {
+      console.log("Verify error", err)
       return rejectWithValue(err.response.data);
     }
   }
@@ -43,7 +44,7 @@ export const getMyElection = createAsyncThunk(
   async (id = null, { rejectWithValue }) => {
     try {
       const response = await CustomAxios.get("/elections/myelection");
-      console.log(response);
+      console.log("My election", response);
       return response.data;
     } catch (err) {
       return rejectWithValue(err.response.data);

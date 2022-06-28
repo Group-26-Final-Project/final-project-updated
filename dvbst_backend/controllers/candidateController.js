@@ -20,7 +20,7 @@ const logger = require("../helpers/logger");
 //get all candidates
 router.get('/', cors(), async (req, res, next) => {
   try {
-    console.log("abt to get candidates")
+    // console.log("abt to get candidates")
     let query = {}
     if (req.query.query) {
       query.$or = [
@@ -56,40 +56,11 @@ router.get("/:id", cors(), async (req, res, next) => {
   }
 });
 
-//disqualify
-router.patch("/", cors(), async function (req, res, next) {
-  try {
-    const candidate = await Candidate.findOne({ email: req.body.email });
-    const updatedCandidate = await Candidate.findByIdAndUpdate(candidate._id, {
-      status: !candidate.status,
-    });
-    res.send(updatedCandidate);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-});
-
-//complete profile
-router.patch("/complete/:id", cors(), async function (req, res, next) {
-  console.log("Got here", req.body)
-  try {
-    const updatedCandidate = await Candidate.findByIdAndUpdate(req.params.id, {
-      completed: true,
-      bio: req.body.bio,
-      plans: req.body.plans,
-      profile: req.file ? req.file.path.substring(8) : ""
-    });
-    return res.send(updatedCandidate).status(200);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-});
-
 //blacklist
 router.delete("/:id", cors(), async function (req, res, next) {
   try {
-    console.log("am here");
-    console.log(req.params.id);
+    // console.log("am here");
+    // console.log(req.params.id);
     const deletedCandidate = await Candidate.findByIdAndDelete(req.params.id);
     await Election.updateMany({}, { $pull: { candidates: { _id: req.params.id } } });
     await blacklistCandidate(deletedCandidate.uniqueID);
@@ -147,20 +118,6 @@ router.post(
       }
 
       const newCandidate = await candidate.save();
-      // const pending = new Pending({
-      //   userId: newCandidate._id,
-      //   name: newCandidate.name,
-      //   fname: newCandidate.fname,
-      //   gname: newCandidate.gname,
-      //   email: newCandidate.email,
-      //   phone: newCandidate.phone,
-      //   id: newCandidate.id,
-      //   dept: newCandidate.dept,
-      //   year: newCandidate.year,
-      //   section: newCandidate.section,
-      //   fullName: newCandidate.fullName,
-      //   role: "candidate"
-      // });
       const salt = await bcrypt.genSalt(10);
       const user = new User({
         userId: newCandidate._id,
@@ -169,7 +126,6 @@ router.post(
         role: "candidate",
       });
       user.password = await bcrypt.hash(req.body.password, salt);
-      // await pending.save();
       await user.save();
       res.json(newCandidate).status(201)
       return logger.info(`200 || ${res.statusMessage} Candidate Add Successful `);

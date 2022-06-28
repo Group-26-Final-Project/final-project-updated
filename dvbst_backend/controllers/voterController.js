@@ -62,20 +62,6 @@ router.post("/", cors(), async function (req, res, next) {
       return res.status(404).send("User Already Exists!");
     }
     const newVoter = await voter.save();
-    // const pending = new Pending({
-    //   userId: newVoter._id,
-    //   name: newVoter.name,
-    //   fname: newVoter.fname,
-    //   gname: newVoter.gname,
-    //   email: newVoter.email,
-    //   phone: newVoter.phone,
-    //   id: newVoter.id,
-    //   dept: newVoter.dept,
-    //   year: newVoter.year,
-    //   section: newVoter.section,
-    //   fullName: newVoter.fullName,
-    //   role: "voter"
-    // });
     const salt = await bcrypt.genSalt(10);
     const user = new User({
       userId: newVoter._id,

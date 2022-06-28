@@ -12,7 +12,7 @@ const Notifications = ({ setShowNotificationModal }) => {
   const dispatch = useDispatch();
 
   const fetchNotifications = useCallback(async () => {
-    await dispatch(getRequests({}));
+    dispatch(getRequests({}));
     console.log("refetching!");
   }, []);
 

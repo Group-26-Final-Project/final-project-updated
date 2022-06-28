@@ -49,7 +49,6 @@ router.post('/', cors(), async (req, res) => {
 //otp request
 router.post("/mobile", cors(), async (req, res) => {
     try {
-        console.log("OTP Request", req.body.email)
         const { email } = req.body;
         if (!email)
             return res.status(404).json("Email is required field!");
@@ -71,7 +70,7 @@ router.post("/mobile", cors(), async (req, res) => {
                 res.status(500).json("Something went wrong!")
             })
     } catch (e) {
-
+        console.log("OTP", e)
     }
 })
 

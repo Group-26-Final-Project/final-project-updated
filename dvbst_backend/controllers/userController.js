@@ -20,12 +20,10 @@ const cors = require('cors');
 router.get("/:id", cors(), async (req, res, next) => {
   try {
     var temp = await User.findById(req.params.id);
-    console.log("Temp", temp)
     if (!temp) {
       return res.status(400).send("User doesn't exist")
     }
     var user = temp.role === "voter" ? await Voter.findById(temp.userId) : await Candidate.findById(temp.userId) 
-    console.log("User", user)
     res.json(user).status(200);
   } catch (e) {
     return res.send("Can't get user").status(500);

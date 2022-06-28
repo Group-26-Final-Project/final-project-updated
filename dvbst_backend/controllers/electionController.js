@@ -34,12 +34,12 @@ router.get("/", cors(), async (req, res, next) => {
     var elections = [];
     console.log("abt to get all elections");
     elections = await Election.find();
-    if(elections.length === 0) elections = await CompletedElections.find();
-    if(elections.length === 0) {
-      const temp = await ArchivedElections.find({year:2022});
+    if (elections.length === 0) elections = await CompletedElections.find();
+    if (elections.length === 0) {
+      const temp = await ArchivedElections.find({ year: 2022 });
       elections = temp.elections;
-  }
-  if(!elections) elections = [];
+    }
+    if (!elections) elections = [];
     return res.json(elections).status(200);
   } catch (e) {
     return res.json(e).status(400);
@@ -50,29 +50,29 @@ router.get("/", cors(), async (req, res, next) => {
 router.get("/details/:id", cors(), async (req, res, next) => {
   try {
     var election = await Election.findById(req.params.id);
-    
+
     var voters = [];
-    if(election.section === 0 && election.year === 0) {
+    if (election.section === 0 && election.year === 0) {
       console.log("abt to get dept election voters");
       voters = await Voter.find({
         dept: election.department,
-        
+
       });
-  } else if (election.section === 0) {
-    console.log("abt to get year election voters");
-    voters = await Voter.find({
-      dept: election.department,
-      year: election.year
-    });
-  } else if (election.section !== 0 && election.year !== 0) {
-    console.log("abt to get section election voters");
-    voters = await Voter.find({
-      dept: election.department,
-      year: election.year,
-      section: election.section
-    });
-  }
-    
+    } else if (election.section === 0) {
+      console.log("abt to get year election voters");
+      voters = await Voter.find({
+        dept: election.department,
+        year: election.year
+      });
+    } else if (election.section !== 0 && election.year !== 0) {
+      console.log("abt to get section election voters");
+      voters = await Voter.find({
+        dept: election.department,
+        year: election.year,
+        section: election.section
+      });
+    }
+
     // election.voters = voters;
     console.log(voters.length);
 
@@ -88,31 +88,6 @@ router.get("/details/:id", cors(), async (req, res, next) => {
       code: 500,
       message: "Election doesn't exist!",
     });
-  }
-});
-
-router.get("/myelection/:id", cors(), async (req, res, next) => {
-  try {
-    var token = req.headers.authorization;
-    token = token.split(" ")[1];
-    var decoded = jwt.decode(token, config.secret);
-    var temp = await User.findById(decoded.id)
-    if (!temp) {
-      return res.status(400).send("User doesn't exist!")
-    }
-    var user = temp.role === 'voter' ?
-      await Voter.findOne({ userId: temp.userId }) :
-      await Candidate.findOne({ userId: temp.userId })
-    if (!user) {
-      return res.status(400).send("User doesn't exist!")
-    }
-    var election = await Election.findOne({ department: user.dept, batch: user.year, section: user.section })
-    if (!election) {
-      return res.status(400).send("Election doesn't exist yet!")
-    }
-    return res.status(200).send(election);
-  } catch (err) {
-    return res.status(500).send("Something went wrong!")
   }
 });
 
@@ -230,26 +205,19 @@ router.patch("/", cors(), async function (req, res, next) {
 
 router.get("/myelection", cors(), async function (req, res) {
   try {
-    console.log(req.params.id);
+    // console.log(req.params.id);
     var token = req.headers.authorization;
     console.log(token);
     token = token.split(" ")[1];
     var decoded = jwt.decode(token, config.secret);
-    const user = await User.findOne({
-      userId: decoded.id,
-    });
+    const user = await User.findById(decoded.id);
     if (!user) return res.status(500).json({ message: "1User Doesn't Exist" });
     var val;
-    val = await Voter.findOne({
-      _id: user.userId,
-    });
+    val = await Voter.findById(user.userId);
     if (!val) {
-      val = await Candidate.findOne({
-        _id: user.userId,
-      });
-      if (!val) return res.status(500).json({ message: "2User Doesn't Exist" });
+      val = await Candidate.findById(user.userId);
     }
-    console.log(val);
+    if (!val) return res.status(500).json({ message: "2User Doesn't Exist" });
     const election = await getPersonalizedElection(
       val.dept,
       val.year,

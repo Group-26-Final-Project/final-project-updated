@@ -24,44 +24,6 @@ router.get("/", cors(), async (req, res, next) => {
   }
 });
 
-//add new voter
-router.post("/", cors(), async function (req, res, next) {
-  try {
-    const pending = new Pending({
-      name: req.body.name,
-      fname: req.body.fname,
-      gname: req.body.gname,
-      email: req.body.email,
-      phone: req.body.phone,
-      id: req.body.id,
-      dept: req.body.dept,
-      section: req.body.section,
-      year: req.body.year
-    });
-    var check = await User.findOne({ email: req.body.email });
-    if (check) {
-      return res.status(404).send("User Already Exists!");
-    }
-    check = await Pending.findOne({ email: req.body.email, id: req.body.id });
-    if (check) {
-      return res.status(404).send("User already in the pending list!");
-    }
-    check = await Voter.findOne({ id: req.body.id });
-    if (check) {
-      return res.status(404).send("User Already Exists!");
-    }
-    check = await Candidate.findOne({ id: req.body.id });
-    if (check) {
-      return res.status(404).send("User Already Exists!");
-    }
-
-    const newPending = await pending.save();
-    return res.json(newPending).status(201)
-  } catch (err) {
-    res.status(400).json({ message: err.message });
-  }
-});
-
 // get pending user detail
 router.get('/:id', cors(), async (req, res, next) => {
   try {
@@ -85,7 +47,6 @@ router.get('/:id', cors(), async (req, res, next) => {
 router.delete('/approve/:id', cors(), async (req, res, next) => {
   try {
     const approvedUser = await Pending.findByIdAndDelete(req.params.id);
-    // console.log("First", approvedUser)
     if (!approvedUser) {
       return res.status(400).json({ message: "User doesn't exist!" });
     }

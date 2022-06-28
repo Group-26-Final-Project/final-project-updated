@@ -2,18 +2,16 @@ const express = require("express");
 const router = express.Router();
 const Request = require("../models/request");
 const Candidate = require("../models/candidate");
+const AllUser = require("../models/allUser");
 const Voter = require("../models/voter");
 const Election = require("../models/election");
 const Blacklist = require("../models/blacklist");
 const Pending = require("../models/pending");
 const completed = require("../models/completed");
-const User = require("../models/user");
 
 router.get("/", async (req, res, next) => {
   try {
-    const totalUsers = await User.find({
-
-    }).count();
+    const totalUsers = await AllUser.find({}).count();
     const totalCandidates = await Candidate.find({}).count();
     const totalVoters = await Voter.find({}).count();
     const totalOngoingElections = await Election.find({}).count();
