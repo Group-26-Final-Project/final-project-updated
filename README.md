@@ -50,28 +50,27 @@ In addition to above mentioned features, voters and candidates have the freedom 
 * ### Smart Contracts
 
   * Start Ganache
-  
-        * SCREENSHOT (GANACHE)
+  ![alt text](https://github.com/Group-26-Final-Project/final-project-updated/blob/main/screenshots/ganache.png)
   
   * Navigate to **dvsbt_smart_contracts** folder
   * Open truffle-config.json and make sure the **networks** object contains entry **dev**. Compare it to the following screenshot
 
-        * SCREENSHOT (truffle-config.json)
+  ![alt text](https://github.com/Group-26-Final-Project/final-project-updated/blob/main/screenshots/truffle-config.png)
 
   * Run **npm install** then followed by **truffle migrate --reset --network dev**
 
-        * SCREENSHOT (migration command)
+  ![alt text](https://github.com/Group-26-Final-Project/final-project-updated/blob/main/screenshots/migration%20command.png)
 
   * After successful deployment, copy the following contents of the migration command output
 
-        * SCREENSHOT (migration completeion contract addresses)
+  ![alt text](https://github.com/Group-26-Final-Project/final-project-updated/blob/main/screenshots/get%20deployed%20contract%20address.png)
 
 * ### Backend
 
   * Navigate to **dvsbt_backend** folder
   * Open/create **.env** file in current directory and replace/paste the previously copied contents
   * Run **npm install** then followed by **npm run dev**
-        * SCREENSHOT (BACKEND NPM INSTALL AND RUN DEV)
+  ![alt text](https://github.com/Group-26-Final-Project/final-project-updated/blob/main/screenshots/backend.png)
 
 * ### Web (User)
 
@@ -79,7 +78,7 @@ In addition to above mentioned features, voters and candidates have the freedom 
   * Run **npm install** then followed by **npm start**
   * Open preffered browser and go to URL **<http://localhost:3000>**
 
-        * SCREENSHOT (WEB USER NPM INSTALL AND start)
+  ![alt text](https://github.com/Group-26-Final-Project/final-project-updated/blob/main/screenshots/web_user.png)
 
 * ### Web (Admin)
 
@@ -87,7 +86,7 @@ In addition to above mentioned features, voters and candidates have the freedom 
   * Run **npm instal** then followed by **npm start**
   * Open preffered browser and go to URL **<http://localhost:3000>**
 
-        * SCREENSHOT (WEB admin NPM INSTALL AND start)
+  ![alt text](https://github.com/Group-26-Final-Project/final-project-updated/blob/main/screenshots/web_admin.png)
 
 * ### Mobile
 
@@ -95,12 +94,12 @@ In addition to above mentioned features, voters and candidates have the freedom 
   * Setup an android emulator on your computer (<https://developer.android.com/studio/run/emulator#:~:text=1%20Select%20Tools%20%3E%20AVD%20Manager%20and%20click,Emulated%20Performance.%203%20Select%20Cold%20boot.%20See%20More>.) or install **Expo Go** app on your mobile device from Playstore
   * Run **npm install** then followed by **npm start**
 
-        * SCREENSHOT (mobile and npm install and start)
+  ![alt text](https://github.com/Group-26-Final-Project/final-project-updated/blob/main/screenshots/mobile.png)
   
   * Open Expo on your mobile device and scan QR Code provided by expo server to connect to it.
 
-        * SCREENSHOT (expo server running)
-        * SCREENSHOT (expo go on mobile)
+  ![alt text](https://github.com/Group-26-Final-Project/final-project-updated/blob/main/screenshots/expo%20server%20running.png)
+  ![alt text](https://github.com/Group-26-Final-Project/final-project-updated/blob/main/screenshots/expo%20go.jpg)
 
 ## Reference
 
