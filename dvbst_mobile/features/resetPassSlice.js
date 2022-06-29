@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from 'axios';
 
-const API_URL = 'https://b800-197-156-103-178.eu.ngrok.io';
+const API_URL = 'https://bfaf-197-156-111-220.eu.ngrok.io';
 
 const initialState = {
     resetToken: "",

@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import CustomAxios from "../Api/CustomAxios";
 import { getData } from "../Api/RetrieveToken";
-const baseURL = "https://b800-197-156-103-178.eu.ngrok.io";
+const baseURL = "https://bfaf-197-156-111-220.eu.ngrok.io";
 // const baseURL = "https://final-project-dvbst.herokuapp.com"
 
 const initialState = {

@@ -58,11 +58,11 @@ export default function Candidates() {
                 accessor: "dept",
                 Cell: Department
             },
-            {
-                Header: "Status",
-                accessor: "status",
-                Cell: StatusPill,
-            },
+            // {
+            //     Header: "Status",
+            //     accessor: "status",
+            //     Cell: StatusPill,
+            // },
             {
                 Header: "",
                 accessor: "_id",
