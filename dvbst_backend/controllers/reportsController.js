@@ -3,6 +3,7 @@ const router = express.Router();
 const Request = require("../models/request");
 const Candidate = require("../models/candidate");
 const AllUser = require("../models/allUser");
+const User = require("../models/user");
 const Voter = require("../models/voter");
 const Election = require("../models/election");
 const Blacklist = require("../models/blacklist");
@@ -11,7 +12,8 @@ const completed = require("../models/completed");
 
 router.get("/", async (req, res, next) => {
   try {
-    const totalUsers = await AllUser.find({}).count();
+    const totalStudents = await AllUser.find({}).count();
+    const totalUsers = await User.find({}).count() - 1;
     const totalCandidates = await Candidate.find({}).count();
     const totalVoters = await Voter.find({}).count();
     const totalOngoingElections = await Election.find({}).count();
@@ -21,6 +23,7 @@ router.get("/", async (req, res, next) => {
 
     res.status(200).json({
       data: {
+        totalStudents,
         totalUsers,
         totalCandidates,
         totalVoters,

@@ -188,7 +188,7 @@ export default function CandidateProfilePage() {
                     />
                   </Grid>
                   <Grid item xs={3}>
-                    <Typography>Department :</Typography>
+                    <Typography>School/Center :</Typography>
                   </Grid>
                   <Grid item xs={9} style={{ marginBottom: "10px" }}>
                     <TextField

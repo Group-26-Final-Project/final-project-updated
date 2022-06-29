@@ -19,7 +19,7 @@ const initialState = {
 };
 
 export const register = createAsyncThunk("auth/register", async (newUser,
-    rejectWithValue) => {
+    {rejectWithValue}) => {
     try {
         const response = (newUser.role === 'voter') ? await CustomAxios.post("/voters", newUser) : await CustomAxios.post("/candidates", newUser); 
         return response.data;

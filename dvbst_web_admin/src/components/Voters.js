@@ -52,7 +52,7 @@ export default function Voters() {
         accessor: "id",
       },
       {
-        Header: "Department",
+        Header: "School/Center",
         accessor: "dept",
         Cell: Department
       },

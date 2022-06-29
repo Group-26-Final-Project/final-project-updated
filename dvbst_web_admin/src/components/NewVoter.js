@@ -74,7 +74,7 @@ export default function NewVoter() {
         "Invalid Name (Only Upper/Lower Case alphabets  3-20 characters long)";
     }
     if (!values.dept) {
-      errors.dept = "Select Department from dropdown";
+      errors.dept = "Select School/Center from dropdown";
     }
     if (!values.section) {
       errors.section = "Select Section from dropdown";
@@ -211,7 +211,7 @@ export default function NewVoter() {
                   class="block tracking-wide text-gray-700 text-xs font-bold mb-2"
                   for="grid-dept"
                 >
-                  Department
+                  School/Center
                 </label>
                 <div class="relative">
                   <select

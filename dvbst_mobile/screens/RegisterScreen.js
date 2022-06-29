@@ -104,6 +104,7 @@ const RegisterScreen = (props) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const errors = validate(formValues);
+        console.log(errors)
         if (Object.keys(errors).length === 0) {
             dispatch(register(formValues))
                 .unwrap()
@@ -113,7 +114,7 @@ const RegisterScreen = (props) => {
                     navigation.navigate('Login')
                 })
                 .catch((e) => {
-                    console.log("Here")
+                    console.log("Here", e)
                 })
         } else {
             setFormErrors(errors);
@@ -289,7 +290,7 @@ const RegisterScreen = (props) => {
                     <Text style={{ color: '#fff', fontSize: 20 }}>Register</Text>
                 </TouchableOpacity>
                 <View style={{ marginTop: 6, justifyContent: 'center', alignSelf: 'center', marginBottom: 40 }}>
-                    <Text style={{ color: '#4B4B4B', fontSize: 16, fontFamily: 'poppinsLight' }}>Already have an account? <Text onPress={() => navigation.reset({ index: 0, routes: [{ name: 'loginStack' }] })} style={{ color: '#00d05a', fontSize: 16, fontFamily: 'poppinsLight' }}>Log in</Text></Text>
+                    <Text style={{ color: '#4B4B4B', fontSize: 16, fontFamily: 'poppinsLight' }}>Already have an account? <Text onPress={() => navigation.reset({ index: 0, routes: [{ name: 'Login' }] })} style={{ color: '#00d05a', fontSize: 16, fontFamily: 'poppinsLight' }}>Log in</Text></Text>
                 </View>
             </View>
         </ScrollView>

@@ -196,7 +196,7 @@ export default function CandidateDetail() {
                   class="w-full md:w-1/3 px-3 block tracking-wide text-gray-700 text-xs font-bold my-2 mx-4"
                   for="grid-dept"
                 >
-                  Department
+                  School/Center
                 </label>
                 <input
                   class="appearance-none block w-full md:w-2/3 bg-white-200 text-sm text-gray-700 border border-gray-200 rounded py-2 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"

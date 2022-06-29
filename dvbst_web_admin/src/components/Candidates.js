@@ -54,7 +54,7 @@ export default function Candidates() {
                 accessor: "year",
             },
             {
-                Header: "Department",
+                Header: "School/Center",
                 accessor: "dept",
                 Cell: Department
             },

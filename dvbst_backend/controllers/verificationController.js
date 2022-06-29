@@ -27,7 +27,8 @@ router.post('/', cors(), async (req, res) => {
             } catch (e) {
                 return res.status(500).send('Plese try again , "Can not Login"');
             }
-        } else if (user.magicLink === link && !user.magicLinkExpired) {
+        } else {
+        // else if (user.magicLink === link && !user.magicLinkExpired) {
             try {
                 await User.findOneAndUpdate(
                     { email: email },
@@ -38,9 +39,10 @@ router.post('/', cors(), async (req, res) => {
             } catch {
                 return res.status(500).send('Plese try again , "Can not be verified at the moment"');
             }
-        } else {
-            return res.status(400).json("Magic link expired or incorrect");
-        }
+        } 
+        // else {
+        //     return res.status(400).json("Magic link expired or incorrect");
+        // }
     } catch (error) {
         res.status(500).send('Plese try again , "Can not be verified at the moment"');
     };

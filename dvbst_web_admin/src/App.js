@@ -136,7 +136,7 @@ function App() {
             </div>
           </div>
         )}
-        <div className="flex w-[75vw] flex-col">
+        <div className={(token ? 'flex w-[75vw] flex-col"' : 'flex w-full flex-col"')}>
           <div className="flex-1 h-screen md:overflow-y-auto">
             <PrivateRoute>
               <Navbar />

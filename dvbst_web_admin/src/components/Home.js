@@ -82,13 +82,46 @@ export default function Home() {
       <div className="w-full bg-[#2F313D] grid grid-cols-3 gap-y-10 py-8 px-4 lg:px-8 rounded-xl">
         <div className="px-1">
           <h3 className="text-md text-white font-body font-semibold">
+            Total AAiT Students
+          </h3>
+          <h2 className="text-3xl text-white font-body font-bold">
+            {reports && reports.totalStudents}
+          </h2>
+          <p className="text-sm text-white font-body font-light">
+            Total number of students that are eligibile to participate in the elections.{" "}
+          </p>
+        </div>
+        <div className="px-1">
+          <h3 className="text-md text-white font-body font-semibold">
+            Total Registered Students
+          </h3>
+          <h2 className="text-3xl text-white font-body font-bold">
+            {reports && reports.totalUsers}
+          </h2>
+          <p className="text-sm text-white font-body font-light">
+            Total number of students registered for upcoming in the elections.{" "}
+          </p>
+        </div>
+        <div className="px-1">
+          <h3 className="text-md text-white font-body font-semibold">
+            Student Participation (%)
+          </h3>
+          <h2 className="text-3xl text-white font-body font-bold">
+            {reports && ((reports.totalUsers)/reports.totalStudents*100).toFixed(2)}
+          </h2>
+          <p className="text-sm text-white font-body font-light">
+            Have been registered for the upcoming elections.{" "}
+          </p>
+        </div>
+        <div className="px-1">
+          <h3 className="text-md text-white font-body font-semibold">
             Total Voters
           </h3>
           <h2 className="text-3xl text-white font-body font-bold">
             {reports && reports.totalVoters}
           </h2>
           <p className="text-sm text-white font-body font-light">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.{" "}
+            Total number of Voters.{" "}
           </p>
         </div>
         <div className="px-1">
@@ -99,7 +132,7 @@ export default function Home() {
             {reports && reports.totalCandidates}
           </h2>
           <p className="text-sm text-white font-body font-light">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.{" "}
+            Total number of Candidates.{" "}
           </p>
         </div>
         <div className="px-1">
@@ -110,18 +143,18 @@ export default function Home() {
             {reports && reports.totalBlacklistedCandidates}
           </h2>
           <p className="text-sm text-white font-body font-light">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.{" "}
+            Total number of candidates that have been disqualified.{" "}
           </p>
         </div>
         <div className="px-1">
           <h3 className="text-md text-white font-body font-semibold">
-            Ongoing
+            Ongoing Elections
           </h3>
           <h2 className="text-3xl text-white font-body font-bold">
             {reports && reports.totalOngoingElections}
           </h2>
           <p className="text-sm text-white font-body font-light">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.{" "}
+            Elections are live.{" "}
           </p>
         </div>
         <div className="px-1">
@@ -132,7 +165,7 @@ export default function Home() {
             {reports && reports.totalFinishedElections}
           </h2>
           <p className="text-sm text-white font-body font-light">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.{" "}
+            Elections have been completed.{" "}
           </p>
         </div>
         <div className="px-1">
@@ -143,22 +176,22 @@ export default function Home() {
             {reports && reports.totalPendingRequests}
           </h2>
           <p className="text-sm text-white font-body font-light">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.{" "}
+            Candidates are waiting for approval.{" "}
           </p>
         </div>
       </div>
       <div>
         {
-          reports.totalVoters/reports.totalUsers > 0.5 && (
+          reports.totalVoters / reports.totalUsers > 0.5 && (
             <div className="flex items-end justify-end mt-10 ">
               <h4 className="font-bold text-red">
                 {`More than 50 % voters. Suggest start election`}
               </h4>
-              </div>
+            </div>
           )
         }
       </div>
-      
+
       <div className="h-[400px] w-full flex px-4 lg:px-8 rounded-2xl bg-white-700">
         <CustomChart reports={reports} />
       </div>

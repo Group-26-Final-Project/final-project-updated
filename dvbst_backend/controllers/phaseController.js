@@ -20,6 +20,7 @@ const { changePhase,extendPhase } = require("../helpers/changePhase");
 // const {vote, mockVoting} = require("../helpers/vote");
 const { getPhase } = require("../helpers/changePhase");
 require("dotenv").config();
+const logger = require("../helpers/logger");
 
 // router.post("/vote", cors(), async (req, res, next) => {
 //   try {
